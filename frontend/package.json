@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Simple PEN request UI.",
-  "author": "Marco Villeneuve <marco.villeneuve@gov.bc.ca>",
+  "author": "Marco Villeneuve",
   "scripts": {
     "serve": "node_modules/.bin/vue-cli-service serve",
     "build": "node_modules/.bin/vue-cli-service build",
