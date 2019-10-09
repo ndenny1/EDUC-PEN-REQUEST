@@ -54,7 +54,7 @@ pipeline{
                                 },
                                 Frontend: {
                                     try {
-                                        def bcFrontend = openshift.process('-f', 'tools/frontend.bc.yaml', "REPO_NAME=${REPO_NAME}", "JOB_NAME=${JOB_NAME}", "SOURCE_REPO_URL=${SOURCE_REPO_URL}", "SOURCE_REPO_REF=${SOURCE_REPO_REF}")
+                                        def bcFrontend = openshift.process('-f', 'tools/openshift/frontend.bc.yaml', "REPO_NAME=${REPO_NAME}", "JOB_NAME=${JOB_NAME}", "SOURCE_REPO_URL=${SOURCE_REPO_URL}", "SOURCE_REPO_REF=${SOURCE_REPO_REF}")
 
                                         openshift.apply(bcFrontend).narrow('bc').startBuild('-w').logs('-f')
                                         openshift.tag("${REPO_NAME}-frontend:latest", "${REPO_NAME}-frontend:${JOB_NAME}")
