@@ -20,10 +20,10 @@ pipeline{
         SOURCE_REPO_REF = 'master'
         SOURCE_REPO_URL = 'https://github.com/${OWNER}/${REPO_NAME}.git'
 
-        TOOLS_HOST_ROUTE = "${APP_NAME}-${TOOLS_PROJECT}.${APP_DOMAIN}"
-        DEV_HOST_ROUTE = "${APP_NAME}-${DEV_PROJECT}.${APP_DOMAIN}"
-        TEST_HOST_ROUTE = "${APP_NAME}-${TEST_PROJECT}.${APP_DOMAIN}"
-        PROD_HOST_ROUTE = "${APP_NAME}-${PROD_PROJECT}.${APP_DOMAIN}"
+        TOOLS_HOST_ROUTE = "${APP_NAME}-${TOOLS}.${APP_DOMAIN}"
+        DEV_HOST_ROUTE = "${APP_NAME}-${DEV}.${APP_DOMAIN}"
+        TEST_HOST_ROUTE = "${APP_NAME}-${TEST}.${APP_DOMAIN}"
+        PROD_HOST_ROUTE = "${APP_NAME}-${PROD}.${APP_DOMAIN}"
     }
 
     stages {
