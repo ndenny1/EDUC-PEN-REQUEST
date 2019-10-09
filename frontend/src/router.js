@@ -2,8 +2,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Home from '@/components/Home.vue';
-import { AuthRoutes } from '@/utils/constants';
-import store from './store';
+import Landing from '@/components/Landing.vue';
+//import { AuthRoutes } from '@/utils/constants';
+//import store from './store/index';
 
 Vue.use(VueRouter);
 
@@ -17,6 +18,11 @@ const router = new VueRouter({
       component: Home
     },
     {
+      path: '/landing',
+      name: 'landing',
+      component: Landing
+    },
+    {
       path: '*',
       name: 'notfound',
       redirect: '/'
@@ -25,14 +31,14 @@ const router = new VueRouter({
 });
 
 // Checks authentication BEFORE rendering to show (or not) password protected locations
-router.beforeEach((to, _from, next) => {
+/*router.beforeEach((to, _from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!store.getters.isAuthenticated) {
-      // next('login');
+      // next('landing');
       window.location.href = AuthRoutes.LOGIN;
     }
   }
   next();
-});
+});*/
 
 export default router;
