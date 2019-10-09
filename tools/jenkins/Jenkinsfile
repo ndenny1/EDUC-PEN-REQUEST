@@ -59,7 +59,7 @@ pipeline{
                                         openshift.apply(bcFrontend).narrow('bc').startBuild('-w').logs('-f')
                                         openshift.tag("${REPO_NAME}-frontend:latest", "${REPO_NAME}-frontend:${JOB_NAME}")
 
-                                        def bcFrontendStatic = openshift.process('-f', 'tools/openshift/frontend-static.bc.yaml', "REPO_NAME=${REPO_NAME}", "JOB_NAME=${JOB_NAME}", "NAMESPACE=${TOOLS_PROJECT}")
+                                        def bcFrontendStatic = openshift.process('-f', 'tools/openshift/frontend-static.bc.yaml', "REPO_NAME=${REPO_NAME}", "JOB_NAME=${JOB_NAME}", "NAMESPACE=${TOOLS}")
                                         openshift.apply(bcFrontendStatic).narrow('bc').startBuild('-w').logs('-f')
                                         openshift.tag("${REPO_NAME}-frontend-static:latest", "${REPO_NAME}-frontend-static:${JOB_NAME}")
                                     } catch(e) {
@@ -76,7 +76,7 @@ pipeline{
                     echo 'Cleanup BuildConfigs...'
                     script {
                         openshift.withCluster() {
-                        openshift.withProject(TOOLS_PROJECT) {
+                        openshift.withProject(TOOLS) {
                             if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
                                 echo "DEBUG - Using project: ${openshift.project()}"
                             } else {
@@ -136,10 +136,10 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
         echo "DEBUG - Using project: ${openshift.project()}"
       }
       echo "Tagging Image ${REPO_NAME}-backend:${JOB_NAME}..."
-      openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-backend:${JOB_NAME}", "${REPO_NAME}-backend:${JOB_NAME}")
+      openshift.tag("${TOOLS}/${REPO_NAME}-backend:${JOB_NAME}", "${REPO_NAME}-backend:${JOB_NAME}")
 
       echo "Tagging Image ${REPO_NAME}-frontend-static:${JOB_NAME}..."
-      openshift.tag("${TOOLS_PROJECT}/${REPO_NAME}-frontend-static:${JOB_NAME}", "${REPO_NAME}-frontend-static:${JOB_NAME}")
+      openshift.tag("${TOOLS}/${REPO_NAME}-frontend-static:${JOB_NAME}", "${REPO_NAME}-frontend-static:${JOB_NAME}")
 
       echo "Processing DeploymentConfig ${REPO_NAME}-backend..."
       def dcBackendTemplate = openshift.process('-f',
