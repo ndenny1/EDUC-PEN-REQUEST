@@ -30,10 +30,6 @@ pipeline{
         stage('Initialize') {
             agent any
             steps {
-                timeout(10){
-                    echo "Cancelling previous ${APP_NAME}-${JOB_NAME} builds in progress..."
-                    abortAllPreviousBuildInProgress(currentBuild)
-                }
                 script {
                     if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
                         // Force OpenShift Plugin directives to be verbose
