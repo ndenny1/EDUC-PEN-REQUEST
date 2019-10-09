@@ -9,7 +9,8 @@
     "build": "node_modules/.bin/vue-cli-service build",
     "test": "npm run unit && npm run e2e",
     "e2e": "node test/e2e/runner.js",
-    "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
+    "lint:fix": "node_modules/.bin/vue-cli-service lint --fix",
+    "lint": "node_modules/.bin/vue-cli-service lint --no-fix",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage"
@@ -21,7 +22,7 @@
     "vue": "^2.6.6",
     "vue-clipboard2": "^0.3.0",
     "vue-router": "^3.0.6",
-    "vuetify": "^2.0.5",
+    "vuetify": "^2.1.1",
     "vuex": "^3.1.1",
     "@babel/preset-env": "7.3.4",
     "sass-loader": "^7.1.0",

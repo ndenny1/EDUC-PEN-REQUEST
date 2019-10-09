@@ -1,14 +1,14 @@
 <template>
-  <div class="home">
+  <v-container>
     <h1>{{msg}}</h1>
-  </div>
+  </v-container>
 </template>
 
 <script>
 export default {
-  name: "home",
+  name: 'home',
   data() {
-    return { msg: "Hi Scott & Greg!" };
+    return { msg: 'Hi Scott & Greg!' };
   }
 };
 </script>
