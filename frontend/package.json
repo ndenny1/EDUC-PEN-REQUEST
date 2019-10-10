@@ -7,13 +7,15 @@
   "scripts": {
     "serve": "node_modules/.bin/vue-cli-service serve",
     "build": "node_modules/.bin/vue-cli-service build",
-    "test": "npm run unit && npm run e2e",
+    "test:unit": "node_modules/.bin/vue-cli-service test:unit",
     "e2e": "node test/e2e/runner.js",
     "lint:fix": "node_modules/.bin/vue-cli-service lint --fix",
     "lint": "node_modules/.bin/vue-cli-service lint --no-fix",
+    "purge": "rm -rf node_modules",
+    "rebuild": "npm run clean && npm run build",
+    "reinstall": "npm run purge && npm install",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
-    "unit": "jest --config test/unit/jest.conf.js --coverage"
+    "start": "npm run dev"
   },
   "dependencies": {
     "axios": "^0.19.0",
@@ -65,10 +67,6 @@
     "last 2 versions",
     "not ie <= 8"
   ],
-  "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
-  },
   "eslintConfig": {
     "root": true,
     "env": {
@@ -112,6 +110,56 @@
         "error",
         "always"
       ]
+    }
+  },
+  "jest": {
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
+    "clearMocks": true,
+    "setupFiles": [
+      "<rootDir>/node_modules/regenerator-runtime/runtime.js"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue",
+      "jsx"
+    ],
+    "transform": {
+      "^.+\\.(js|jsx)?$": "<rootDir>/node_modules/babel-jest",
+      ".*\\.(vue)$": "vue-jest",
+      "^.+\\.vue$": "vue-jest",
+      ".+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "testMatch": [
+      "**/test/unit/**/*.spec.(js|jsx|ts|tsx)|**/__test__/*.(js|jsx|ts|tsx)"
+    ],
+    "testURL": "http://localhost/",
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,vue}"
+    ],
+    "testResultsProcessor": "jest-sonar-reporter"
+  },
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
     }
   }
 }

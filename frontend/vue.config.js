@@ -1,5 +1,4 @@
 module.exports = {
-  runtimeCompiler:true,
   configureWebpack: {
     performance: {
       hints: false
@@ -11,5 +10,8 @@ module.exports = {
       }
     }
   },
-  transpileDependencies: ['vuetify']
+  transpileDependencies: ['vuetify'],
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/'
+    : '/test/'
 };

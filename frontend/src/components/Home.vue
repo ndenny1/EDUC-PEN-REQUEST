@@ -8,7 +8,7 @@
 export default {
   name: 'home',
   data() {
-    return { msg: 'Hi Scott & Greg!' };
+    return { msg: 'Logged In' };
   }
 };
 </script>
