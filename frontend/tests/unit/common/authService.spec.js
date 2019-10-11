@@ -6,13 +6,6 @@ import { AuthRoutes } from '@/utils/constants.js';
 
 const mockAxios = new MockAdapter(axios);
 
-const handleErrors = (response) => {
-  if (response.status !== 200) {
-    throw new Error('foo');
-  } else {
-    return response.data;
-  }
-};
 
 describe('authService.js', () => {
   const spy = jest.spyOn(ApiService.apiAxios, 'get');

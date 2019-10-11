@@ -1,0 +1,8 @@
+{
+    "name": "pen-request-backend",
+    "version": "0.0.1",
+    "description": "The backend portion of the PEN request web app",
+    "scripts": {
+
+    },
+}
