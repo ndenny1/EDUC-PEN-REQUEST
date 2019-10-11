@@ -154,7 +154,7 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
 
       echo "Processing DeploymentConfig ${REPO_NAME}-frontend-static..."
       def dcFrontendStaticTemplate = openshift.process('-f',
-        'openshift/obiee-frontend-static.dc.yaml',
+        'tools/openshift/frontend-static.dc.yaml',
         "REPO_NAME=${REPO_NAME}",
         "JOB_NAME=${JOB_NAME}",
         "NAMESPACE=${projectEnv}",
