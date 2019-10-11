@@ -10,9 +10,6 @@ selenium-debug.log
 coverage/
 junit.xml
 test-report.xml
-clover.xml
-coverage-final.json
-lcov.info
 
 # Editor directories and files
 .idea

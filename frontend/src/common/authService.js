@@ -10,7 +10,7 @@ export default {
       return response.data;
     } catch (e) {
       console.log(`Failed to acquire JWT token - ${e}`); // eslint-disable-line no-console
-      return {error: 'Failed to get JWT token'}
+      return {error: 'Failed to get JWT token'};
     }
   },
 
