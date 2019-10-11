@@ -10,7 +10,7 @@ export default {
       return response.data;
     } catch (e) {
       console.log(`Failed to acquire JWT token - ${e}`); // eslint-disable-line no-console
-      throw e;
+      return {error: 'Failed to get JWT token'}
     }
   },
 
@@ -22,13 +22,13 @@ export default {
       });
 
       if(response.data.error){
-        throw new Error(response.data.error_description);
+        return {error: response.data.error_description};
       }
       
       return response.data;
     } catch (e) {
       console.log(`Failed to refresh JWT token - ${e}`); // eslint-disable-line no-console
-      throw e;
+      return {error: 'Failed to refresh JWT token'};
     }
   }
 };

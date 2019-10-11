@@ -15,8 +15,8 @@ describe('Footer.vue', () => {
     });
   });
 
-    test('Login form exists', () => {
-        expect(wrapper.html()).toContain('<v-card-title>Login</v-card-title>');
-    });
+  test('Login form exists', () => {
+    expect(wrapper.html()).toContain('<div class="v-card__text"><div class="row align-center justify-center">');
+  });
 });
 

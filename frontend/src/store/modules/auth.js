@@ -5,8 +5,7 @@ export default {
   namespaced: true,
   state: {
     acronyms: [],
-    isAuthenticated: localStorage.getItem('jwtToken') !== null,
-    accessDenied: false
+    isAuthenticated: localStorage.getItem('jwtToken') !== null
   },
   getters: {
     acronyms: state => state.acronyms,
@@ -29,13 +28,7 @@ export default {
         }
 
         state.isAuthenticated = true;
-        state.accessDenied = false;
         localStorage.setItem('jwtToken', token);
-
-        localStorage.removeItem('jwtToken');
-        localStorage.removeItem('refreshToken');
-        state.isAuthenticated = true;
-        //localStorage.setItem('jwtToken', token);
       } else {
         state.acronyms = [];
         state.isAuthenticated = false;
@@ -52,8 +45,8 @@ export default {
       }
     },
     logoutState: (state) => {
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('jwtToken');
+      localStorage.setItem('refreshToken', null);
+      localStorage.setItem('jwtToken', null);
       state.isAuthenticated = false;
     }
   },

@@ -20,6 +20,6 @@ describe('Home.vue', () => {
   });
 
   it('Check that text body exists', () => {
-    expect(wrapper.html()).toBe('<h1>Logged in Page</h1>');
+    expect(wrapper.html()).toContain('<h1>Logged In</h1>');
   });
 });
