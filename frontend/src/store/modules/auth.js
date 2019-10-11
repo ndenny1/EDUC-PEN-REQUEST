@@ -14,7 +14,6 @@ export default {
     refreshToken: () => localStorage.getItem('refreshToken'),
   },
   mutations: {
-
     //sets Json web token and determines whether user is authenticated
     setJwtToken: (state, token = null) => {
       if (token) {
@@ -45,8 +44,8 @@ export default {
       }
     },
     logoutState: (state) => {
-      localStorage.setItem('refreshToken', null);
-      localStorage.setItem('jwtToken', null);
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('jwtToken');
       state.isAuthenticated = false;
     }
   },

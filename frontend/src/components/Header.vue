@@ -22,16 +22,28 @@
 
       <v-spacer></v-spacer>
 
+      <div v-if="isAuthenticated">
+        <v-btn dark text tile id="nav-logout" @click="logout" to='landing'>Logout</v-btn>
+      </div>
     </v-toolbar>
   </header>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   data(){
     return {
       appTitle: 'PEN Request'
     };
+  },
+  computed: {
+    ...mapGetters('auth', ['isAuthenticated'])
+  },
+  methods: {
+    logout(){
+      this.$store.commit('auth/logoutState');
+    }
   }
 };
 </script>
