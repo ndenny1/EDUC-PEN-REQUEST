@@ -9,8 +9,7 @@ export default {
       const response = await axios.get(AuthRoutes.TOKEN);
       return response.data;
     } catch (e) {
-      console.log(`Failed to acquire JWT token - ${e}`); // eslint-disable-line no-console
-      return {error: 'Failed to get JWT token'};
+      throw e;
     }
   },
 
@@ -28,7 +27,7 @@ export default {
       return response.data;
     } catch (e) {
       console.log(`Failed to refresh JWT token - ${e}`); // eslint-disable-line no-console
-      return {error: 'Failed to refresh JWT token'};
+      throw e;
     }
   }
 };
