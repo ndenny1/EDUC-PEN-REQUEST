@@ -156,6 +156,8 @@ def deployStage(String stageEnv, String projectEnv, String hostRouteEnv) {
         "APP_NAME=${APP_NAME}",
         "HOST_ROUTE=${hostRouteEnv}"
       )
+        
+      def dcBackend = openshift.apply(dcBackendTemplate).narrow('dc')
 
       echo "Processing DeploymentConfig ${REPO_NAME}-frontend-static..."
       def dcFrontendStaticTemplate = openshift.process('-f',
