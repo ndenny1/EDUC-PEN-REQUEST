@@ -54,7 +54,7 @@ pipeline{
                                 try {
                                     timeout(10){
                                         echo 'Running backend lint checks and tests...'
-                                        sh 'npm install'
+                                        sh 'npm ci'
                                         sh 'npm run lint:fix'
                                         sh 'npm run test'
                                         echo 'Backend lint checks and tests passed!'
@@ -70,7 +70,7 @@ pipeline{
                                 try {
                                     timeout(10){
                                         echo 'Running frontend lint checks and tests...'
-                                        sh 'npm install'
+                                        sh 'npm ci'
                                         sh 'npm run lint:fix'
                                         sh 'npm run test:unit'
                                         echo 'Frontend lint checks and tests passed!'
