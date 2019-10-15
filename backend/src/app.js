@@ -18,6 +18,7 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const OidcStrategy = require('passport-openidconnect').Strategy;
 
 const apiRouter = express.Router();
+const authRouter = require('./routes/auth');
 
 //initialize app
 const app = express();
@@ -129,6 +130,8 @@ apiRouter.get('/', (_req, res) => {
 
 //set up routing to auth and main API
 app.use(/(\/api)?/, apiRouter);
+
+apiRouter.use('/auth', authRouter);
 
 //Handle 500 error
 app.use((err, _req, res, next) => {
