@@ -13,6 +13,7 @@ nconf.overrides({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     publicKey: process.env.PUBLIC_KEY,
+    //url containing all OIDC endpoints
     discovery: ''
   },
   server: {

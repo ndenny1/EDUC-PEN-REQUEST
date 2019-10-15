@@ -9,9 +9,13 @@ const express = require('express');
 const passport = require('passport');
 const helmet = require('helmet');
 const cors = require('cors');
+const utils = require('./components/utils');
 
 dotenv.config();
 
+const JWTStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+const OidcStrategy = require('passport-openidconnect').Strategy;
 
 const apiRouter = express.Router();
 
@@ -57,7 +61,57 @@ log.addLevel('debug', 1500, {
 });
 
 //initialize our authentication strategy
+utils.getOidcDiscovery().then(discovery => {
+  //OIDC Strategy is used for authorization
+  passport.use('oidc', new OidcStrategy({
+    issuer: discovery.issuer,
+    authorizationURL: discovery.authorization_endpoint,
+    tokenURL: discovery.token_endpoint,
+    userInfoURL: discovery.userinfo_endpoint,
+    clientID: config.get('oidc:clientID'),
+    clientSecret: config.get('oidc:clientSecret'),
+    callbackURL: process.env.SERVER_FRONTEND + '/api/auth/callback',
+    scope: discovery.scopes_supported
+  }, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
+    if ((typeof (accessToken) === 'undefined') || (accessToken === null) ||
+      (typeof (refreshToken) === 'undefined') || (refreshToken === null)) {
+      return done('No access token', null);
+    }
 
+    //set access and refresh tokens
+    profile.jwt = accessToken;
+    profile.refreshToken = refreshToken;
+    return done(null, profile);
+  }));
+  //JWT strategy is used for authorization
+  passport.use('jwt', new JWTStrategy({
+    algorithms: discovery.token_endpoint_auth_signing_alg_values_supported,
+    // Keycloak 7.3.0 no longer automatically supplies matching client_id audience.
+    // If audience checking is needed, check the following SO to update Keycloak first.
+    // Ref: https://stackoverflow.com/a/53627747
+    //audience: config.get('oidc:clientID'),
+    issuer: discovery.issuer,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: config.get('oidc:publicKey')
+  }, (jwtPayload, done) => {
+    if ((typeof (jwtPayload) === 'undefined') || (jwtPayload === null)) {
+      return done('No JWT token', null);
+    }
+
+    done(null, {
+      email: jwtPayload.email,
+      familyName: jwtPayload.family_name,
+      givenName: jwtPayload.given_name,
+      jwt: jwtPayload,
+      name: jwtPayload.name,
+      preferredUsername: jwtPayload.preferred_username,
+      realmRole: jwtPayload.realm_role
+    });
+  }));
+});
+//functions for serializing/deserializing users
+passport.serializeUser((user, next) => next(null, user));
+passport.deserializeUser((obj, next) => next(null, obj));
 
 
 // GetOK Base API Directory
@@ -74,7 +128,7 @@ apiRouter.get('/', (_req, res) => {
 });
 
 //set up routing to auth and main API
-app.use(/(\/getok)?(\/api)?/, apiRouter);
+app.use(/(\/api)?/, apiRouter);
 
 //Handle 500 error
 app.use((err, _req, res, next) => {
