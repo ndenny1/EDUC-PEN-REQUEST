@@ -26,4 +26,8 @@ describe('Header.vue', () => {
   test('expect site title', () => {
     expect(wrapper.html()).toContain('<v-toolbar-title-stub><h3 style="color: white;">PEN Request');
   });
+
+  test('logout of site', () => {
+    wrapper.vm.logout();
+  });
 });

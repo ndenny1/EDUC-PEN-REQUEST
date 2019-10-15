@@ -62,11 +62,11 @@ function onError(error) {
   switch (error.code) {
   case 'EACCES':
     log.error(bind + ' requires elevated privileges');
-    process.exit(1);
+    //process.exit(1);
     break;
   case 'EADDRINUSE':
     log.error(bind + ' is already in use');
-    process.exit(1);
+    //process.exit(1);
     break;
   default:
     throw error;
@@ -83,3 +83,10 @@ function onListening() {
     'port ' + addr.port;
   log.info('Listening on ' + bind);
 }
+
+//exports are purely for testing
+module.exports = {
+  normalizePort,
+  onError,
+  onListening
+};

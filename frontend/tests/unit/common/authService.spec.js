@@ -48,20 +48,12 @@ describe('authService.js', () => {
     mockAxios.onGet(AuthRoutes.TOKEN).reply(function() {
       throw new Error('error');
     });
-    try{
-      await AuthService.getAuthToken();
-    } catch(e) {
-      expect(e).toEqual({error: 'failed to get JWT token'});
-    }
+    expect(AuthService.getAuthToken()).rejects.toThrowError();
   });
   it('Expect getRefreshToken to throw error', async () => {
     mockAxios.onPost(AuthRoutes.REFRESH).reply(function() {
-      throw new Error('error');
+      throw Error;
     });
-    try{
-      await AuthService.refreshAuthToken('testToken');
-    } catch(e) {
-      expect(e).toEqual({error: 'Failed to refresh JWT token'});
-    }
+    expect(AuthService.refreshAuthToken('testToken')).rejects.toThrowError();
   });
 });

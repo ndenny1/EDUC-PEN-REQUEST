@@ -4,7 +4,7 @@ const nconf = require('nconf');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const env = process.env.NODE_ENV || 'development';
+const env = 'local'; //process.env.NODE_ENV || 'development';
 
 //injects environment variables into the json file
 nconf.overrides({
@@ -13,7 +13,8 @@ nconf.overrides({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     publicKey: process.env.PUBLIC_KEY,
-    discovery: ''
+    //url containing all OIDC endpoints (need to change to PEN endpoint once available)
+    discovery: 'https://sso.pathfinder.gov.bc.ca/auth/realms/jsgbqlip/.well-known/openid-configuration'
   },
   server: {
     frontend: process.env.FRONTEND,

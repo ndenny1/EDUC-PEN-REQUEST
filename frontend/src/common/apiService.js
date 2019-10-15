@@ -68,6 +68,8 @@ const intercept = apiAxios.interceptors.response.use(config => config, error => 
 export default {
   apiAxios: apiAxios,
   intercept: intercept,
+  processQueue,
+  failedQueue,
 
   //Adds required headers to the Auth request
   setAuthHeader(token) {
