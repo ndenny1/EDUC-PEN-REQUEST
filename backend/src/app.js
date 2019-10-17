@@ -3,7 +3,7 @@
 const config = require('./config/index');
 const dotenv = require('dotenv');
 const log = require('npmlog');
-const morgan = require('morgan');
+//const morgan = require('morgan');
 const session = require('express-session');
 const express = require('express');
 const passport = require('passport');
@@ -35,15 +35,15 @@ app.use(express.urlencoded({
 }));
 
 //initialize logging middleware
-if(process.env.NODE_ENV !== 'test'){
+/*if(process.env.NODE_ENV !== 'test'){
   app.use(morgan(config.get('server:morganFormat')));
-}
+}*/
 
 //app.use(keycloak.middleware());
 //sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
 var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 app.use(session({
-  secret: 'fakeSecret',
+  secret: config.get('oidc:clientSecret'),
   resave: true,
   saveUninitialized: true,
   httpOnly: true,
@@ -69,9 +69,9 @@ utils.getOidcDiscovery().then(discovery => {
     authorizationURL: discovery.authorization_endpoint,
     tokenURL: discovery.token_endpoint,
     userInfoURL: discovery.userinfo_endpoint,
-    clientID: config.get('oidc:clientID'),
+    clientID: 'pen-request',
     clientSecret: config.get('oidc:clientSecret'),
-    callbackURL: process.env.SERVER_FRONTEND + '/api/auth/callback',
+    callbackURL: config.get('server:frontend') + '/api/auth/callback',
     scope: discovery.scopes_supported
   }, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
     if ((typeof (accessToken) === 'undefined') || (accessToken === null) ||

@@ -4,7 +4,9 @@
   "description": "The backend portion of the PEN request web app",
   "scripts": {
     "build": "babel /opt/app-root/src/ --out-dir dist --ignore 'node_modules/**/*.js'",
-    "serve": "nodemon ./src/server.js",
+    "serve": "npm run setlocal && npm run servecmd",
+    "setlocal": "set NODE_ENV='local'",
+    "servecmd": "nodemon ./src/server.js",
     "start": "node ./src/server.js",
     "lint": "node_modules/.bin/eslint . --no-fix --ignore-pattern 'node_modules' --ext .js",
     "lint:fix": "node_modules/.bin/eslint . --fix --ignore-pattern 'node_modules' --ext .js",
@@ -34,7 +36,8 @@
     "jest-junit": "^7.0.0",
     "passport-jwt": "^4.0.0",
     "path": "0.12.7",
-    "querystring": "0.2.0"
+    "querystring": "0.2.0",
+    "config": "^3.2.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",

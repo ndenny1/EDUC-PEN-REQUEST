@@ -44,7 +44,7 @@ pipeline{
                     }
                 }
             }
-        }
+        }/*
         stage('Unit Tests') {
             steps {
                 script {
@@ -70,7 +70,7 @@ pipeline{
                                 try {
                                     timeout(10){
                                         echo 'Running frontend lint checks and tests...'
-                                        sh 'npm install'
+                                        sh 'npm ci'
                                         sh 'npm run lint:fix'
                                         sh 'npm run test:unit'
                                         echo 'Frontend lint checks and tests passed!'
@@ -84,7 +84,7 @@ pipeline{
                     )
                 }
             }
-        }
+        }*/
         stage('Build'){
             steps{
                 script {

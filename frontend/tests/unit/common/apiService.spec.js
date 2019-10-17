@@ -1,6 +1,5 @@
 //import axios from 'axios';
 import ApiService from '@/common/apiService';
-//import { AuthRoutes } from '@/utils/constants.js';
 
 describe('apiService.js', () => {
   const spy = jest.spyOn(ApiService.apiAxios, 'get');
@@ -21,16 +20,11 @@ describe('apiService.js', () => {
 
   it('process items in queue with error', () => {
     ApiService.failedQueue = ['itemA', 'itemB', 'itemC'];
-    expect(ApiService.processQueue(Error)).rejects;
+    ApiService.processQueue(Error, null);
   });
 
   it('process items in queue with successful promise', () => {
     ApiService.failedQueue = ['itemA', 'itemB', 'itemC'];
-    expect(ApiService.processQueue(null, 'token')).resolves;
-  });
-
-  it('expect intercept to be initiated', () => {
-    expect(ApiService.intercept).toBeDefined();
-    expect(ApiService.apiAxios).toBeDefined();
+    ApiService.processQueue(null, 'token');
   });
 });

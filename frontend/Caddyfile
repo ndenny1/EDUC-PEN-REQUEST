@@ -12,6 +12,12 @@
         Feature-Policy "fullscreen 'self'; camera 'none'; microphone 'none'"
     }
 
+    proxy /api {$HOST_ROUTE}
+
+    redir 307 {
+        /api
+    }
+
     gzip {
         level 7
     }
