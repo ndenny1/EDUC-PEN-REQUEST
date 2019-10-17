@@ -1,15 +1,25 @@
 <template>
-  <v-container>
+  <v-container v-if='!isAuthenticated'>
+    <v-row align="center" justify="center">
+      <Login></Login>
+    </v-row>
+  </v-container>
+  <v-container v-else>
     <h1>{{msg}}</h1>
   </v-container>
 </template>
 
 <script>
+import Login from './Login';
+import { mapGetters } from 'vuex';
 export default {
   name: 'home',
   data() {
     return { msg: 'Logged In' };
-  }
+  },
+  computed: {
+    ...mapGetters('auth', ['isAuthenticated'])
+  },
 };
 </script>
 
