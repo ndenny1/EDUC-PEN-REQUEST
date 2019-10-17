@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Home from '@/components/Home.vue';
-import Landing from '@/components/Landing.vue';
+//import Landing from '@/components/Landing.vue';
 //import { AuthRoutes } from '@/utils/constants';
 //import store from '@/store/index.js';
 
@@ -16,12 +16,12 @@ const router = new VueRouter({
       path: '/',
       name: 'home',
       component: Home
-    },
+    },/*
     {
       path: '/landing',
       name: 'landing',
       component: Landing
-    },
+    },*/
     {
       path: '*',
       name: 'notfound',

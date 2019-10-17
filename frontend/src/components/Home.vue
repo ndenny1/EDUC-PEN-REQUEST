@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if='!isAuthenticated'>
+  <v-container v-if="!isAuthenticated">
     <v-row align="center" justify="center">
       <Login></Login>
     </v-row>
@@ -14,8 +14,11 @@ import Login from './Login';
 import { mapGetters } from 'vuex';
 export default {
   name: 'home',
+  components: {
+    Login
+  },
   data() {
-    return { msg: 'Logged In' };
+    return { msg: 'Welcome to the PEN Retrieval webapp!' };
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated'])
