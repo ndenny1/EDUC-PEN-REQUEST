@@ -21,12 +21,12 @@
 
 <script>
 export default {
-    name: "Info",
-    data() {
-        return {
+  name: 'Info',
+  data() {
+    return {
             
-        };
-    },
+    };
+  },
 };
 </script>
 
