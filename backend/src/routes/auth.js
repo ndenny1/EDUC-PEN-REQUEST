@@ -30,10 +30,11 @@ router.get('/callback',
     failureRedirect: 'error'
   }),
   (_req, res) => {
+    //redirect to localhost if running locally
     if(process.env.NODE_ENV === 'local'){
       res.redirect('localhost:8081');
     }
-    res.redirect(config.get('server.frontend'));
+    res.redirect(config.get('server:frontend'));
   }
 );
 
@@ -56,7 +57,7 @@ router.get('/logout', (req, res) => {
   if(process.env.NODE_ENV === 'local'){
     res.redirect('localhost:8081');
   }
-  res.redirect(config.get('server.frontend'));
+  res.redirect(config.get('server:frontend'));
 });
 
 //refreshes jwt on refresh if refreshToken is valid
