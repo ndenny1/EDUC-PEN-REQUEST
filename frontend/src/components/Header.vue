@@ -1,18 +1,16 @@
 <template>
   <header class="gov-header">
-    <v-toolbar>
+    <v-toolbar class="toolbar_header">
       <!-- Navbar content -->
       <a href="https://www2.gov.bc.ca">
         <img
-          src="@/assets/images/bcid-logo-rev-en.svg"
-          width="152"
-          height="55"
+          src="@/assets/images/bc-gov-logo.svg"
+          width="155"
+          class="logo"
           alt="B.C. Government Logo"
         >
       </a>
-
       <v-toolbar-title><h3 style="color:white">{{ appTitle }}</h3></v-toolbar-title>
-      
       <!--
       <div>
         <v-btn text id="nav-home" color="text" :to="{ path: '/'}">View Users</v-btn>
@@ -52,6 +50,12 @@ export default {
 </script>
 
 <style>
+.v-toolbar__content{
+  padding: 4px 65px;
+}
+.logo{
+  padding-right: 15px;
+}
 .gov-header .title {
   color: #fff;
   text-decoration: none;
