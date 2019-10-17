@@ -5,7 +5,7 @@
         </v-card-title>
         <v-card-text>
             <v-row align="center" justify="center">
-                <v-btn @click='clearStorage' :href="authRoutes.LOGIN" class="ma-2" dark color='#003366'>Login</v-btn>
+                <v-btn @click="clearStorage" :href="authRoutes.LOGIN" class="ma-2" dark color='#003366'>Login</v-btn>
             </v-row>
         </v-card-text>
     </v-card>
