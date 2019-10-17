@@ -12,8 +12,6 @@ module.exports = {
   },
   devServer: {
     proxy: {
-    // Using reduce syntax to represent multiple mount points
-    // https://github.com/vuejs/vue-cli/issues/2285#issuecomment-462061125
       ...['/api'].reduce(
         (acc, ctx) => ({
           ...acc,
