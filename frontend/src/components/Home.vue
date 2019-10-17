@@ -1,6 +1,6 @@
 <template>
   <v-container fluid v-if="!isAuthenticated">
-    <article class="login">
+    <article class="top-banner">
       <v-row align="center" justify="center">
         <Login></Login>
       </v-row>
@@ -12,7 +12,20 @@
     </article>
   </v-container>
   <v-container v-else>
-    <h1>{{msg}}</h1>
+    <article class="top-banner">
+      <v-row align="center" justify="center">
+        <v-card>
+          <v-card-header>
+            {{ msg }}
+          </v-card-header>
+        </v-card>
+      </v-row>
+    </article>
+    <article class="infoTab">
+      <v-row align="center" justify="center">
+        <Info></Info>
+      </v-row>
+    </article>
   </v-container>
 </template>
 
@@ -27,7 +40,7 @@ export default {
     Info
   },
   data() {
-    return { msg: 'Welcome to the PEN Retrieval webapp!' };
+    return { msg: 'Welcome to the PEN Retrieval application!' };
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated'])
@@ -40,7 +53,7 @@ export default {
 .container{
   padding: 0px;
 }
-.login{
+.top-banner{
   background-image: url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80");
   min-height: 500px;
   background-size: cover;
