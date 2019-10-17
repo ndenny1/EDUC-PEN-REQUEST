@@ -23,7 +23,7 @@
       <v-spacer></v-spacer>
 
       <div v-if="isAuthenticated">
-        <v-btn dark text tile id="nav-logout" @click="logout" to='landing'>Logout</v-btn>
+        <v-btn dark text tile id="nav-logout" @click='clearStorage' :href="authRoutes.LOGOUT" to='landing'>Logout</v-btn>
       </div>
     </v-toolbar>
   </header>
@@ -31,18 +31,21 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { AuthRoutes } from '@/utils/constants';
 export default {
   data(){
     return {
-      appTitle: 'PEN Request'
+      appTitle: 'PEN Retrieval',
+      authRoutes: AuthRoutes
     };
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated'])
   },
   methods: {
-    logout(){
-      this.$store.commit('auth/logoutState');
+    clearStorage() {
+      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('refreshToken');
     }
   }
 };

@@ -44,7 +44,7 @@ pipeline{
                     }
                 }
             }
-        }
+        }/*
         stage('Unit Tests') {
             steps {
                 script {
@@ -84,7 +84,7 @@ pipeline{
                     )
                 }
             }
-        }
+        }*/
         stage('Build'){
             steps{
                 script {

@@ -1,34 +1,35 @@
 'use strict';
-const path = require('path');
 const nconf = require('nconf');
 const dotenv = require('dotenv');
+const path = require('path');
 dotenv.config();
 
-const env = 'local'; //process.env.NODE_ENV || 'development';
+const env = 'local';//process.env.NODE_ENV;
 
 //injects environment variables into the json file
 nconf.overrides({
   environment: env,
-  oidc: {
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    publicKey: process.env.PUBLIC_KEY,
-    //url containing all OIDC endpoints (need to change to PEN endpoint once available)
-    discovery: 'https://sso.pathfinder.gov.bc.ca/auth/realms/jsgbqlip/.well-known/openid-configuration'
-  },
   server: {
-    frontend: process.env.FRONTEND,
+    frontend: process.env.SERVER_FRONTEND,
     logLevel: 'silent',
     morganFormat: 'dev',
-    port: 8080
+    port: '8080'
+  },
+  oidc: {
+    publicKey: process.env.PUBLIC_KEY,
+    clientId: process.env.ID,
+    clientSecret: process.env.SECRET,
+    discovery: process.env.DISCOVERY
   }
 });
+
 
 nconf.argv()
   .env()
   .file({ file: path.join(__dirname, `${env}.json`) });
 
 nconf.defaults({
+
 });
 
 module.exports = nconf;

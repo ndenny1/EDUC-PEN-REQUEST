@@ -30,7 +30,10 @@ router.get('/callback',
     failureRedirect: 'error'
   }),
   (_req, res) => {
-    res.redirect(config.get('server:frontend'));
+    if(process.env.NODE_ENV === 'local'){
+      res.redirect('localhost:8081');
+    }
+    res.redirect(config.get('server.frontend'));
   }
 );
 
@@ -43,14 +46,17 @@ router.get('/error', (_req, res) => {
 
 //redirects to the SSO login screen
 router.get('/login', passport.authenticate('oidc', {
-  failureRedirect: '../error'
+  failureRedirect: 'error'
 }));
 
 //removes tokens and destroys session
 router.get('/logout', (req, res) => {
   req.logout();
   req.session.destroy();
-  res.redirect(config.get('server:frontend'));
+  if(process.env.NODE_ENV === 'local'){
+    res.redirect('localhost:8081');
+  }
+  res.redirect(config.get('server.frontend'));
 });
 
 //refreshes jwt on refresh if refreshToken is valid
