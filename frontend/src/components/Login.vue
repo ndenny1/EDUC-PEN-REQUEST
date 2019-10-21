@@ -1,14 +1,14 @@
 <template>
     <v-card class="login-card">
         <v-card-title class="gov-header">
-            <h4>Sign In</h4>
+          <h4>Sign In</h4>
         </v-card-title>
         <v-card-text>
           To access the PEN Retrieval Application, you must have a Basic BCeID or a BC Services Card.
         </v-card-text>
         <v-card-actions>
             <v-row align="center" justify="center">
-                <v-btn id="login-button" @click="clearStorage" :href="authRoutes.LOGIN" class="ma-2" dark color='#003366'>Login</v-btn>
+                <v-btn id="login-button" @click="clearStorage" :href="authRoutes.LOGIN" class="ma-2" dark color='#003366'>Login <v-icon>$sign_in</v-icon></v-btn>
             </v-row>
         </v-card-actions>
     </v-card>
@@ -37,6 +37,9 @@ export default {
 </script>
 
 <style scoped>
+  .v-icon{
+    padding-left: 10px
+  }
   .login-card{
     max-width: 400px;
   }

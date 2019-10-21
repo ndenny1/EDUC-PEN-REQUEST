@@ -77,6 +77,6 @@ export default {
   background-color: rgb(252, 252, 252)
 }
 .bottomContainer{
-  padding-bottom: 15px
+  padding-bottom: 30px
 }
 </style>
