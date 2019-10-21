@@ -51,7 +51,7 @@ export default {
 
 <style>
 .v-toolbar__content{
-  padding: 4px 65px;
+  padding: 4px 10px 4px 65px;
 }
 .logo{
   padding-right: 15px;
