@@ -10,5 +10,4 @@ RUN npm ci
 COPY . /opt/app-root/src
 
 EXPOSE 8080 443
-RUN npm run e2e
 RUN npm run build
