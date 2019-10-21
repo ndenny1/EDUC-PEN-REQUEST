@@ -2,7 +2,7 @@
     <v-row class="centerInfo" align="center" justify="center">
         <v-column height=100% class="half-card">
             <v-card class="full-height" dark color="#003366">
-                <v-card-title>Easy Login</v-card-title>
+                <v-card-title> <v-icon>$login</v-icon> Easy Login</v-card-title>
                 <v-card-text>
                     Login using a Basic BCeID or BC Services Card.
                 </v-card-text>
@@ -15,7 +15,7 @@
         <v-spacer></v-spacer>
         <v-column class="half-card">
             <v-card class="full-height" dark color="#6c757d">
-                <v-card-title>Fast Results</v-card-title>
+                <v-card-title> <v-icon>$fast</v-icon>Fast Results</v-card-title>
                 <v-card-text>
                     The PEN Retrieval app instantly returns your PEN if it can confidently identify the user. If you can not be instantly identified, you will recieve an email once manual identification has been completed.
                 </v-card-text>
@@ -36,6 +36,9 @@ export default {
 </script>
 
 <style scoped>
+.v-icon{
+    padding-right: 20px
+}
 .card-actions{
     padding: 0px 15px;
     width: 100%;
