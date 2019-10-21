@@ -16,13 +16,16 @@
       </v-row>
     </article>
   </v-container>
-  <v-container v-else>
+  <v-container fluid v-else>
     <article class="top-banner">
       <v-row align="center" justify="center">
         <v-card>
-          <v-card-header>
-            {{ msg }}
-          </v-card-header>
+          <v-card-title>
+            User is logged in
+          </v-card-title>
+          <v-card-text>
+            Welcome to the PEN Retrieval application!
+          </v-card-text>
         </v-card>
       </v-row>
     </article>
@@ -50,9 +53,6 @@ export default {
     Login,
     Info,
     LoginCards
-  },
-  data() {
-    return { msg: 'Welcome to the PEN Retrieval application!' };
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated'])
