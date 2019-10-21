@@ -10,6 +10,11 @@
         <Info></Info>
       </v-row>
     </article>
+    <article class="bottomContainer">
+      <v-row align="center" justify="center">
+        <LoginCards></LoginCards>
+      </v-row>
+    </article>
   </v-container>
   <v-container v-else>
     <article class="top-banner">
@@ -26,18 +31,25 @@
         <Info></Info>
       </v-row>
     </article>
+    <article class="bottomContainer">
+      <v-row align="center" justify="center">
+        <LoginCards></LoginCards>
+      </v-row>
+    </article>
   </v-container>
 </template>
 
 <script>
 import Login from './Login';
 import Info from './Info';
+import LoginCards from './LoginCards';
 import { mapGetters } from 'vuex';
 export default {
   name: 'home',
   components: {
     Login,
-    Info
+    Info,
+    LoginCards
   },
   data() {
     return { msg: 'Welcome to the PEN Retrieval application!' };
@@ -63,5 +75,8 @@ export default {
 .infoTab{
   padding: 10px 0px;
   background-color: rgb(252, 252, 252)
+}
+.bottomContainer{
+  padding-bottom: 15px
 }
 </style>
