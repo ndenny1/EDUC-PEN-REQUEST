@@ -1,6 +1,6 @@
 <template>
     <div class="word-container">
-        <h2 class="gov-header">About PEN Retrieval</h2>
+        <h2 class="gov-header"> <v-icon large color="#003366">info</v-icon>About PEN Retrieval</h2>
         <p class="paragraph">
             The PEN Retrieval application is aimed at making it fast and easy for students to get their PEN. 
             This application strives to be widely accessible and easily usable for all potential users.
@@ -40,6 +40,9 @@ export default {
 </script>
 
 <style scoped>
+    .v-icon{
+        padding-right: 10px;
+    }
     .gov-header{
         color: #003366;
         padding: 10px 0px;
