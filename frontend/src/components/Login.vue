@@ -38,7 +38,7 @@ export default {
 
 <style scoped>
   .v-icon{
-    padding-left: 10px
+    padding-left: 10px;
   }
   .login-card{
     max-width: 400px;
