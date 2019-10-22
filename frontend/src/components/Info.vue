@@ -48,7 +48,7 @@ export default {
         padding: 10px 0px;
     }
     .word-container{
-        max-width: 50%;
+        max-width: 55%;
     }
     .paragraph{
         padding-bottom: 15px;
