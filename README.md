@@ -2,7 +2,7 @@
 This project contains the frontend for PEN requests. 
 
 # Ministry of Education PEN Request
-UI created in Vue.js for PEN requests within the Ministry of Education. Currently in its infancy. 
+The PEN request application consists of a Vue.js frontend (UI and UX) and a Node.js backend (auth and session management). Currently early in the development process, so the front and backend are currently quite thin (only a single UI page).
 
 ## Documentation
 
