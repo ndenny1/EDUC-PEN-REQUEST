@@ -47,15 +47,16 @@ export default {
     position: absolute;
 }
 .centerInfo{
-    max-width: 50%;
+    max-width: 55%;
 }
 .half-card{
     width: 48%;
 }
 .full-height{
-    height: 170px
+    height: 170px;
 }
 .v-btn{
-    text-transform: none
+    text-transform: none;
+    overflow: hidden;
 }
 </style>
