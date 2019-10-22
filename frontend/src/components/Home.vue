@@ -74,7 +74,7 @@ export default {
 }
 .infoTab{
   padding: 10px 0px;
-  background-color: rgb(252, 252, 252)
+  background-color: #fafafa
 }
 .bottomContainer{
   padding-bottom: 30px
