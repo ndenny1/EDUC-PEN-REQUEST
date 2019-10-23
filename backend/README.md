@@ -13,6 +13,9 @@ npm run serve
 # build for production with minification
 npm run build
 
+#fix lint errors in your local code (may need to be done before tests can run)
+npm run lint:fix
+
 # run unit tests
 npm run test
 
