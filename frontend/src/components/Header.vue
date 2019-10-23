@@ -21,6 +21,7 @@
       <v-spacer></v-spacer>
 
       <div v-if="isAuthenticated">
+        <v-btn id="user-button" dark text tile :to="'/user'">User Info</v-btn>
         <v-btn id="logout-button" dark text tile @click='clearStorage' :href="authRoutes.LOGOUT">Logout</v-btn>
       </div>
     </v-toolbar>

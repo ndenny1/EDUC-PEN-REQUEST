@@ -1,0 +1,24 @@
+<template>
+    <v-card>
+        <v-card-title>User Info</v-card-title>
+        <v-card-text>
+            {{ userInfo }}
+        </v-card-text>
+    </v-card>
+</template>
+
+<script>
+import {mapGetters} from 'vuex';
+export default {
+  name: 'userCard',
+  computed: {
+    ...mapGetters('user', ['userInfo'])
+  }
+};
+</script>
+
+<style scoped>
+.v-card{
+    padding: 20px;
+}
+</style>
