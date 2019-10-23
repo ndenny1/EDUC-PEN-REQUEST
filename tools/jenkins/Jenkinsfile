@@ -42,6 +42,11 @@ pipeline{
             }
         }/*
         stage('Unit Tests') {
+            agent{
+                node{
+                    label 'nodejs10'
+                }
+            }
             steps {
                 script {
                     parallel(
