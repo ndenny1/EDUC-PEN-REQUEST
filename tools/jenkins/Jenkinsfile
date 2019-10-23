@@ -40,8 +40,11 @@ pipeline{
                     }
                 }
             }
-        }/*
+        }
         stage('Unit Tests') {
+            agent{
+                label: 'nodejs10'
+            }
             steps {
                 script {
                     parallel(
@@ -80,7 +83,7 @@ pipeline{
                     )
                 }
             }
-        }*/
+        }
         stage('Build'){
             steps{
                 script {
