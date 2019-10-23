@@ -43,7 +43,9 @@ pipeline{
         }
         stage('Unit Tests') {
             agent{
-                label: 'nodejs10'
+                node{
+                    label 'nodejs10'
+                }
             }
             steps {
                 script {
