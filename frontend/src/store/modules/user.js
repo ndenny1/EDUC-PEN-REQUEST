@@ -20,7 +20,8 @@ export default{
   actions: {
     async getUserInfo(context){
       try{
-        const response = AuthService.getAuthToken();
+        const response = await AuthService.getAuthToken();
+        console.log(response);
         context.commit('setUserInfo', response);
       } catch(e) {
         throw e;
