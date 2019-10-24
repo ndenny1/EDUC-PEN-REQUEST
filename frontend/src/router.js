@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 
 import Home from '@/components/Home.vue';
 import User from '@/components/UserInfo.vue';
-import store from '@/store/index.js';
+//import store from '@/store/index.js';
 
 Vue.use(VueRouter);
 
@@ -32,14 +32,16 @@ const router = new VueRouter({
   ]
 });
 
+/*
 router.beforeEach((to, _from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!store.getters.isAuthenticated) {
       next('home');
     }
   }
-  else next();
-
-});
+  else{
+    next();
+  }
+});*/
 
 export default router;
