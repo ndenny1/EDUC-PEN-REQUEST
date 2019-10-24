@@ -3,8 +3,7 @@ import VueRouter from 'vue-router';
 
 import Home from '@/components/Home.vue';
 import User from '@/components/UserInfo.vue';
-//import { AuthRoutes } from '@/utils/constants';
-//import store from '@/store/index.js';
+import store from '@/store/index.js';
 
 Vue.use(VueRouter);
 
@@ -20,7 +19,10 @@ const router = new VueRouter({
     {
       path: '/user',
       name: 'user',
-      component: User
+      component: User,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '*',
@@ -28,6 +30,16 @@ const router = new VueRouter({
       redirect: '/'
     }
   ]
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.getters.isAuthenticated) {
+      next('home');
+    }
+  }
+  else next();
+
 });
 
 export default router;

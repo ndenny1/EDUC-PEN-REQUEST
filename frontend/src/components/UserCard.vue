@@ -1,8 +1,11 @@
 <template>
     <v-card>
         <v-card-title>User Info</v-card-title>
-        <v-card-text>
-            {{ userInfo }}
+        <v-card-text v-if="userInfo === null">
+          No user info
+        </v-card-text>
+        <v-card-text v-else>
+          {{ userInfo }}
         </v-card-text>
     </v-card>
 </template>
