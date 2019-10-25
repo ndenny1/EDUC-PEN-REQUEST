@@ -2,7 +2,7 @@
     <v-card>
         <v-card-title>User Info</v-card-title>
         <v-card-text v-if="userInfo === null">
-          No user info
+          Error getting user info
         </v-card-text>
         <v-card-text v-else>
           {{ userInfo._json }}
@@ -15,7 +15,7 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'userCard',
   computed: {
-    ...mapGetters('user', ['userInfo'])
+    ...mapGetters('auth', ['userInfo'])
   }
 };
 </script>

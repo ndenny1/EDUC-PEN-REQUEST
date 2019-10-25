@@ -13,11 +13,11 @@ export default {
     UserCard
   },
   computed: {
-    ...mapGetters('user', ['userInfo'])
+    ...mapGetters('auth', ['userInfo'])
   },
   async created() {
     if(!(this.userInfo)){
-      await this.$store.dispatch('user/getUserInfo');
+      await this.$store.dispatch('auth/getUserInfo');
     }
   },
 };

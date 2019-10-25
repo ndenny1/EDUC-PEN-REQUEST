@@ -22,7 +22,7 @@
 
       <v-spacer></v-spacer>
 
-      <div >
+      <div v-if="isAuthenticated">
         <v-menu offset-y="0px">
           <template v-slot:activator="{ on }">
             <v-chip v-on="on" pill color="#003366" dark>
@@ -60,12 +60,12 @@ export default {
   },
   async created() {
     if(!(this.userInfo)) {
-      await this.$store.dispatch('user/getUserInfo');
+      await this.$store.dispatch('auth/getUserInfo');
     }
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapGetters('user', ['userInfo'])
+    ...mapGetters('auth', ['userInfo'])
   },
   methods: {
     clearStorage() {
