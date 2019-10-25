@@ -2,7 +2,7 @@
   <header class="gov-header">
     <v-toolbar class="toolbar_header">
       <!-- Navbar content -->
-      <a href="https://www2.gov.bc.ca">
+      <a href="/">
         <img
           src="@/assets/images/bc-gov-logo.svg"
           width="155"
@@ -10,7 +10,9 @@
           alt="B.C. Government Logo"
         >
       </a>
-      <v-toolbar-title><h3 style="color:white">{{ appTitle }}</h3></v-toolbar-title>
+      <a href="/">
+        <v-toolbar-title><h3 style="color:white">{{ appTitle }}</h3></v-toolbar-title>
+      </a>
       <!--
       <div>
         <v-btn text id="nav-home" color="text" :to="{ path: '/'}">View Users</v-btn>
@@ -21,8 +23,23 @@
       <v-spacer></v-spacer>
 
       <div v-if="isAuthenticated">
-        <v-btn id="user-button" dark text tile :to="'/user'">User Info</v-btn>
-        <v-btn id="logout-button" dark text tile @click='clearStorage' :href="authRoutes.LOGOUT">Logout</v-btn>
+        <v-menu offset-y="10px">
+          <template v-slot:activator="{ on }">
+            <v-chip v-on="on" pill large color="#003366" dark>
+              <v-avatar left color="#6c757d">
+                {{ userInfo.displayName[0] }}
+              </v-avatar>
+              {{ userInfo.displayName }}
+              <!--<v-icon v-if="on">$downArrow</v-icon>
+              <v-icon v-else>$upArrow</v-icon>-->
+            </v-chip>
+          </template>
+          <v-list dark color="#003366">
+            <v-list-item to='/user'><v-list-title>User Info</v-list-title></v-list-item>
+            <v-list-item @click='clearStorage' :to='authRoutes.LOGOUT'><v-list-title>Logout</v-list-title></v-list-item>
+          </v-list>
+        </v-menu>
+        <!--<v-btn id="logout-button" dark text tile @click='clearStorage' :href="authRoutes.LOGOUT">Logout</v-btn>-->
       </div>
     </v-toolbar>
   </header>
@@ -34,12 +51,20 @@ import { AuthRoutes } from '@/utils/constants';
 export default {
   data(){
     return {
-      appTitle: 'PEN Retrieval',
-      authRoutes: AuthRoutes
+      appTitle: process.env.VUE_APP_TITLE,
+      userInfo: {
+        displayName: 'Nathan Denny'
+      },
+      authRoutes: AuthRoutes,
+      dropdown_list: [
+        { text: 'User Info', href: '/user'},
+        { text: 'Logout', href: AuthRoutes.LOGOUT}
+      ]
     };
   },
   computed: {
-    ...mapGetters('auth', ['isAuthenticated'])
+    ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('user', ['userInfo'])
   },
   methods: {
     clearStorage() {
@@ -51,6 +76,12 @@ export default {
 </script>
 
 <style>
+.v-icon{
+  padding-left: 10px;
+}
+a {
+  text-decoration: none;
+}
 .v-toolbar__content{
   padding: 4px 10px 4px 65px;
 }
@@ -74,5 +105,12 @@ export default {
 }
 .secondary_color {
   background-color: var(--v-secondary-base);
+}
+.v-input__slot{
+  padding-top: 10px
+}
+.top-down{
+  padding-top: 20px;
+  height: 80%;
 }
 </style>

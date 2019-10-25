@@ -15,7 +15,9 @@ export default new Vuetify({
       login: 'fas fa-user-clock',
       fast: 'fas fa-shipping-fast',
       sign_in: 'fas fa-sign-in-alt',
-      info: 'fas fa-info-circle'
+      info: 'fas fa-info-circle',
+      downArrow: 'fas fa-angle-down',
+      upArrow: 'fas fa-angle-up'
     }
   }
 });
