@@ -15,9 +15,9 @@ export default {
   computed: {
     ...mapGetters('auth', ['userInfo'])
   },
-  async created() {
+  created() {
     if(!(this.userInfo)){
-      await this.$store.dispatch('auth/getUserInfo');
+      this.$store.dispatch('auth/getUserInfo');
     }
   },
 };
