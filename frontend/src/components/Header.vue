@@ -23,7 +23,7 @@
       <v-spacer></v-spacer>
 
       <div >
-        <v-menu offset-y="10px">
+        <v-menu offset-y="0px">
           <template v-slot:activator="{ on }">
             <v-chip v-on="on" pill color="#003366" dark>
               <v-avatar left color="#6c757d">

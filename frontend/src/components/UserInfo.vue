@@ -6,7 +6,7 @@
 
 <script>
 import UserCard from './UserCard';
-import { mapGetters } from 'vuex;'
+import { mapGetters } from 'vuex';
 export default {
   name: 'userInfo',
   components: {
