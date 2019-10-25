@@ -19,15 +19,17 @@ export default {
     //sets Json web token and determines whether user is authenticated
     setJwtToken: (state, token = null) => {
       if (token) {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const roles = payload.realm_access.roles;
+        //if we aren't in test mode, verify the token contains expected elements
+        if(process.env.NODE_ENV !== 'development'){
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          const roles = payload.realm_access.roles;
 
-        if (typeof roles === 'object' && roles instanceof Array) {
-          state.acronyms = roles.filter(role => !role.match(/offline_access|uma_authorization/));
-        } else {
-          state.acronyms = [];
+          if (typeof roles === 'object' && roles instanceof Array) {
+            state.acronyms = roles.filter(role => !role.match(/offline_access|uma_authorization/));
+          } else {
+            state.acronyms = [];
+          }
         }
-
         state.isAuthenticated = true;
         localStorage.setItem('jwtToken', token);
       } else {
@@ -64,12 +66,32 @@ export default {
     async getJwtToken(context) {
       try {
         if (context.getters.isAuthenticated && !!context.getters.refreshToken) {
-          const now = Date.now().valueOf() / 1000;
-          const jwtPayload = context.getters.jwtToken.split('.')[1];
-          const payload = JSON.parse(window.atob(jwtPayload));
+          if(process.env.NODE_ENV === 'development'){
+            context.commit('setJwtToken', 'testToken');
+            context.commit('setRefreshToken', 'fakeRefreshToken');
+          } else{
+            const now = Date.now().valueOf() / 1000;
+            const jwtPayload = context.getters.jwtToken.split('.')[1];
+            const payload = JSON.parse(window.atob(jwtPayload));
 
-          if (payload.exp > now) {
-            const response = await AuthService.refreshAuthToken(context.getters.refreshToken);
+            if (payload.exp > now) {
+              const response = await AuthService.refreshAuthToken(context.getters.refreshToken);
+
+              if (response.jwt) {
+                context.commit('setJwtToken', response.jwt);
+              }
+              if (response.refreshToken) {
+                context.commit('setRefreshToken', response.refreshToken);
+              }
+              ApiService.setAuthHeader(response.jwt);
+            }
+          }
+        } else {
+          if(process.env.NODE_ENV === 'development'){
+            context.commit('setJwtToken', 'testToken');
+            context.commit('setRefreshToken', 'fakeRefreshToken');
+          } else {
+            const response = await AuthService.getAuthToken();
 
             if (response.jwt) {
               context.commit('setJwtToken', response.jwt);
@@ -79,16 +101,6 @@ export default {
             }
             ApiService.setAuthHeader(response.jwt);
           }
-        } else {
-          const response = await AuthService.getAuthToken();
-
-          if (response.jwt) {
-            context.commit('setJwtToken', response.jwt);
-          }
-          if (response.refreshToken) {
-            context.commit('setRefreshToken', response.refreshToken);
-          }
-          ApiService.setAuthHeader(response.jwt);
         }
       } catch (e) {
         // Remove tokens from localStorage and update state
@@ -98,8 +110,18 @@ export default {
     },
     async getUserInfo(context){
       try{
-        const response = await AuthService.getAuthToken();
-        context.commit('setUserInfo', response);
+        if(process.env.NODE_ENV === 'development'){
+          context.commit('setUserInfo', {
+            displayName: 'Nathan Denny',
+            given_name: 'Nathan',
+            family_name: 'Denny',
+            email: 'fake-email@not.real',
+            preferred_username: 'ndenny@bceid'
+          });
+        } else {
+          const response = await AuthService.getAuthToken();
+          context.commit('setUserInfo', response);
+        }
       } catch(e) {
         throw e;
       }
