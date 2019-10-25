@@ -52,9 +52,6 @@ export default {
   data(){
     return {
       appTitle: process.env.VUE_APP_TITLE,
-      userInfo: {
-        displayName: 'Nathan Denny'
-      },
       authRoutes: AuthRoutes,
       dropdown_list: [
         { text: 'User Info', href: '/user'},
