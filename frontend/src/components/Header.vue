@@ -59,6 +59,9 @@ export default {
       ]
     };
   },
+  mounted() {
+    this.$store.dispatch('user/getUserInfo');
+  },
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('user', ['userInfo'])
