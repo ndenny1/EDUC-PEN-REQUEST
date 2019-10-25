@@ -22,10 +22,10 @@
 
       <v-spacer></v-spacer>
 
-      <div v-if="isAuthenticated">
+      <div >
         <v-menu offset-y="10px">
           <template v-slot:activator="{ on }">
-            <v-chip v-on="on" pill large color="#003366" dark>
+            <v-chip v-on="on" pill color="#003366" dark>
               <v-avatar left color="#6c757d">
                 {{ userInfo.displayName[0] }}
               </v-avatar>
@@ -53,14 +53,15 @@ export default {
     return {
       appTitle: process.env.VUE_APP_TITLE,
       authRoutes: AuthRoutes,
-      dropdown_list: [
-        { text: 'User Info', href: '/user'},
-        { text: 'Logout', href: AuthRoutes.LOGOUT}
-      ]
+      userInfo: {
+        displayName: 'Nathan Denny'
+      }
     };
   },
-  mounted() {
-    this.$store.dispatch('user/getUserInfo');
+  async created() {
+    if(!(this.userInfo)) {
+      await this.$store.dispatch('user/getUserInfo');
+    }
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),

@@ -6,13 +6,19 @@
 
 <script>
 import UserCard from './UserCard';
+import { mapGetters } from 'vuex;'
 export default {
   name: 'userInfo',
   components: {
     UserCard
   },
-  mounted() {
-    this.$store.dispatch('user/getUserInfo');
+  computed: {
+    ...mapGetters('user', ['userInfo'])
+  },
+  async created() {
+    if(!(this.userInfo)){
+      await this.$store.dispatch('user/getUserInfo');
+    }
   },
 };
 </script>
