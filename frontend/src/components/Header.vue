@@ -23,10 +23,10 @@
       <v-spacer></v-spacer>
 
       <div v-if="isAuthenticated">
-        <v-menu offset-y="0px">
+        <v-menu offset-y>
           <template v-slot:activator="{ on }">
             <v-chip v-on="on" pill color="#003366" dark>
-              <v-avatar left color="#6c757d">
+              <v-avatar left color="info">
                 {{ userInfo.displayName[0] }}
               </v-avatar>
               {{ userInfo.displayName }}
@@ -53,9 +53,6 @@ export default {
     return {
       appTitle: process.env.VUE_APP_TITLE,
       authRoutes: AuthRoutes,
-      userInfo: {
-        displayName: 'Nathan Denny'
-      }
     };
   },
   async created() {

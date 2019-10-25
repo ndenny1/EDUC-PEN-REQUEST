@@ -17,7 +17,8 @@ export default new Vuetify({
       sign_in: 'fas fa-sign-in-alt',
       info: 'fas fa-info-circle',
       downArrow: 'fas fa-angle-down',
-      upArrow: 'fas fa-angle-up'
+      upArrow: 'fas fa-angle-up',
+      user: 'far fa-user'
     }
   }
 });
