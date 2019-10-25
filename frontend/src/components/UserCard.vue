@@ -5,7 +5,7 @@
           No user info
         </v-card-text>
         <v-card-text v-else>
-          {{ userInfo }}
+          {{ userInfo._json }}
         </v-card-text>
     </v-card>
 </template>
