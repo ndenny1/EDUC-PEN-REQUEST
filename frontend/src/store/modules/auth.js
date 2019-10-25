@@ -5,13 +5,15 @@ export default {
   namespaced: true,
   state: {
     acronyms: [],
-    isAuthenticated: localStorage.getItem('jwtToken') !== null
+    isAuthenticated: localStorage.getItem('jwtToken') !== null,
+    userInfo: null
   },
   getters: {
     acronyms: state => state.acronyms,
     isAuthenticated: state => state.isAuthenticated,
     jwtToken: () => localStorage.getItem('jwtToken'),
     refreshToken: () => localStorage.getItem('refreshToken'),
+    userInfo: state => state.userInfo
   },
   mutations: {
     //sets Json web token and determines whether user is authenticated
@@ -34,6 +36,13 @@ export default {
         localStorage.removeItem('jwtToken');
       }
     },
+    setUserInfo: (state, userInf = null) => {
+      if(userInf){
+        state.userInfo = userInf;
+      } else {
+        state.userInfo = null;
+      }
+    },
 
     //sets the token required for refresing expired json web tokens
     setRefreshToken: (_state, token = null) => {
@@ -46,6 +55,7 @@ export default {
     logoutState: (state) => {
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('jwtToken');
+      state.userInfo = null;
       state.isAuthenticated = false;
     }
   },
@@ -84,6 +94,14 @@ export default {
         // Remove tokens from localStorage and update state
         context.commit('setJwtToken');
         context.commit('setRefreshToken');
+      }
+    },
+    async getUserInfo(context){
+      try{
+        const response = await AuthService.getAuthToken();
+        context.commit('setUserInfo', response);
+      } catch(e) {
+        throw e;
       }
     }
   }
