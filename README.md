@@ -4,6 +4,9 @@ This project contains the frontend for PEN requests.
 # Ministry of Education PEN Request
 The PEN request application consists of a Vue.js frontend (UI and UX) and a Node.js backend (auth and session management). Currently early in the development process, so the front and backend are currently quite thin (only a single UI page).
 
+## Reusable Templates
+This repository contains multiple OpenShift templates that can be used to instantly spin up builds, deployments, and pipelines. These templates can be found in the [templates folder](https://github.com/bcgov/EDUC-PEN-REQUEST/tree/master/tools/templates).
+
 ## Documentation
 
 * [Openshift Readme](openshift/README.md)
