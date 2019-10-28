@@ -1,7 +1,7 @@
 *:2015 {
     root /var/www/html
 
-    header /* {
+    header / {
         X-Frame-Options "SAMEORIGIN"
         X-XSS-Protection "1;mode=block"
         Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate"
@@ -10,6 +10,11 @@
         Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://use.fontawesome.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://fonts.googleapis.com http://www.w3.org https://unsplash.com https://images.unsplash.com"
         Referrer-Policy "same-origin"
         Feature-Policy "fullscreen 'self'; camera 'none'; microphone 'none'"
+    }
+
+    rewrite /user {
+        r (.*)
+        to {1}
     }
 
     gzip {
