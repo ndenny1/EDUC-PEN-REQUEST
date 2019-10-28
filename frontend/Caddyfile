@@ -1,7 +1,7 @@
 *:2015 {
     root /var/www/html
 
-    header / {
+    header /* {
         X-Frame-Options "SAMEORIGIN"
         X-XSS-Protection "1;mode=block"
         Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate"
