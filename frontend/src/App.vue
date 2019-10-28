@@ -20,9 +20,9 @@ export default {
   computed: {
     ...mapGetters('auth', ['getJwtToken'])
   },
-  created() {
+  async created() {
     this.$store.dispatch('auth/getJwtToken');
-    this.$store.dispatch('auth/getUserInfo');
+    await this.$store.dispatch('auth/getUserInfo');
   }
 };
 </script>
