@@ -55,11 +55,6 @@ export default {
       authRoutes: AuthRoutes,
     };
   },
-  mounted() {
-    if(this.userInfo === null) {
-      this.$store.dispatch('auth/getUserInfo');
-    }
-  },
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('auth', ['userInfo'])

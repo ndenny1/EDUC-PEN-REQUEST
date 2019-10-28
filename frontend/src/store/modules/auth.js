@@ -6,7 +6,7 @@ export default {
   state: {
     acronyms: [],
     isAuthenticated: localStorage.getItem('jwtToken') !== null,
-    userInfo: null
+    userInfo: false
   },
   getters: {
     acronyms: state => state.acronyms,
@@ -38,7 +38,7 @@ export default {
         localStorage.removeItem('jwtToken');
       }
     },
-    setUserInfo: (state, userInf = null) => {
+    setUserInfo: (state, userInf) => {
       if(userInf){
         state.userInfo = userInf;
       } else {

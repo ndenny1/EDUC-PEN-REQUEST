@@ -14,12 +14,7 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['userInfo'])
-  },
-  mounted() {
-    if(this.userInfo === null){
-      this.$store.dispatch('auth/getUserInfo');
-    }
-  },
+  }
 };
 </script>
 
