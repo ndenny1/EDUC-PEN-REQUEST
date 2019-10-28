@@ -55,9 +55,9 @@ export default {
       authRoutes: AuthRoutes,
     };
   },
-  created() {
-    if(!(this.userInfo)) {
-      this.$store.dispatch('auth/getUserInfo');
+  async created() {
+    if(this.userInfo === null) {
+      await this.$store.dispatch('auth/getUserInfo');
     }
   },
   computed: {
