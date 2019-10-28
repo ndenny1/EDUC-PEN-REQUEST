@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-list-item dark>
-          <v-list-item-avatar size='50px' color="info">{{ userInfo.displayName[0] }}</v-list-item-avatar>
+          <v-list-item-avatar size='50px' color="info">{{ userLetter }}</v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title><h2>{{ userInfo.displayName }}</h2></v-list-item-title>
           </v-list-item-content>
@@ -10,7 +10,7 @@
         <v-card-text v-if="userInfo === null">
           Error getting user info
         </v-card-text>
-        <v-card-text v-else>
+        <v-card-text v-else-if="accountType === 'bceid'">
           <v-row>
             <v-col><b>First Name: </b></v-col>
             <v-col><p> {{ userInfo._json.given_name }}</p></v-col>
@@ -33,6 +33,9 @@
             <v-col><p>{{ accountType }}</p></v-col>
           </v-row>
         </v-card-text>
+        <v-card-text v-else>
+          Nice try pal, we don't use IDIR in this town
+        </v-card-text>
     </v-card>
 </template>
 
@@ -41,7 +44,10 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'userCard',
   computed: {
-    ...mapGetters('auth', ['userInfo'])
+    ...mapGetters('auth', ['userInfo']),
+    userLetter: function() {
+      return this.userInfo.displayName[0];
+    }
   },
   mounted() {
     this.getAccountType(); 
@@ -53,7 +59,6 @@ export default {
   },
   methods: {
     getAccountType() {
-      console.log(this.userInfo._json);
       const res = this.userInfo._json.preferred_username.split('@');
       this.accountType = res[1];
     }
@@ -65,5 +70,7 @@ export default {
 .v-list-item{
   background-color: #003366
 }
-
+.v-list-item__avatar{
+  justify-content: center !important
+}
 </style>
