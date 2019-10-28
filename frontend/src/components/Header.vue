@@ -64,7 +64,10 @@ export default {
       this.$store.commit('auth/setJwtToken');
       this.$store.commit('auth/setRefreshToken');
     }
-  }
+  },
+  mounted() {
+    console.log(this.userInfo);
+  },
 };
 </script>
 
