@@ -73,4 +73,7 @@ export default {
 .v-list-item__avatar{
   justify-content: center !important
 }
+h2{
+  line-height: 1.5;
+}
 </style>
