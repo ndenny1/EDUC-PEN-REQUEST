@@ -1,9 +1,9 @@
 <template>
     <v-card>
         <v-list-item dark>
-          <v-list-item-avatar size='50px' color="info">{{ userInfo._json.displayName[0] }}</v-list-item-avatar>
+          <v-list-item-avatar size='50px' color="info">{{ userInfo.displayName[0] }}</v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title><h2>{{ userInfo._json.displayName }}</h2></v-list-item-title>
+            <v-list-item-title><h2>{{ userInfo.displayName }}</h2></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     getAccountType() {
-      console.log(this.userInfo);
+      console.log(this.userInfo._json);
       const res = this.userInfo._json.preferred_username.split('@');
       this.accountType = res[1];
     }
