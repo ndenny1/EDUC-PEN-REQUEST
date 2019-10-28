@@ -6,7 +6,7 @@ export default {
   state: {
     acronyms: [],
     isAuthenticated: localStorage.getItem('jwtToken') !== null,
-    userInfo: false
+    userInfo: {}
   },
   getters: {
     acronyms: state => state.acronyms,
@@ -120,6 +120,7 @@ export default {
           });
         } else {
           const response = await AuthService.getAuthToken();
+          console.log('Response: ' + response);
           context.commit('setUserInfo', response);
         }
       } catch(e) {
