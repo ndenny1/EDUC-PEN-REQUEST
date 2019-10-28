@@ -13,7 +13,8 @@ export default {
       }
       return response.data;
     } catch (e) {
-      throw e;
+      console.log(e.response.status);
+      return e.response.status;
     }
   },
 
