@@ -113,10 +113,12 @@ export default {
         if(process.env.NODE_ENV === 'development'){
           context.commit('setUserInfo', {
             displayName: 'Nathan Denny',
-            given_name: 'Nathan',
-            family_name: 'Denny',
-            email: 'fake-email@not.real',
-            preferred_username: 'ndenny@bceid'
+            _json: {
+              given_name: 'Nathan',
+              family_name: 'Denny',
+              email: 'fake-email@not.real',
+              preferred_username: 'ndenny@bceid'
+            }
           });
         } else {
           const response = await AuthService.getAuthToken();
