@@ -7,6 +7,9 @@ export default {
   async getAuthToken() {
     try {
       const response = await axios.get(AuthRoutes.TOKEN);
+      if(response.status === 401){
+        return response.status;
+      }
       return response.data;
     } catch (e) {
       throw e;
