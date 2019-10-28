@@ -6,14 +6,10 @@
 
 <script>
 import UserCard from './UserCard';
-import { mapGetters } from 'vuex';
 export default {
   name: 'userInfo',
   components: {
     UserCard
-  },
-  computed: {
-    ...mapGetters('auth', ['userInfo'])
   }
 };
 </script>
