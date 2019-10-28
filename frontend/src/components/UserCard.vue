@@ -53,6 +53,7 @@ export default {
   },
   methods: {
     getAccountType() {
+      console.log(this.userInfo);
       const res = this.userInfo._json.preferred_username.split('@');
       this.accountType = res[1];
     }
