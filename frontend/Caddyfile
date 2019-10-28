@@ -1,7 +1,7 @@
 *:2015 {
     root /var/www/html
 
-    header /* {
+    header / {
         X-Frame-Options "SAMEORIGIN"
         X-XSS-Protection "1;mode=block"
         Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate"
@@ -12,9 +12,9 @@
         Feature-Policy "fullscreen 'self'; camera 'none'; microphone 'none'"
     }
 
-    rewrite /user {
-        r (.*)
-        to {1}
+    rewrite {
+        if  {path} not_match ^\/0.0.0.0
+        to  {path} {path}/ /?_url={uri}
     }
 
     gzip {

@@ -21,7 +21,8 @@ const router = new VueRouter({
       name: 'user',
       component: User,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        name: 'User Info'
       }
     },
     {
