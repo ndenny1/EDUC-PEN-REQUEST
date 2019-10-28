@@ -12,6 +12,11 @@
         Feature-Policy "fullscreen 'self'; camera 'none'; microphone 'none'"
     }
 
+    rewrite /user {
+        r (.*)
+        to {1}
+    }
+
     gzip {
         level 7
     }
