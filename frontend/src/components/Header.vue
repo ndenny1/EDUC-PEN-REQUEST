@@ -22,7 +22,7 @@
 
       <v-spacer></v-spacer>
 
-      <div v-if="isAuthenticated">
+      <div v-if="isAuthenticated && dataReady">
         <v-menu offset-y>
           <template v-slot:activator="{ on }">
             <v-chip v-on="on" pill color="#003366" dark>
@@ -53,6 +53,7 @@ export default {
     return {
       appTitle: process.env.VUE_APP_TITLE,
       authRoutes: AuthRoutes,
+      dataReady: true
     };
   },
   computed: {
@@ -65,8 +66,12 @@ export default {
       this.$store.commit('auth/setRefreshToken');
     }
   },
-  mounted() {
-    console.log(this.userInfo);
+  async mounted() {
+    if(!(this.userInfo)){
+      this.dataReady = false;
+      await this.$store.dispatch('auth/getUserInfo');
+      this.dataReady = true;
+    }
   },
 };
 </script>
