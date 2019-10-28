@@ -22,6 +22,7 @@ export default {
   },
   created() {
     this.$store.dispatch('auth/getJwtToken');
+    this.$store.dispatch('auth/getUserInfo');
   }
 };
 </script>

@@ -55,11 +55,6 @@ export default {
       authRoutes: AuthRoutes,
     };
   },
-  async created() {
-    if(this.userInfo === null) {
-      await this.$store.dispatch('auth/getUserInfo');
-    }
-  },
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('auth', ['userInfo'])
