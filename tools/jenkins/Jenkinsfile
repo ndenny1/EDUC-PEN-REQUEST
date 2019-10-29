@@ -40,7 +40,7 @@ pipeline{
                     }
                 }
             }
-        }/*
+        }
         stage('Unit Tests') {
             agent{
                 node{
@@ -55,9 +55,9 @@ pipeline{
                                 try {
                                     timeout(10){
                                         echo 'Running backend lint checks and tests...'
-                                        //sh 'npm install'
-                                        //sh 'npm run lint:fix'
-                                        //sh 'npm run test'
+                                        sh 'npm ci'
+                                        sh 'npm run lint:fix'
+                                        sh 'npm run test'
                                         echo 'Backend lint checks and tests passed!'
                                     }
                                 } catch(e) {
@@ -85,7 +85,7 @@ pipeline{
                     )
                 }
             }
-        }*/
+        }
         stage('Build'){
             steps{
                 script {
