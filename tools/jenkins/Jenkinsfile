@@ -55,6 +55,7 @@ pipeline{
                                     echo 'Running backend lint checks and tests...'
                                     sh 'npm ci'
                                     sh 'npm run lint:fix'
+                                    sh 'npm run setlocal'
                                     sh 'npm run test'
                                     echo 'Backend lint checks and tests passed!'
                                 }
