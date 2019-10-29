@@ -3,32 +3,26 @@ import Vuetify from 'vuetify';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import UserInfo from '../../../src/components/UserInfo.vue';
-import auth from '@/store/modules/auth';
+import auth from '../../../src/store/modules/auth';
 
 describe('Home.vue', () => {
   let wrapper;
   let store;
+  
   
   beforeEach(() => {
 
     Vue.use(Vuetify);
     Vue.use(Vuex);
 
+
     store = new Vuex.Store({
-      modules: { auth }
+      modules: {auth}
     });
 
     wrapper = mount(UserInfo, {
       Vue: Vue,
-      store,
-      propsData: {
-        userInfo: {
-          displayName: 'Nathan Denny',
-          _json: {
-            preferred_username: 'fake@setup'
-          }
-        }
-      }
+      store
     });
   });
 
