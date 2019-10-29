@@ -50,7 +50,7 @@ export default {
     }
   },
   mounted() {
-    this.getAccountType(); 
+    this.getAccountType = this.getAccountType(this.userInfo._json.preferred_username);
   },
   data() {
     return {
@@ -58,9 +58,9 @@ export default {
     };
   },
   methods: {
-    getAccountType() {
-      const res = this.userInfo._json.preferred_username.split('@');
-      this.accountType = res[1];
+    getAccountType(input) {
+      const res = input.split('@');
+      return res[1];
     }
   },
 };

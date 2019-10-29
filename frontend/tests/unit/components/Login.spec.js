@@ -29,11 +29,11 @@ describe('Footer.vue', () => {
   });
 
   test('Login form exists', () => {
-    expect(wrapper.html()).toContain('<div class="v-card__text"><div class="row align-center justify-center">');
+    expect(wrapper.html()).toContain('<div class="login-card v-card v-sheet theme--light">');
   });
 
-  test('Ensure mock login works', () => {
-    wrapper.vm.mockLogin();
+  test('Ensure clear storage works', () => {
+    wrapper.vm.clearStorage();
   });
 });
 

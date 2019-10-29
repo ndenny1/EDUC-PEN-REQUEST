@@ -20,6 +20,6 @@ describe('Home.vue', () => {
   });
 
   it('Check that text body exists', () => {
-    expect(wrapper.html()).toContain('<h1>Logged In</h1>');
+    expect(wrapper.html()).toContain('<h4 class="gov-header">Who has a PEN?</h4>');
   });
 });
