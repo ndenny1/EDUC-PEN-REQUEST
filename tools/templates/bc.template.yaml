@@ -20,7 +20,7 @@ objects:
   metadata:
     labels:
       build: "${REPO_NAME}-${JOB_NAME}"
-    name: "${REPO_NAME}-${JOB_NAME}"
+    name: "${REPO_NAME}-${JOB_NAME}-${GIT_REF}"
   spec:
     completionDeadlineSeconds: 800
     successfulBuildsHistoryLimit: 3
@@ -69,3 +69,7 @@ parameters:
 - name:  CONTEXT_DIR
   description: Location of application root directory
   required: true
+- name: GIT_REF
+  description: Git branch where source code is located
+  value: 'master'
+  required: false
