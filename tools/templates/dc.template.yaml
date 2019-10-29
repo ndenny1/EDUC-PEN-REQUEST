@@ -115,10 +115,12 @@ parameters:
   required: true
 - name: CONTAINER_PORT
   description: The port on which the application will be accessible
-  required: true
+  value: 8080
+  required: false
 - name: TAG
   description: The identifying tag for this specific deployment
   required: true
 - name: HOST_PATH
   description: The path appended to the HOST_ROUTE where the root of this project will be served
-  required: true
+  value: ''
+  required: false

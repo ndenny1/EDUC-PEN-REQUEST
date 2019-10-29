@@ -28,6 +28,6 @@ describe('Header.vue', () => {
   });
 
   test('logout of site', () => {
-    wrapper.vm.logout();
+    wrapper.vm.clearStorage();
   });
 });
