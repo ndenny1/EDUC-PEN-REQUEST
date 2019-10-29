@@ -42,17 +42,12 @@ objects:
     source:
       contextDir: "${CONTEXT_DIR}"
       git:
-        ref: "${SOURCE_REPO_REF}"
+        ref: ${SOURCE_REPO_REF}
         uri: "${SOURCE_REPO_URL}"
       type: Git
     strategy:
-      dockerStrategy:
-        env:
-        - name: BUILD_LOGLEVEL
-          value: '2'
-        - name: NPM_CONFIG_LOGLEVEL
-          value: notice
-      type: Docker
+      jenkinsPipelineStrategy: 
+        jenkinsfilePath: ${JENKINSFILE_PATH}
 parameters:
 - name: REPO_NAME
   description: Application repository name
@@ -72,4 +67,8 @@ parameters:
 - name: GIT_REF
   description: Git branch where source code is located
   value: 'master'
+  required: false
+- name: JENKINSFILE_PATH
+  description: Path to Jenkinsfile used for build
+  value: 'Jenkinsfile'
   required: false
