@@ -66,7 +66,7 @@ utils.getOidcDiscovery().then(discovery => {
   //OIDC Strategy is used for authorization
   passport.use('oidc', new OidcStrategy({
     issuer: discovery.issuer,
-    authorizationURL: discovery.authorization_endpoint,
+    authorizationURL: discovery.authorization_endpoint + '&kc_idp_hint=keycloak_bcdevexchange',
     tokenURL: discovery.token_endpoint,
     userInfoURL: discovery.userinfo_endpoint,
     clientID: 'pen-request',
