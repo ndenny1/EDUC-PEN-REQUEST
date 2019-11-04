@@ -47,8 +47,7 @@ router.get('/error', (_req, res) => {
 
 //redirects to the SSO login screen
 router.get('/login', passport.authenticate('oidc', {
-  failureRedirect: 'error',
-  idpHint: 'keycloak_bcdevexchange'
+  failureRedirect: 'error'
 }));
 
 //removes tokens and destroys session
