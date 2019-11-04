@@ -50,7 +50,7 @@ export default {
     }
   },
   mounted() {
-    this.getAccountType = this.getAccountType(this.userInfo._json.preferred_username);
+    this.accountType = this.getAccountType(this.userInfo._json.preferred_username);
   },
   data() {
     return {
