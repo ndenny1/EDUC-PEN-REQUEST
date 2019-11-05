@@ -7,9 +7,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
-        <v-card-text v-if="userInfo === false">
-        </v-card-text>
-        <v-card-text v-else-if="accountType === 'bceid'">
+        <v-card-text v-if="userInfo !== false && accountType === 'bceid'">
           <v-row>
             <v-col><b>First Name: </b></v-col>
             <v-col><p> {{ userInfo._json.given_name }}</p></v-col>
@@ -49,7 +47,9 @@ export default {
     }
   },
   mounted() {
-    this.accountType = this.getAccountType(this.userInfo._json.preferred_username);
+    if(this.userInfo !== false){
+      this.accountType = this.getAccountType(this.userInfo._json.preferred_username);
+    }
   },
   data() {
     return {
