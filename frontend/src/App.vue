@@ -18,11 +18,14 @@ export default {
     Footer
   },
   computed: {
-    ...mapGetters('auth', ['getJwtToken'])
+    ...mapGetters('auth', ['getJwtToken']),
+    ...mapGetters('auth', ['userInfo'])
   },
   async created() {
     this.$store.dispatch('auth/getJwtToken');
-    await this.$store.dispatch('auth/getUserInfo');
+    if(!this.userInfo){
+      await this.$store.dispatch('auth/getUserInfo');
+    }
   }
 };
 </script>
