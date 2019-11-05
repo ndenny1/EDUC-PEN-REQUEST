@@ -42,17 +42,10 @@ export default {
   name: 'userCard',
   computed: {
     ...mapGetters('auth', ['userInfo']),
-  },
-  mounted() {
-    while(this.userInfo === false){
-      
+    accountType: function() {
+      const res = this.userInfo._json.preferred_username.split('@');
+      return res[1];
     }
-    this.accountType = this.getAccountType(this.userInfo._json.preferred_username);
-  },
-  data() {
-    return {
-      accountType: null
-    };
   },
   methods: {
     getAccountType(input) {
