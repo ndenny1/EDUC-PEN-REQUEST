@@ -1,13 +1,13 @@
 <template>
-    <v-card>
+    <v-card v-if="userInfo !== false">
         <v-list-item dark>
-          <v-list-item-avatar size='50px' color="info">{{ userLetter }}</v-list-item-avatar>
+          <v-list-item-avatar size='50px' color="info">{{ userInfo.displayName[0] }}</v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title><h2>{{ userInfo.displayName }}</h2></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
-        <v-card-text v-if="userInfo !== false && accountType === 'bceid'">
+        <v-card-text v-if="accountType === 'bceid'">
           <v-row>
             <v-col><b>First Name: </b></v-col>
             <v-col><p> {{ userInfo._json.given_name }}</p></v-col>
@@ -42,14 +42,12 @@ export default {
   name: 'userCard',
   computed: {
     ...mapGetters('auth', ['userInfo']),
-    userLetter: function() {
-      return this.userInfo.displayName[0];
-    }
   },
   mounted() {
-    if(this.userInfo !== false){
-      this.accountType = this.getAccountType(this.userInfo._json.preferred_username);
+    while(this.userInfo === false){
+      
     }
+    this.accountType = this.getAccountType(this.userInfo._json.preferred_username);
   },
   data() {
     return {
