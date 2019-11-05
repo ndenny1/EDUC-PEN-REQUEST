@@ -7,8 +7,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
-        <v-card-text v-if="userInfo === null">
-          Error getting user info
+        <v-card-text v-if="userInfo === false">
         </v-card-text>
         <v-card-text v-else-if="accountType === 'bceid'">
           <v-row>
