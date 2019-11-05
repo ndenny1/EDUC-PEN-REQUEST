@@ -57,7 +57,7 @@ export default {
     logoutState: (state) => {
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('jwtToken');
-      state.userInfo = null;
+      state.userInfo = false;
       state.isAuthenticated = false;
     }
   },

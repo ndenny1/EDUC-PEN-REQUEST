@@ -2,16 +2,16 @@
 apiVersion: v1
 kind: Template
 labels:
-    template: "${REPO_NAME}-template"
+    template: "${SERVICE_NAME}-template"
 metadata:
-    name: "${REPO_NAME}-${JOB_NAME}-bc"
+    name: "${SERVICE_NAME}-${JOB_NAME}-bc"
 objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
     labels:
-      build: "${REPO_NAME}-${JOB_NAME}"
-    name: "${REPO_NAME}-${JOB_NAME}"
+      build: "${SERVICE_NAME}-${JOB_NAME}"
+    name: "${SERVICE_NAME}-${JOB_NAME}"
   spec:
     lookupPolicy:
       local: false
@@ -19,8 +19,8 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      build: "${REPO_NAME}-${JOB_NAME}"
-    name: "${REPO_NAME}-${JOB_NAME}-${GIT_REF}"
+      build: "${SERVICE_NAME}-${JOB_NAME}"
+    name: "${SERVICE_NAME}-${JOB_NAME}-${GIT_REF}"
   spec:
     completionDeadlineSeconds: 800
     successfulBuildsHistoryLimit: 3
@@ -29,7 +29,7 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: "${REPO_NAME}-${JOB_NAME}:latest"
+        name: "${SERVICE_NAME}-${JOB_NAME}:latest"
     postCommit: {}
     resources:
       requests:
@@ -54,8 +54,8 @@ objects:
           value: notice
       type: Docker
 parameters:
-- name: REPO_NAME
-  description: Application repository name
+- name: SERVICE_NAME
+  description: Name of service to build
   required: true
 - name: JOB_NAME
   description: Job identifier (i.e. 'pr-5' OR 'master')
