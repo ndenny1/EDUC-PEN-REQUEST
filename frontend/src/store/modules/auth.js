@@ -124,6 +124,7 @@ export default {
           const response = await AuthService.getAuthToken();
           if(response === 401){
             context.commit('logoutState');
+            window.location.pathname = '/';
           } else {
             console.log('Response: ' + response);
             context.commit('setUserInfo', response);
