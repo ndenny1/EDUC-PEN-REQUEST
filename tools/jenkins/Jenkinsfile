@@ -184,13 +184,6 @@ pipeline{
                         sh 'npm run test:e2e'
                     }
                 }
-            } 
-            post {
-                success{
-                    echo 'e2e tests ran successfully!'
-                } failure {
-                    echo 'At least one e2e test failed'
-                }
             }
         }
     }
