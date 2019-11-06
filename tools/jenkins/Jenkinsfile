@@ -40,7 +40,7 @@ pipeline{
                     }
                 }
             }
-        }/*
+        }
         stage('Unit Tests') {
             agent{
                 node{
@@ -80,7 +80,7 @@ pipeline{
                         }
                 }
             }
-        }*/
+        }
         stage('Build'){
             steps{
                 script {
@@ -156,13 +156,46 @@ pipeline{
         stage('Deploy to Dev'){
             steps{
                 deployStage('Dev', DEV, DEV_HOST_ROUTE)
-            }
-            post{
+            } post{
                 success{
                     echo 'Deployment to Dev was successful'
                 }
                 failure{
                     echo 'Deployment to Dev failed'
+                }
+            }
+        }
+        stage('Deploy to Test'){
+            steps{
+                deployStage('Test', TEST, TEST_HOST_ROUTE)
+            } post {
+                success{
+                    echo 'Deployment to Test was successful'
+                }
+                failure{
+                    echo 'Deployment to Test failed'
+                }
+            }
+        }
+        stage('e2e tests'){
+            agent{
+                node{
+                    label 'nodejs10'
+                }
+            }
+            steps{
+                script{
+                    timeout(10){
+                        echo 'Running e2e tests'
+                        sh 'npm install'
+                        sh 'npm run test:e2e'
+                    }
+                }
+            } post {
+                success{
+                    echo 'e2e tests ran successfully!'
+                } failure {
+                    echo 'At least one e2e test failed'
                 }
             }
         }

@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1572386415303" clover="3.2.0">
-  <project timestamp="1572386415303" name="All files">
-    <metrics statements="154" coveredstatements="90" conditionals="66" coveredconditionals="27" methods="33" coveredmethods="22" elements="253" coveredelements="139" complexity="0" loc="154" ncloc="154" packages="6" files="13" classes="13">
+<coverage generated="1573062360290" clover="3.2.0">
+  <project timestamp="1573062360291" name="All files">
+    <metrics statements="153" coveredstatements="84" conditionals="70" coveredconditionals="28" methods="31" coveredmethods="19" elements="254" coveredelements="131" complexity="0" loc="153" ncloc="153" packages="6" files="13" classes="13">
       <package name="src">
-        <metrics statements="5" coveredstatements="5" conditionals="3" coveredconditionals="1" methods="2" coveredmethods="2"/>
+        <metrics statements="5" coveredstatements="5" conditionals="5" coveredconditionals="2" methods="2" coveredmethods="2"/>
         <file name="App.vue" path="C:\Users\NDENNY\EDUC-PEN-REQUEST\frontend\src\App.vue">
-          <metrics statements="5" coveredstatements="5" conditionals="3" coveredconditionals="1" methods="2" coveredmethods="2"/>
+          <metrics statements="5" coveredstatements="5" conditionals="5" coveredconditionals="2" methods="2" coveredmethods="2"/>
           <line num="10" count="1" type="stmt"/>
           <line num="11" count="1" type="stmt"/>
           <line num="12" count="1" type="stmt"/>
-          <line num="14" count="8" type="cond" truecount="1" falsecount="2"/>
-          <line num="24" count="1" type="stmt"/>
+          <line num="14" count="9" type="cond" truecount="2" falsecount="3"/>
+          <line num="25" count="1" type="stmt"/>
         </file>
       </package>
       <package name="src.common">
-        <metrics statements="54" coveredstatements="22" conditionals="19" coveredconditionals="5" methods="9" coveredmethods="1"/>
+        <metrics statements="52" coveredstatements="21" conditionals="19" coveredconditionals="5" methods="9" coveredmethods="1"/>
         <file name="apiService.js" path="C:\Users\NDENNY\EDUC-PEN-REQUEST\frontend\src\common\apiService.js">
           <metrics statements="39" coveredstatements="9" conditionals="15" coveredconditionals="2" methods="9" coveredmethods="1"/>
-          <line num="5" count="10" type="stmt"/>
-          <line num="6" count="10" type="stmt"/>
+          <line num="5" count="8" type="stmt"/>
+          <line num="6" count="8" type="stmt"/>
           <line num="9" count="2" type="stmt"/>
           <line num="10" count="0" type="cond" truecount="0" falsecount="2"/>
           <line num="11" count="0" type="stmt"/>
           <line num="13" count="0" type="stmt"/>
           <line num="17" count="2" type="stmt"/>
-          <line num="21" count="10" type="stmt"/>
-          <line num="22" count="10" type="stmt"/>
+          <line num="21" count="8" type="stmt"/>
+          <line num="22" count="8" type="stmt"/>
           <line num="23" count="0" type="stmt"/>
           <line num="24" count="0" type="cond" truecount="0" falsecount="4"/>
           <line num="25" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -58,26 +58,24 @@
           <line num="79" count="1" type="stmt"/>
         </file>
         <file name="authService.js" path="C:\Users\NDENNY\EDUC-PEN-REQUEST\frontend\src\common\authService.js">
-          <metrics statements="15" coveredstatements="13" conditionals="4" coveredconditionals="3" methods="0" coveredmethods="0"/>
+          <metrics statements="13" coveredstatements="12" conditionals="4" coveredconditionals="3" methods="0" coveredmethods="0"/>
           <line num="8" count="7" type="stmt"/>
           <line num="9" count="7" type="stmt"/>
-          <line num="10" count="1" type="stmt"/>
-          <line num="11" count="1" type="cond" truecount="1" falsecount="1"/>
-          <line num="12" count="0" type="stmt"/>
-          <line num="14" count="1" type="stmt"/>
-          <line num="16" count="1" type="stmt"/>
-          <line num="17" count="0" type="stmt"/>
-          <line num="23" count="3" type="stmt"/>
-          <line num="24" count="3" type="stmt"/>
-          <line num="28" count="2" type="cond" truecount="2" falsecount="0"/>
-          <line num="29" count="1" type="stmt"/>
+          <line num="10" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="11" count="0" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="15" count="1" type="stmt"/>
+          <line num="21" count="3" type="stmt"/>
+          <line num="22" count="3" type="stmt"/>
+          <line num="26" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="27" count="1" type="stmt"/>
+          <line num="30" count="1" type="stmt"/>
           <line num="32" count="1" type="stmt"/>
-          <line num="34" count="1" type="stmt"/>
-          <line num="35" count="1" type="stmt"/>
+          <line num="33" count="1" type="stmt"/>
         </file>
       </package>
       <package name="src.components">
-        <metrics statements="26" coveredstatements="23" conditionals="6" coveredconditionals="2" methods="12" coveredmethods="11"/>
+        <metrics statements="25" coveredstatements="18" conditionals="6" coveredconditionals="2" methods="10" coveredmethods="8"/>
         <file name="Header.vue" path="C:\Users\NDENNY\EDUC-PEN-REQUEST\frontend\src\components\Header.vue">
           <metrics statements="8" coveredstatements="7" conditionals="6" coveredconditionals="2" methods="4" coveredmethods="4"/>
           <line num="49" count="2" type="stmt"/>
@@ -113,17 +111,16 @@
           <line num="30" count="1" type="stmt"/>
         </file>
         <file name="UserCard.vue" path="C:\Users\NDENNY\EDUC-PEN-REQUEST\frontend\src\components\UserCard.vue">
-          <metrics statements="6" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="3"/>
-          <line num="43" count="2" type="stmt"/>
-          <line num="49" count="2" type="stmt"/>
-          <line num="53" count="2" type="stmt"/>
-          <line num="56" count="2" type="stmt"/>
-          <line num="62" count="0" type="stmt"/>
-          <line num="63" count="0" type="stmt"/>
+          <metrics statements="5" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+          <line num="40" count="0" type="stmt"/>
+          <line num="46" count="0" type="stmt"/>
+          <line num="47" count="0" type="stmt"/>
+          <line num="52" count="0" type="stmt"/>
+          <line num="53" count="0" type="stmt"/>
         </file>
         <file name="UserInfo.vue" path="C:\Users\NDENNY\EDUC-PEN-REQUEST\frontend\src\components\UserInfo.vue">
-          <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-          <line num="8" count="1" type="stmt"/>
+          <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="8" count="0" type="stmt"/>
         </file>
       </package>
       <package name="src.store">
@@ -134,14 +131,14 @@
         </file>
       </package>
       <package name="src.store.modules">
-        <metrics statements="62" coveredstatements="34" conditionals="36" coveredconditionals="18" methods="10" coveredmethods="8"/>
+        <metrics statements="64" coveredstatements="34" conditionals="38" coveredconditionals="18" methods="10" coveredmethods="8"/>
         <file name="auth.js" path="C:\Users\NDENNY\EDUC-PEN-REQUEST\frontend\src\store\modules\auth.js">
-          <metrics statements="62" coveredstatements="34" conditionals="36" coveredconditionals="18" methods="10" coveredmethods="8"/>
+          <metrics statements="64" coveredstatements="34" conditionals="38" coveredconditionals="18" methods="10" coveredmethods="8"/>
           <line num="12" count="0" type="stmt"/>
           <line num="13" count="6" type="stmt"/>
           <line num="14" count="3" type="stmt"/>
           <line num="15" count="4" type="stmt"/>
-          <line num="16" count="4" type="stmt"/>
+          <line num="16" count="3" type="stmt"/>
           <line num="21" count="6" type="cond" truecount="2" falsecount="0"/>
           <line num="23" count="3" type="cond" truecount="1" falsecount="1"/>
           <line num="24" count="3" type="stmt"/>
@@ -196,21 +193,23 @@
           <line num="124" count="3" type="stmt"/>
           <line num="125" count="0" type="cond" truecount="0" falsecount="2"/>
           <line num="126" count="0" type="stmt"/>
+          <line num="127" count="0" type="cond" truecount="0" falsecount="2"/>
           <line num="128" count="0" type="stmt"/>
-          <line num="129" count="0" type="stmt"/>
-          <line num="133" count="0" type="stmt"/>
+          <line num="131" count="0" type="stmt"/>
+          <line num="132" count="0" type="stmt"/>
+          <line num="136" count="0" type="stmt"/>
         </file>
       </package>
       <package name="src.utils">
         <metrics statements="6" coveredstatements="5" conditionals="2" coveredconditionals="1" methods="0" coveredmethods="0"/>
         <file name="constants.js" path="C:\Users\NDENNY\EDUC-PEN-REQUEST\frontend\src\utils\constants.js">
           <metrics statements="6" coveredstatements="5" conditionals="2" coveredconditionals="1" methods="0" coveredmethods="0"/>
-          <line num="1" count="9" type="stmt"/>
-          <line num="2" count="9" type="stmt"/>
-          <line num="5" count="9" type="cond" truecount="1" falsecount="1"/>
+          <line num="1" count="7" type="stmt"/>
+          <line num="2" count="7" type="stmt"/>
+          <line num="5" count="7" type="cond" truecount="1" falsecount="1"/>
           <line num="6" count="0" type="stmt"/>
-          <line num="13" count="9" type="stmt"/>
-          <line num="21" count="9" type="stmt"/>
+          <line num="13" count="7" type="stmt"/>
+          <line num="21" count="7" type="stmt"/>
         </file>
       </package>
     </metrics>
