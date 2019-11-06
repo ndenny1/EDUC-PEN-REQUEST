@@ -24,7 +24,7 @@
             User is logged in
           </v-card-title>
           <v-card-text>
-            Welcome to the PEN Retrieval application!
+            Welcome to the PEN Request application!
           </v-card-text>
         </v-card>
       </v-row>
