@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 
 import Home from '@/components/Home.vue';
 import User from '@/components/UserInfo.vue';
-import store from '@/store/index.js';
+//import store from '@/store/index.js';
 
 Vue.use(VueRouter);
 
