@@ -1,7 +1,6 @@
 'use strict';
 
 const config =require('../config/index');
-const utils = require('../components/utils');
 const passport = require('passport');
 const express = require('express');
 const auth = require('../components/auth');
