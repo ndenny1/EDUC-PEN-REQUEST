@@ -70,7 +70,6 @@ utils.getOidcDiscovery().then(discovery => {
     tokenURL: discovery.token_endpoint,
     userInfoURL: discovery.userinfo_endpoint,
     clientID: 'pen-request',
-    identifierField: 'keycloak_bcdevexchange',
     clientSecret: config.get('oidc:clientSecret'),
     callbackURL: config.get('server:frontend') + '/api/auth/callback',
     scope: discovery.scopes_supported
