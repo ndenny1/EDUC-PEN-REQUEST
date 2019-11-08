@@ -1,6 +1,7 @@
 'use strict';
 
 const config =require('../config/index');
+const utils = require('../components/utils');
 const passport = require('passport');
 const express = require('express');
 const auth = require('../components/auth');
@@ -52,12 +53,11 @@ router.get('/login', passport.authenticate('oidc', {
 
 //removes tokens and destroys session
 router.get('/logout', (req, res) => {
-  req.logout();
-  req.session.destroy();
-  if(process.env.NODE_ENV === 'local'){
-    res.redirect('localhost:8081');
-  }
-  res.redirect(config.get('server:frontend'));
+  utils.getOidcDiscovery().then(discovery => {
+    req.logout();
+    req.session.destroy();
+    res.redirect(discovery.end_session_endpoint);
+  });
 });
 
 //refreshes jwt on refresh if refreshToken is valid
