@@ -52,10 +52,11 @@ router.get('/login', passport.authenticate('oidc', {
 }));
 
 //removes tokens and destroys session
-router.use('/logout', (req, res) => {
-  utils.getOidcDiscovery().then(discovery => {
-    res.redirect(discovery.end_session_endpoint + '?&id_token_hint=' + req.user.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend'));
-  });
+router.use('/logout', async (req, res) => {
+  const discovery = await utils.getOidcDiscovery();
+  req.logout();
+  req.session.destroy();
+  res.redirect(discovery.end_session_endpoint + '?&id_token_hint=' + req.user.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend'));
 });
 
 //refreshes jwt on refresh if refreshToken is valid
