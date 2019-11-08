@@ -54,7 +54,7 @@ router.get('/login', passport.authenticate('oidc', {
 //removes tokens and destroys session
 router.use('/logout', (req, res) => {
   utils.getOidcDiscovery().then(discovery => {
-    res.redirect(discovery.end_session_endpoint + '?&id_token_hint=' + req.user.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend') + '/api/auth/callback');
+    res.redirect(discovery.end_session_endpoint + '?&id_token_hint=' + req.user.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend'));
   });
 });
 
