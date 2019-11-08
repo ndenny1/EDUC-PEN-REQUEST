@@ -9,6 +9,7 @@ const env = 'local';//process.env.NODE_ENV;
 //injects environment variables into the json file
 nconf.overrides({
   environment: env,
+  logoutEndpoint: process.env.KC_DOMAIN + '/auth/realms/master/protocol/openid-connect/logout',
   server: {
     frontend: process.env.SERVER_FRONTEND,
     logLevel: 'silent',
@@ -19,8 +20,7 @@ nconf.overrides({
     publicKey: process.env.PUBLIC_KEY,
     clientId: process.env.ID,
     clientSecret: process.env.SECRET,
-    discovery: process.env.DISCOVERY,
-    logoutEndpoint: process.env.KC_DOMAIN + '/auth/realms/master/protocol/openid-connect/logout'
+    discovery: process.env.DISCOVERY
   }
 });
 

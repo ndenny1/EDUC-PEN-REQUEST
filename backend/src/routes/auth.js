@@ -54,7 +54,7 @@ router.get('/login', passport.authenticate('oidc', {
 router.get('/logout', (req, res) => {
   req.logout();
   req.session.destroy();
-  res.redirect(config.get('oidc:logoutEndpoint') + '?id_token_hint=' + req.user.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend'));
+  res.redirect(config.get('logoutEndpoint') + '?id_token_hint=' + req.user.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend'));
 });
 
 //refreshes jwt on refresh if refreshToken is valid
