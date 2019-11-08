@@ -122,15 +122,8 @@ export default {
           });
         } else {
           const response = await AuthService.getAuthToken();
-          if(response === 401){
-            context.commit('logoutState');
-            if(window.location.pathname !== '/'){
-              window.location.pathname = '/';
-            }
-          } else {
-            console.log('Response: ' + response);
-            context.commit('setUserInfo', response);
-          }
+          console.log('Response: ' + response);
+          context.commit('setUserInfo', response);
         }
       } catch(e) {
         throw e;

@@ -16,27 +16,10 @@
       </v-row>
     </article>
   </v-container>
-  <v-container fluid v-else>
-    <article class="top-banner">
+  <v-container fluid class="full-height" v-else>
+    <article class="top-banner full-height">
       <v-row align="center" justify="center">
-        <v-card>
-          <v-card-title>
-            User is logged in
-          </v-card-title>
-          <v-card-text>
-            Welcome to the PEN Request application!
-          </v-card-text>
-        </v-card>
-      </v-row>
-    </article>
-    <article class="infoTab">
-      <v-row align="center" justify="center">
-        <Info></Info>
-      </v-row>
-    </article>
-    <article class="bottomContainer">
-      <v-row align="center" justify="center">
-        <LoginCards></LoginCards>
+        <RequestForm></RequestForm>
       </v-row>
     </article>
   </v-container>
@@ -45,6 +28,7 @@
 <script>
 import Login from './Login';
 import Info from './Info';
+import RequestForm from './RequestForm';
 import LoginCards from './LoginCards';
 import { mapGetters } from 'vuex';
 export default {
@@ -52,7 +36,8 @@ export default {
   components: {
     Login,
     Info,
-    LoginCards
+    LoginCards,
+    RequestForm
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated'])
@@ -72,6 +57,9 @@ export default {
   background-size: cover;
   align-items: center;
   display: flex;
+}
+.full-height{
+  height: 100%;
 }
 .infoTab{
   padding: 10px 0px;

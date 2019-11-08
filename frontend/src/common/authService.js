@@ -7,12 +7,11 @@ export default {
   async getAuthToken() {
     try {
       const response = await axios.get(AuthRoutes.TOKEN);
-      if(response.status === 401){
-        return response.status;
-      }
+
       return response.data;
     } catch (e) {
-      return e.response.status;
+      console.log(`Failed to acquire JWT token - ${e}`); // eslint-disable-line no-console
+      throw e;
     }
   },
 
