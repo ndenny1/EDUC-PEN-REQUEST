@@ -19,7 +19,8 @@ nconf.overrides({
     publicKey: process.env.PUBLIC_KEY,
     clientId: process.env.ID,
     clientSecret: process.env.SECRET,
-    discovery: process.env.DISCOVERY
+    discovery: process.env.DISCOVERY,
+    logoutEndpoint: process.env.KC_DOMAIN + '/auth/realms/master/protocol/openid-connect/logout'
   }
 });
 
