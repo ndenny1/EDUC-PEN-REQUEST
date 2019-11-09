@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-card-title>PEN Request Form</v-card-title>
+        <v-card-title><h3>PEN Request Form</h3></v-card-title>
         <v-card-subtitle>{{ currentSubtitle }}</v-card-subtitle>
 
         <v-window v-model="step">
