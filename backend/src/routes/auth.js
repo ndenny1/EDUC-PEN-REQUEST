@@ -55,7 +55,11 @@ router.get('/logout', (req, res) => {
   const token = req.user.jwt;
   req.logout();
   req.session.destroy();
-  res.redirect(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend'));
+  try {
+    res.redirect(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend'));
+  } catch(e) {
+    res.redirect('/');
+  }
 });
 
 //refreshes jwt on refresh if refreshToken is valid
