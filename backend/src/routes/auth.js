@@ -58,7 +58,7 @@ router.get('/logout', (req, res) => {
   try {
     res.redirect(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend'));
   } catch(e) {
-    res.redirect('/');
+    res.redirect(config.get('server:frontend'));
   }
 });
 
