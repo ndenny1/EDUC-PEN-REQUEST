@@ -2,7 +2,12 @@
     <v-card :width="currentWidth" class="mainCard">
         <v-card-title><h3>PEN Request Form</h3></v-card-title>
         <v-card-subtitle>{{ currentSubtitle }}</v-card-subtitle>
-
+        <!--<v-form
+          id="requestForm"
+          @submit="validate"
+          action=""
+          method="post"
+        >-->
         <v-window v-model="step">
 
             <v-window-item :value="1">
@@ -20,23 +25,23 @@
                             <v-text-field color="#003366" outlined label="Legal Second (Middle) Given Name(s)"></v-text-field>
                         </v-col>
                         <v-col>
-                            <v-text-field color="#003366" outlined label="Usual Surname"></v-text-field>
+                            <v-text-field color="#003366" outlined  hint="If different from legal surname" label="Usual Surname"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-text-field color="#003366" outlined label="Usual First Given Name"></v-text-field>
+                            <v-text-field color="#003366" outlined  hint="If different from legal first given name" label="Usual First Given Name"></v-text-field>
                         </v-col>
                         <v-col>
-                            <v-text-field color="#003366" outlined label="Usual Second (Middle) Given Name(s)"></v-text-field>
+                            <v-text-field color="#003366" outlined  hint="If different from legal second given name" label="Usual Second (Middle) Given Name(s)"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-text-field color="#003366" outlined label="Maiden Name"></v-text-field>
+                            <v-text-field color="#003366"  hint="Optional" outlined label="Maiden Name"></v-text-field>
                         </v-col>
                         <v-col>
-                            <v-text-field color="#003366" outlined label="Past Name(s)"></v-text-field>
+                            <v-text-field color="#003366" hint="Optional"  outlined label="Past Name(s)"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -65,7 +70,7 @@
                                 ref="picker"
                                 v-model="date"
                                 :max="new Date().toISOString().substr(0, 10)"
-                                min="1950-01-01"
+                                min="1903-01-01"
                                 @change="save"
                             ></v-date-picker>
                           </v-menu>
@@ -85,7 +90,7 @@
             <v-window-item :value=2>
                 <v-card-text>
                     <v-row>
-                        <v-text-field color="#003366" outlined label="School Student ID Number (Optional)"></v-text-field>
+                        <v-text-field color="#003366" hint="Optional"  outlined label="School Student ID Number"></v-text-field>
                     </v-row>
                     <v-row>
                         <v-text-field color="#003366" outlined label="Last BC School Attended"></v-text-field>
@@ -108,7 +113,7 @@
                             <v-text-field color="#003366" outlined label="Primary Mailing Address"></v-text-field>
                         </v-col>
                         <v-col>
-                            <v-text-field color="#003366" outlined label="Secondary Mailing Address"></v-text-field>
+                            <v-text-field color="#003366" hint="Optional"  outlined label="Secondary Mailing Address"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -155,6 +160,7 @@
             Submit
             </v-btn>
         </v-card-actions>
+       <!-- </v-form> -->
     </v-card>        
 </template>
 
