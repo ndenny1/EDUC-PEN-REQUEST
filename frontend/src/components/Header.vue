@@ -36,7 +36,7 @@
           </template>
           <v-list dark color="#003366">
             <v-list-item to='/user'><v-list-title>User Info</v-list-title></v-list-item>
-            <v-list-item :href='authRoutes.LOGOUT'><v-list-title>Logout</v-list-title></v-list-item>
+            <v-list-item @click="clearStorage" :href='authRoutes.LOGOUT'><v-list-title>Logout</v-list-title></v-list-item>
           </v-list>
         </v-menu>
         <!--<v-btn id="logout-button" dark text tile @click='clearStorage' :href="authRoutes.LOGOUT">Logout</v-btn>-->
