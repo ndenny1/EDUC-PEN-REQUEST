@@ -1,4 +1,4 @@
-import apiAxios from './apiService';
+import axios from 'axios';
 import { AuthRoutes } from '@/utils/constants.js';
 
 export default {
@@ -6,7 +6,7 @@ export default {
   //Retrieves an auth token from the API endpoint
   async getAuthToken() {
     try {
-      const response = await apiAxios.get(AuthRoutes.TOKEN);
+      const response = await axios.get(AuthRoutes.TOKEN);
 
       return response.data;
     } catch (e) {
@@ -18,7 +18,7 @@ export default {
   //Refreshes the users auth token
   async refreshAuthToken(token) {
     try {
-      const response = await apiAxios.post(AuthRoutes.REFRESH, {
+      const response = await axios.post(AuthRoutes.REFRESH, {
         refreshToken: token
       });
 
