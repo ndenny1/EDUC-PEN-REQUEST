@@ -62,6 +62,33 @@ export default {
     }
   },
   actions: {
+
+    async getUserInfo(context){
+      try{
+        if(process.env.NODE_ENV === 'development'){
+          context.commit('setUserInfo', {
+            name: 'Nathan Denny',
+            given_name: 'Nathan',
+            family_name: 'Denny',
+            email: 'fake-email@not.real',
+            preferred_username: 'ndenny@bceid'
+          });
+        } else {
+          var token = localStorage.getItem('jwtToken');
+          var base64Url = token.split('.')[1];
+          var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join(''));
+          const decoded = JSON.parse(jsonPayload);
+          console.log(decoded);
+          context.commit('setUserInfo', decoded);
+        }
+      } catch(e) {
+        throw e;
+      }
+    },
+
     //retrieves the json web token from local storage. If not in local storage, retrieves it from API
     async getJwtToken(context) {
       try {
@@ -106,33 +133,6 @@ export default {
         // Remove tokens from localStorage and update state
         context.commit('setJwtToken');
         context.commit('setRefreshToken');
-      }
-    },
-    async getUserInfo(context){
-      try{
-        if(process.env.NODE_ENV === 'development'){
-          context.commit('setUserInfo', {
-            displayName: 'Nathan Denny',
-            _json: {
-              given_name: 'Nathan',
-              family_name: 'Denny',
-              email: 'fake-email@not.real',
-              preferred_username: 'ndenny@bceid'
-            }
-          });
-        } else {
-          var token = localStorage.getItem('jwtToken');
-          var base64Url = token.split('.')[1];
-          var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-          var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-          }).join(''));
-          const decoded = JSON.parse(jsonPayload);
-          console.log(decoded);
-          context.commit('setUserInfo', decoded);
-        }
-      } catch(e) {
-        throw e;
       }
     }
   }

@@ -22,10 +22,9 @@ export default {
     ...mapGetters('auth', ['userInfo'])
   },
   async created() {
-    this.$store.dispatch('auth/getJwtToken');
-    if(!this.userInfo){
-      await this.$store.dispatch('auth/getUserInfo');
-    }
+    this.$store.dispatch('auth/getJwtToken').then(() => {
+      this.$store.dispatch('auth/getUserInfo');
+    });
   }
 };
 </script>

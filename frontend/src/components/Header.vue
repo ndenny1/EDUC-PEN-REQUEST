@@ -52,27 +52,26 @@ export default {
   data(){
     return {
       appTitle: process.env.VUE_APP_TITLE,
-      authRoutes: AuthRoutes,
-      dataReady: true
+      authRoutes: AuthRoutes
     };
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
-    ...mapGetters('auth', ['userInfo'])
+    ...mapGetters('auth', ['userInfo']),
+    dataReady: function() {
+      if(!(this.userInfo)){
+        return false;
+      } else {
+        return true;
+      }
+    }
   },
   methods: {
     clearStorage() {
       this.$store.commit('auth/setJwtToken');
       this.$store.commit('auth/setRefreshToken');
     }
-  },
-  async mounted() {
-    if(!(this.userInfo)){
-      this.dataReady = false;
-      await this.$store.dispatch('auth/getUserInfo');
-      this.dataReady = true;
-    }
-  },
+  }
 };
 </script>
 
