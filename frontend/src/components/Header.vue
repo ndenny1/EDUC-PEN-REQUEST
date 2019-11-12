@@ -27,9 +27,9 @@
           <template v-slot:activator="{ on }">
             <v-chip v-on="on" pill color="#003366" dark>
               <v-avatar left color="info">
-                {{ userInfo.displayName[0] }}
+                {{ userInfo.name[0] }}
               </v-avatar>
-              {{ userInfo.displayName }}
+              {{ userInfo.name }}
               <!--<v-icon v-if="on">$downArrow</v-icon>
               <v-icon v-else>$upArrow</v-icon>-->
             </v-chip>

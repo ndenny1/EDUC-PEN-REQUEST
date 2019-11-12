@@ -1,29 +1,29 @@
 <template>
     <v-card v-if="userInfo !== false">
         <v-list-item dark>
-          <v-list-item-avatar size='50px' color="info">{{ userInfo.displayName[0] }}</v-list-item-avatar>
+          <v-list-item-avatar size='50px' color="info">{{ userInfo.name[0] }}</v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title><h2>{{ userInfo.displayName }}</h2></v-list-item-title>
+            <v-list-item-title><h2>{{ userInfo.name }}</h2></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
         <v-card-text v-if="accountType === 'bceid'">
           <v-row>
             <v-col><b>First Name: </b></v-col>
-            <v-col><p> {{ userInfo._json.given_name }}</p></v-col>
+            <v-col><p> {{ userInfo.given_name }}</p></v-col>
           </v-row>
           <v-row>
             <v-col><b>Last Name: </b></v-col>
-            <v-col><p> {{ userInfo._json.family_name }}</p></v-col>
+            <v-col><p> {{ userInfo.family_name }}</p></v-col>
           </v-row>
           <v-row>
             <v-col><b>Middle Name(s): </b></v-col>
             <v-col v-if="!userInfo.middle_name"><p> N/A </p></v-col>
-            <v-col v-else><p>{{ userInfo._json.middle_name }}</p></v-col>
+            <v-col v-else><p>{{ userInfo.middle_name }}</p></v-col>
           </v-row>
           <v-row>
             <v-col><b>Email: </b></v-col>
-            <v-col><p> {{ userInfo._json.email }}</p></v-col>
+            <v-col><p> {{ userInfo.email }}</p></v-col>
           </v-row>
           <v-row>
             <v-col><b>Account Type: </b></v-col>
@@ -43,7 +43,7 @@ export default {
   computed: {
     ...mapGetters('auth', ['userInfo']),
     accountType: function() {
-      const res = this.userInfo._json.preferred_username.split('@');
+      const res = this.userInfo.preferred_username.split('@');
       return res[1];
     }
   },
