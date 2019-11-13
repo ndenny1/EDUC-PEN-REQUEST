@@ -81,7 +81,6 @@ export default {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
           }).join(''));
           const decoded = JSON.parse(jsonPayload);
-          console.log(decoded);
           context.commit('setUserInfo', decoded);
         }
       } catch(e) {

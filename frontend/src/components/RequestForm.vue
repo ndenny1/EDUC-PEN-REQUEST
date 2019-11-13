@@ -121,7 +121,26 @@
                             <v-text-field color="#003366" outlined label="City"></v-text-field>
                         </v-col>
                         <v-col>
-                            <v-text-field color="#003366" outlined label="Province"></v-text-field>
+                            <v-text-field color="#003366" outlined label="Province/State"></v-text-field>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                          <v-autocomplete
+                            v-model="model"
+                            :items="countries"
+                            :loading="isLoading"
+                            :search-input.sync="search"
+                            color="#003366"
+                            hide-selected
+                            hide-no-data
+                            outlined
+                            item-text="Name"
+                            item-value="alpha3Code"
+                            label="Country"
+                            return-object
+                          >
+                          </v-autocomplete>
                         </v-col>
                         <v-col>
                             <v-text-field color="#003366" outlined label="Postal Code"></v-text-field>
@@ -173,6 +192,11 @@ export default {
       step: 1,
       date: null,
       menu: false,
+      entries: [],
+      isLoading: false,
+      model: null,
+      search: null,
+      nameLimit: 80
     };
   },
   computed: {
@@ -189,11 +213,48 @@ export default {
       case 2: return '35%';
       default: return '45%';
       }
-    }
+    },
+    fields () {
+      if (!this.model) return []
+
+      return Object.keys(this.model).map(key => {
+        return {
+          key,
+          value: this.model[key] || 'n/a',
+        }
+      })
+    },
+    countries () {
+      return this.entries.map(entry => {
+        const Name = entry.name;
+
+        return Object.assign({}, entry, { Name })
+      })
+    },
   },
   watch: {
     menu (val) {
       val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
+    },
+    search (val) {
+      // Items have already been loaded
+      if (this.countries.length > 0) return
+
+      // Items have already been requested
+      if (this.isLoading) return
+
+      this.isLoading = true
+
+      // Lazily load input items
+      fetch('https://restcountries.eu/rest/v2/all')
+        .then(res => res.json())
+        .then(res => {
+          this.entries = res
+        })
+        .catch(err => {
+          console.log(err)
+        })
+        .finally(() => (this.isLoading = false))
     },
   },
   methods: {
@@ -209,7 +270,7 @@ export default {
 
 <style scoped>
 .mainCard{
-    margin: 10px 0px;
+    margin: 20px 0px;
     padding:10px;
 }
 .v-card-text{
