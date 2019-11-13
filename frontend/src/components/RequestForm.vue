@@ -215,46 +215,46 @@ export default {
       }
     },
     fields () {
-      if (!this.model) return []
+      if (!this.model) return [];
 
       return Object.keys(this.model).map(key => {
         return {
           key,
           value: this.model[key] || 'n/a',
-        }
-      })
+        };
+      });
     },
     countries () {
       return this.entries.map(entry => {
         const Name = entry.name;
 
-        return Object.assign({}, entry, { Name })
-      })
+        return Object.assign({}, entry, { Name });
+      });
     },
   },
   watch: {
     menu (val) {
-      val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
+      val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'));
     },
-    search (val) {
+    search () {
       // Items have already been loaded
-      if (this.countries.length > 0) return
+      if (this.countries.length > 0) return;
 
       // Items have already been requested
-      if (this.isLoading) return
+      if (this.isLoading) return;
 
-      this.isLoading = true
+      this.isLoading = true;
 
       // Lazily load input items
       fetch('https://restcountries.eu/rest/v2/all')
         .then(res => res.json())
         .then(res => {
-          this.entries = res
+          this.entries = res;
         })
         .catch(err => {
-          console.log(err)
+          console.log(err);
         })
-        .finally(() => (this.isLoading = false))
+        .finally(() => (this.isLoading = false));
     },
   },
   methods: {
@@ -262,7 +262,7 @@ export default {
 
     },
     save (date) {
-      this.$refs.menu.save(date)
+      this.$refs.menu.save(date);
     },
   },
 };

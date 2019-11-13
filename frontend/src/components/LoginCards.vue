@@ -2,13 +2,13 @@
     <v-row class="centerInfo" align="center" justify="center">
         <v-col md="auto" height=100% class="half-card">
             <v-card outlined height='170px' dark color="#003366">
-                <v-card-title> <v-icon>$login</v-icon> Easy Login</v-card-title>
+                <v-card-title> <v-icon>$login</v-icon> Easy Log In</v-card-title>
                 <v-card-text>
-                    Login using a Basic BCeID or BC Services Card.
+                    Log In using a Basic BCeID or B.C. Services Card.
                 </v-card-text>
                 <v-card-actions class="card-actions">
                     <v-btn width="50%" href="https://www.bceid.ca/" outlined>About BCeID</v-btn>
-                    <v-btn width="50%" href="https://www2.gov.bc.ca/gov/content/governments/government-id/bc-services-card" outlined>About BC Services Card</v-btn>
+                    <v-btn width="50%" href="https://www2.gov.bc.ca/gov/content/governments/government-id/bc-services-card" outlined>About B.C. Services Card</v-btn>
                 </v-card-actions>
             </v-card>
         </v-col>
