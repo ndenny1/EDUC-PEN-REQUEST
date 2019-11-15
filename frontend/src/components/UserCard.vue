@@ -10,30 +10,32 @@
         <v-card-text v-if="accountType === 'bceid'">
           <v-row>
             <v-col><b>First Name: </b></v-col>
-            <v-col><p> {{ userInfo.given_name }}</p></v-col>
+            <v-col><p id="given_name"> {{ userInfo.given_name }}</p></v-col>
           </v-row>
           <v-row>
             <v-col><b>Last Name: </b></v-col>
-            <v-col><p> {{ userInfo.family_name }}</p></v-col>
+            <v-col><p id="family_name"> {{ userInfo.family_name }}</p></v-col>
           </v-row>
           <v-row>
             <v-col><b>Middle Name(s): </b></v-col>
             <v-col v-if="!userInfo.middle_name"><p> N/A </p></v-col>
-            <v-col v-else><p>{{ userInfo.middle_name }}</p></v-col>
+            <v-col v-else><p id="middle_name">{{ userInfo.middle_name }}</p></v-col>
           </v-row>
           <v-row>
             <v-col><b>Email: </b></v-col>
-            <v-col><p> {{ userInfo.email }}</p></v-col>
+            <v-col><p id="email"> {{ userInfo.email }}</p></v-col>
           </v-row>
           <v-row>
             <v-col><b>Account Type: </b></v-col>
-            <v-col><p>{{ accountType }}</p></v-col>
+            <v-col><p id="account_type">{{ accountType }}</p></v-col>
           </v-row>
         </v-card-text>
         <v-card-text v-else>
           Nice try pal, we don't use IDIR in this town
         </v-card-text>
     </v-card>
+    <v-skeleton-loader type="image" v-else>
+    </v-skeleton-loader>
 </template>
 
 <script>

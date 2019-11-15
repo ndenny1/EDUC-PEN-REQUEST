@@ -1,9 +1,9 @@
 <template>
     <v-card class="login-card">
         <v-card-title class="gov-header">
-          <h4>Log In</h4>
+          <h4 id="login_text">Log In</h4>
         </v-card-title>
-        <v-card-text>
+        <v-card-text id="login_descriptor">
           To access the PEN Retrieval Application, you must have a Basic BCeID or a B.C. Services Card.
         </v-card-text>
         <v-card-actions>
