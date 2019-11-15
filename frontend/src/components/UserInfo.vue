@@ -1,5 +1,5 @@
 <template>
-  <article class="background">
+  <article id="user-info-container" class="background">
     <v-container>
         <UserCard></UserCard>
     </v-container>

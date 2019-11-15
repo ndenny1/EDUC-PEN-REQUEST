@@ -23,23 +23,25 @@
       <v-spacer></v-spacer>
 
       <div v-if="isAuthenticated && dataReady">
-        <v-menu offset-y>
+        <v-menu name="user_options" offset-y>
           <template v-slot:activator="{ on }">
-            <v-chip v-on="on" pill color="#003366" dark>
+            <v-chip tabindex="0" v-on="on" pill color="#003366" dark>
               <v-avatar left color="info">
                 {{ userInfo.name[0] }}
               </v-avatar>
               {{ userInfo.name }}
-              <!--<v-icon v-if="on">$downArrow</v-icon>
-              <v-icon v-else>$upArrow</v-icon>-->
             </v-chip>
           </template>
           <v-list dark color="#003366">
-            <v-list-item to='/user'><v-list-title>User Info</v-list-title></v-list-item>
-            <v-list-item @click="clearStorage" :href='authRoutes.LOGOUT'><v-list-title>Logout</v-list-title></v-list-item>
+            <v-list-item id="user_info_link" to='/user'><v-list-title>User Info</v-list-title></v-list-item>
+            <v-list-item id="logout_button" @click="clearStorage" :href='authRoutes.LOGOUT'><v-list-title>Logout</v-list-title></v-list-item>
           </v-list>
         </v-menu>
-        <!--<v-btn id="logout-button" dark text tile @click='clearStorage' :href="authRoutes.LOGOUT">Logout</v-btn>-->
+
+      </div>
+      <div v-else>
+        <v-skeleton-loader type="chip">
+        </v-skeleton-loader>
       </div>
     </v-toolbar>
   </header>

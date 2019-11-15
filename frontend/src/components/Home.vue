@@ -1,23 +1,28 @@
 <template>
   <v-container fluid v-if="!isAuthenticated">
-    <article class="top-banner">
+
+    <!-- login article -->
+    <article name="login-banner" class="top-banner">
+      Login Article
       <v-row align="center" justify="center">
         <Login></Login>
       </v-row>
     </article>
-    <article class="infoTab">
+    <article id="info-section" class="infoTab">
       <v-row align="center" justify="center">
         <Info></Info>
       </v-row>
     </article>
-    <article class="bottomContainer">
+    <article id="info-cards" class="bottomContainer">
       <v-row align="center" justify="center">
         <LoginCards></LoginCards>
       </v-row>
     </article>
   </v-container>
   <v-container fluid class="full-height" v-else>
-    <article class="top-banner full-height">
+
+    <!-- pen request form -->
+    <article id="request-form-container" class="top-banner full-height">
       <v-row align="center" justify="center">
         <RequestForm></RequestForm>
       </v-row>
