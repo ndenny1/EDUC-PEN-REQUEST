@@ -3,7 +3,6 @@
 
     <!-- login article -->
     <article name="login-banner" class="top-banner">
-      Login Article
       <v-row align="center" justify="center">
         <Login></Login>
       </v-row>
