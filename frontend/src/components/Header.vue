@@ -39,7 +39,7 @@
         </v-menu>
 
       </div>
-      <div v-else>
+      <div v-else-if="isAuthenticated && !dataReady">
         <v-skeleton-loader type="chip">
         </v-skeleton-loader>
       </div>
