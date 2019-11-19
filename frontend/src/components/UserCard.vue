@@ -23,11 +23,12 @@
           </v-row>
           <v-row>
             <v-col><b>Email: </b></v-col>
-            <v-col><p id="email"> {{ userInfo.email }}</p></v-col>
+            <v-col v-if="!userInfo.email"><p>N/A</p></v-col>
+            <v-col v-else><p id="email"> {{ userInfo.email }}</p></v-col>
           </v-row>
           <v-row>
             <v-col><b>Account Type: </b></v-col>
-            <v-col><p id="account_type">{{ accountType }}</p></v-col>
+            <v-col><p id="account_type">{{ userInfo.accountType }}</p></v-col>
           </v-row>
         </v-card-text>
         <v-card-text v-else>
