@@ -15,7 +15,7 @@ dotenv.config();
 
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const OidcStrategy = require('passport-openidconnect').Strategy;
+const OidcStrategy = require('passport-openidconnect-kc-idp').Strategy;
 
 const apiRouter = express.Router();
 const authRouter = require('./routes/auth');
@@ -39,7 +39,6 @@ app.use(express.urlencoded({
   app.use(morgan(config.get('server:morganFormat')));
 }*/
 
-//app.use(keycloak.middleware());
 //sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
 var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 app.use(session({
@@ -48,7 +47,11 @@ app.use(session({
   saveUninitialized: true,
   httpOnly: true,
   secure: true,
-  expires: expiryDate
+  expires: expiryDate,
+  cookie: {
+    secure: true,
+    path: '/cookie'
+  }
 }));
 
 //initialize routing and session. Cookies are now only reachable via requests (not js)
