@@ -11,10 +11,6 @@ const helmet = require('helmet');
 const cors = require('cors');
 const utils = require('./components/utils');
 
-const redis = require('redis');
-let RedisStore = require('connect-redis')(session);
-let redisClient = redis.createClient();
-
 dotenv.config();
 
 const JWTStrategy = require('passport-jwt').Strategy;
@@ -46,7 +42,6 @@ app.use(express.urlencoded({
 //sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
 var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 app.use(session({
-  store: new RedisStore({ client: redisClient }),
   secret: config.get('oidc:clientSecret'),
   resave: true,
   saveUninitialized: true,
