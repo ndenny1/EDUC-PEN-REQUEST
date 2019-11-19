@@ -35,7 +35,7 @@
     "npmlog": "^4.1.2",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "passport-openidconnect-kc-idp": "^0.0.7",
+    "passport-openidconnect": "^0.0.2",
     "path": "0.12.7",
     "querystring": "0.2.0"
   },
