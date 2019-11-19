@@ -30,7 +30,7 @@
     "nconf": "^0.10.0",
     "dotenv": "^8.0.0",
     "jsonwebtoken": "^8.5.1",
-    "passport-openidconnect": "^0.0.2",
+    "passport-openidconnect-kc-idp": "^0.0.2",
     "cors": "^2.8.5",
     "helmet": "^3.20.0",
     "jest-junit": "^7.0.0",
