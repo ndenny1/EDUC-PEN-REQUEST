@@ -112,10 +112,12 @@
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-text-field id="primary_mailing_address" color="#003366" outlined label="Primary Mailing Address"></v-text-field>
+                            <v-text-field id="mailing_address_line1" color="#003366" outlined label="Mailing Address Line 1"></v-text-field>
                         </v-col>
+                    </v-row>
+                    <v-row>
                         <v-col>
-                            <v-text-field id="secondary_mailing_address" color="#003366" hint="Optional"  outlined label="Secondary Mailing Address"></v-text-field>
+                          <v-text-field id="mailing_address_line2" color="#003366" outlined label="Mailing Address Line 2"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
