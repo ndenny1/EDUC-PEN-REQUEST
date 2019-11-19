@@ -86,6 +86,11 @@
                         <v-select color="#003366" id="sex" outlined :items="sexes" label="Sex"></v-select>
                       </v-col>
                     </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-text-field id="email_address" color="#003366" outlined label="E-mail Address"></v-text-field>
+                        </v-col>
+                    </v-row>
                 </v-card-text>
             </v-window-item>
 
@@ -103,55 +108,6 @@
                 </v-card-text>
             </v-window-item>
 
-            <v-window-item :value=3>
-                <v-card-text>
-                    <v-row>
-                        <v-col>
-                            <v-text-field id="email_address" color="#003366" outlined label="E-mail Address"></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <v-text-field id="mailing_address_line1" color="#003366" outlined label="Mailing Address Line 1"></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                          <v-text-field id="mailing_address_line2" color="#003366" outlined label="Mailing Address Line 2"></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <v-text-field id="city" color="#003366" outlined label="City"></v-text-field>
-                        </v-col>
-                        <v-col>
-                            <v-text-field id="province_state" color="#003366" outlined label="Province/State"></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                          <v-autocomplete
-                            v-model="model"
-                            :items="countries"
-                            :loading="isLoading"
-                            :search-input.sync="search"
-                            color="#003366"
-                            hide-selected
-                            hide-no-data
-                            outlined
-                            item-text="Name"
-                            item-value="alpha3Code"
-                            label="Country"
-                            id="country"
-                          >
-                          </v-autocomplete>
-                        </v-col>
-                        <v-col>
-                            <v-text-field id="postal_code" color="#003366" outlined label="Postal Code"></v-text-field>
-                        </v-col>
-                    </v-row>
-                </v-card-text>
-            </v-window-item>
 
         </v-window>
 
@@ -165,7 +121,7 @@
             </v-btn>
             <v-spacer></v-spacer>
             <v-btn
-                v-if="step !== 3"
+                v-if="step !== 2"
                 color="#003366"
                 dark
                 id="next"
@@ -210,15 +166,13 @@ export default {
     currentSubtitle () {
       switch(this.step){
       case 1: return 'Personal Information';
-      case 2: return 'School Information';
-      default: return 'Contact Information';
+      default: return 'School Information';
       }
     },
     currentWidth () {
       switch(this.step){
       case 1: return '65%';
-      case 2: return '40%';
-      default: return '55%';
+      default: return '40%';
       }
     },
     fields () {
