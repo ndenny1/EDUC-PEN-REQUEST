@@ -14,29 +14,31 @@
                 <v-card-text>
                     <v-row>
                         <v-col>
-                            <v-text-field id="legal_surname" color="#003366" outlined label="Legal Surname"></v-text-field>
-                        </v-col>
-                        <v-col>
-                            <v-text-field  id="legal_first_name" color="#003366" outlined label="Legal First Given Name(s)"></v-text-field>
+                            <v-text-field id="legal_surname" color="#003366" outlined label="Legal Last Name"></v-text-field>
                         </v-col>
                     </v-row>
-                    <v-row>
+                    <v-row class="bottom_group">
                         <v-col>
-                            <v-text-field id="legal_middle_name" color="#003366" outlined label="Legal Second (Middle) Given Name(s)"></v-text-field>
+                            <v-text-field  id="legal_first_name" color="#003366" outlined label="Legal First Name(s)"></v-text-field>
                         </v-col>
                         <v-col>
-                            <v-text-field id="usual_surname" color="#003366" outlined  hint="If different from legal surname" label="Usual Surname"></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <v-text-field id="usual_first_name" color="#003366" outlined  hint="If different from legal first given name" label="Usual First Given Name"></v-text-field>
-                        </v-col>
-                        <v-col>
-                            <v-text-field id="usual_middle_name" color="#003366" outlined  hint="If different from legal second given name" label="Usual Second (Middle) Given Name(s)"></v-text-field>
+                            <v-text-field id="legal_middle_name" color="#003366" outlined label="Legal Name(s)"></v-text-field>
                         </v-col>
                     </v-row>
-                    <v-row>
+                    <v-row class="top_group">
+                        <v-col>
+                            <v-text-field id="usual_surname" color="#003366" outlined  hint="If different from legal last name" label="Usual Last Name"></v-text-field>
+                        </v-col>
+                    </v-row>
+                    <v-row class="bottom_group">
+                        <v-col>
+                            <v-text-field id="usual_first_name" color="#003366" outlined  hint="If different from legal first name(s)" label="Usual First Name(s)"></v-text-field>
+                        </v-col>
+                        <v-col>
+                            <v-text-field id="usual_middle_name" color="#003366" outlined  hint="If different from legal middle name(s)" label="Usual Middle Name(s)"></v-text-field>
+                        </v-col>
+                    </v-row>
+                    <v-row class="top_group">
                         <v-col>
                             <v-text-field id="maiden_name" color="#003366"  hint="Optional" outlined label="Maiden Name"></v-text-field>
                         </v-col>
@@ -77,13 +79,8 @@
                             ></v-date-picker>
                           </v-menu>
                         </v-col>
-                    </v-row>
-                    <v-row>
                       <v-col>
                         <v-select color="#003366" id="gender" outlined :items="genders" label="Gender"></v-select>
-                      </v-col>
-                      <v-col>
-                        <v-select color="#003366" id="sex" outlined :items="sexes" label="Sex"></v-select>
                       </v-col>
                     </v-row>
                     <v-row>
@@ -97,13 +94,13 @@
             <v-window-item :value=2>
                 <v-card-text>
                     <v-row>
+                        <v-text-field id="last_bc_school" color="#003366" outlined label="Last B.C. School Attended"></v-text-field>
+                    </v-row>
+                    <v-row>
                         <v-text-field id="student_id_number" color="#003366" hint="Optional"  outlined label="School Student ID Number"></v-text-field>
                     </v-row>
                     <v-row>
-                        <v-text-field id="last_bc_school" color="#003366" outlined label="Last BC School Attended"></v-text-field>
-                    </v-row>
-                    <v-row>
-                        <v-text-field id="current_school" color="#003366" outlined label="Current School Attending"></v-text-field>
+                        <v-text-field id="current_school" color="#003366" outlined label="Current B.C. School Attending"></v-text-field>
                     </v-row>
                 </v-card-text>
             </v-window-item>
@@ -239,5 +236,16 @@ export default {
 .v-card-text{
     padding-top: 0px;
     margin-top: 0px;
+}
+.col{
+  padding: 0px 10px;
+}
+
+.top_group{
+  padding-top: 15px;
+}
+
+.bottom_group{
+  padding-bottom: 15px;
 }
 </style>
