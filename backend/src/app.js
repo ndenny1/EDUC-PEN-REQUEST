@@ -10,6 +10,7 @@ const passport = require('passport');
 const helmet = require('helmet');
 const cors = require('cors');
 const utils = require('./components/utils');
+const cookieSession = require('cookie-session');
 
 dotenv.config();
 
@@ -39,10 +40,8 @@ app.use(express.urlencoded({
   app.use(morgan(config.get('server:morganFormat')));
 }*/
 
-//sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
-var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-app.use(session({
-  secret: config.get('oidc:clientSecret'),
+/*
+secret: config.get('oidc:clientSecret'),
   resave: true,
   saveUninitialized: true,
   httpOnly: true,
@@ -51,6 +50,16 @@ app.use(session({
   cookie: {
     secure: true
   }
+*/
+
+//sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
+var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+app.use(cookieSession({
+  httpOnly: true,
+  secret: config.get('oidc:clientSecret'),
+  maxAge: expiryDate,
+  secure: true,
+  signed: true
 }));
 
 //initialize routing and session. Cookies are now only reachable via requests (not js)
@@ -74,8 +83,7 @@ utils.getOidcDiscovery().then(discovery => {
     clientID: 'pen-request',
     clientSecret: config.get('oidc:clientSecret'),
     callbackURL: config.get('server:frontend') + '/api/auth/callback',
-    scope: discovery.scopes_supported,
-    kc_idp_hint: 'keycloak_bcdevexchange'
+    scope: discovery.scopes_supported
   }, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
     if ((typeof (accessToken) === 'undefined') || (accessToken === null) ||
       (typeof (refreshToken) === 'undefined') || (refreshToken === null)) {
