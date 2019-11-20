@@ -12,7 +12,7 @@ nconf.overrides({
   logoutEndpoint: process.env.KC_DOMAIN + '/auth/realms/master/protocol/openid-connect/logout',
   server: {
     frontend: process.env.SERVER_FRONTEND,
-    logLevel: 'silent',
+    logLevel: 'verbose',
     morganFormat: 'dev',
     port: '8080'
   },
