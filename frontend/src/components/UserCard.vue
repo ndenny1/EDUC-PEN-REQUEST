@@ -7,7 +7,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
-        <v-card-text v-if="accountType === 'bceid'">
+        <v-card-text v-if="accountType === 'BCEID'">
           <v-row>
             <v-col><b>First Name: </b></v-col>
             <v-col><p id="given_name"> {{ userInfo.firstName }}</p></v-col>
