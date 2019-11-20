@@ -50,11 +50,7 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'userCard',
   computed: {
-    ...mapGetters('auth', ['userInfo']),
-    accountType: function() {
-      const res = this.userInfo.preferred_username.split('@');
-      return res[1];
-    }
+    ...mapGetters('auth', ['userInfo'])
   },
   methods: {
     getAccountType(input) {
