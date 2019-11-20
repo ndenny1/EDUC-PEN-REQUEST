@@ -46,10 +46,7 @@ app.use(session({
   saveUninitialized: true,
   httpOnly: true,
   secure: true,
-  expires: expiryDate,
-  cookie: {
-    secure: true
-  }
+  expires: expiryDate
 }));
 
 //initialize routing and session. Cookies are now only reachable via requests (not js)
