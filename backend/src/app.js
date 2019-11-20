@@ -3,7 +3,7 @@
 const config = require('./config/index');
 const dotenv = require('dotenv');
 const log = require('npmlog');
-//const morgan = require('morgan');
+const morgan = require('morgan');
 const session = require('express-session');
 const express = require('express');
 const passport = require('passport');
@@ -36,9 +36,7 @@ app.use(express.urlencoded({
 }));
 
 //initialize logging middleware
-/*if(process.env.NODE_ENV !== 'test'){
-  app.use(morgan(config.get('server:morganFormat')));
-}*/
+app.use(morgan(config.get('server:morganFormat')));
 
 //sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
 var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
