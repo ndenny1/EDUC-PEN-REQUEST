@@ -4,13 +4,13 @@ const config = require('./config/index');
 const dotenv = require('dotenv');
 const log = require('npmlog');
 //const morgan = require('morgan');
-//const session = require('express-session');
+const session = require('express-session');
 const express = require('express');
 const passport = require('passport');
 const helmet = require('helmet');
 const cors = require('cors');
 const utils = require('./components/utils');
-const cookieSession = require('cookie-session');
+//const cookieSession = require('cookie-session')
 
 dotenv.config();
 
@@ -40,8 +40,10 @@ app.use(express.urlencoded({
   app.use(morgan(config.get('server:morganFormat')));
 }*/
 
-/*
-secret: config.get('oidc:clientSecret'),
+//sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
+var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+app.use(session({
+  secret: config.get('oidc:clientSecret'),
   resave: true,
   saveUninitialized: true,
   httpOnly: true,
@@ -50,16 +52,6 @@ secret: config.get('oidc:clientSecret'),
   cookie: {
     secure: true
   }
-*/
-
-//sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
-var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-app.use(cookieSession({
-  httpOnly: true,
-  secret: config.get('oidc:clientSecret'),
-  maxAge: expiryDate,
-  secure: true,
-  signed: true
 }));
 
 //initialize routing and session. Cookies are now only reachable via requests (not js)
