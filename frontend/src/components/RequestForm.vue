@@ -19,10 +19,10 @@
                     </v-row>
                     <v-row class="bottom_group">
                         <v-col>
-                            <v-text-field  id="legal_first_name" color="#003366" outlined label="Legal First Name(s)"></v-text-field>
+                            <v-text-field  id="legal_first_name" color="#003366" hint="Optional (allow single names)" outlined label="Legal First Name(s)"></v-text-field>
                         </v-col>
                         <v-col>
-                            <v-text-field id="legal_middle_name" color="#003366" outlined label="Legal Name(s)"></v-text-field>
+                            <v-text-field id="legal_middle_name" color="#003366" outlined label="Legal Middle Name(s)"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row class="top_group">

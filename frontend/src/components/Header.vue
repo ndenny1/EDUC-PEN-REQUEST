@@ -60,6 +60,7 @@ export default {
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('auth', ['userInfo']),
+    ...mapGetters('auth', ['clipboard']), 
     dataReady: function() {
       if(!(this.userInfo)){
         return false;
@@ -114,5 +115,8 @@ a {
 .top-down{
   padding-top: 20px;
   height: 80%;
+}
+.v-alert{
+  margin-bottom: 0px;
 }
 </style>
