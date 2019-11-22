@@ -110,15 +110,8 @@ utils.getOidcDiscovery().then(discovery => {
   }));
 });
 //functions for serializing/deserializing users
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
+passport.serializeUser((user, next) => next(null, user));
+passport.deserializeUser((obj, next) => next(null, obj));
 
 
 // GetOK Base API Directory
