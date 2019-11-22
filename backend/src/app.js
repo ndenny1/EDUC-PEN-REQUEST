@@ -132,7 +132,7 @@ apiRouter.get('/', (_req, res) => {
 app.use(/(\/api)?/, apiRouter);
 
 apiRouter.use('/auth', authRouter);
-apiRouter.user('/pen', penRouter);
+apiRouter.use('/pen', penRouter);
 
 //Handle 500 error
 app.use((err, _req, res, next) => {
