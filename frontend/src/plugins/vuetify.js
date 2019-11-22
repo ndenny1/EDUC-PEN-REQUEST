@@ -18,7 +18,8 @@ export default new Vuetify({
       info: 'fas fa-info-circle',
       downArrow: 'fas fa-angle-down',
       upArrow: 'fas fa-angle-up',
-      user: 'far fa-user'
+      user: 'far fa-user',
+      copy: 'fas fa-copy'
     }
   }
 });

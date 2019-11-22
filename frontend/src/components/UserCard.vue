@@ -38,7 +38,7 @@
           </v-row>
         </v-card-text>
         <v-card-text v-else>
-          Nice try pal, we don't use IDIR in this town
+          Couldn't recognize your account type. (Hint: account has 2 c's not 3)
         </v-card-text>
     </v-card>
     <v-skeleton-loader type="image" v-else>

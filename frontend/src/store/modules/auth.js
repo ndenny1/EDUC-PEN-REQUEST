@@ -6,14 +6,14 @@ export default {
   state: {
     acronyms: [],
     isAuthenticated: localStorage.getItem('jwtToken') !== null,
-    userInfo: false
+    userInfo: false,
   },
   getters: {
     acronyms: state => state.acronyms,
     isAuthenticated: state => state.isAuthenticated,
     jwtToken: () => localStorage.getItem('jwtToken'),
     refreshToken: () => localStorage.getItem('refreshToken'),
-    userInfo: state => state.userInfo
+    userInfo: state => state.userInfo,
   },
   mutations: {
     //sets Json web token and determines whether user is authenticated
@@ -67,11 +67,12 @@ export default {
       try{
         if(process.env.NODE_ENV === 'development'){
           context.commit('setUserInfo', {
-            name: 'Nathan Denny',
-            given_name: 'Nathan',
-            family_name: 'Denny',
+            displayName: 'Nathan Denny',
+            firstName: 'Nathan',
+            lastName: 'Denny',
             email: 'fake-email@not.real',
-            preferred_username: 'ndenny@bceid'
+            accountType: 'BCEID',
+            pen: '123984623479'
           });
         } else {
           var token = localStorage.getItem('jwtToken');
@@ -133,6 +134,6 @@ export default {
         context.commit('setJwtToken');
         context.commit('setRefreshToken');
       }
-    }
+    },
   }
 };

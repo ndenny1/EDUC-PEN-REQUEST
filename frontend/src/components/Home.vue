@@ -1,6 +1,7 @@
 <template>
-  <v-container fluid v-if="!isAuthenticated">
 
+
+  <v-container fluid v-if="!isAuthenticated">
     <!-- login article -->
     <article name="login-banner" class="top-banner">
       <v-row align="center" justify="center">
@@ -18,12 +19,30 @@
       </v-row>
     </article>
   </v-container>
-  <v-container fluid class="full-height" v-else>
 
+
+  <v-container fluid class="full-height" v-else-if="isAuthenticated && dataReady && userInfo.pen">
+    <article id="pen-display-container" class="top-banner full-height">
+      <v-row align="center" justify="center">
+        <PenDisplay></PenDisplay>
+      </v-row>
+    </article>
+  </v-container>
+
+  <v-container fluid class="full-height" v-else-if="isAuthenticated && dataReady && !userInfo.pen">
     <!-- pen request form -->
     <article id="request-form-container" class="top-banner full-height">
       <v-row align="center" justify="center">
         <RequestForm></RequestForm>
+      </v-row>
+    </article>
+  </v-container>
+
+
+  <v-container fluid class="full-height" v-else>
+    <article id="request-form-container" class="top-banner full-height">
+      <v-row align="center" justify="center">
+        <v-skeleton-loader type="image"></v-skeleton-loader>
       </v-row>
     </article>
   </v-container>
@@ -34,6 +53,7 @@ import Login from './Login';
 import Info from './Info';
 import RequestForm from './RequestForm';
 import LoginCards from './LoginCards';
+import PenDisplay from './PenDisplay';
 import { mapGetters } from 'vuex';
 export default {
   name: 'home',
@@ -41,10 +61,19 @@ export default {
     Login,
     Info,
     LoginCards,
-    RequestForm
+    RequestForm,
+    PenDisplay
   },
   computed: {
-    ...mapGetters('auth', ['isAuthenticated'])
+    ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('auth', ['userInfo']),
+    dataReady: function() {
+      if(!(this.userInfo)){
+        return false;
+      } else {
+        return true;
+      }
+    }
   },
 };
 </script>
