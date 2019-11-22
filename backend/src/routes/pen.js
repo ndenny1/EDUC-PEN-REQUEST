@@ -20,3 +20,4 @@ router.post('/request', passport.authenticate('jwt', {
   res.status(200).json(req);
 });
 
+module.exports = router;
