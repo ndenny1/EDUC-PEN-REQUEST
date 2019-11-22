@@ -20,6 +20,7 @@ const OidcStrategy = require('passport-openidconnect-kc-idp').Strategy;
 
 const apiRouter = express.Router();
 const authRouter = require('./routes/auth');
+const penRouter = require('./routes/pen');
 
 //initialize app
 const app = express();
@@ -119,7 +120,7 @@ apiRouter.get('/', (_req, res) => {
   res.status(200).json({
     endpoints: [
       '/api/auth',
-      '/api/main'
+      '/api/pen'
     ],
     versions: [
       1
@@ -131,6 +132,7 @@ apiRouter.get('/', (_req, res) => {
 app.use(/(\/api)?/, apiRouter);
 
 apiRouter.use('/auth', authRouter);
+apiRouter.user('/pen', penRouter);
 
 //Handle 500 error
 app.use((err, _req, res, next) => {
