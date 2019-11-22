@@ -2,27 +2,28 @@
     <v-card :width="currentWidth" class="mainCard">
         <v-card-title><h3>PEN Request Form</h3></v-card-title>
         <v-card-subtitle>{{ currentSubtitle }}</v-card-subtitle>
-        <!--<v-form
-          id="requestForm"
-          @submit="validate"
-          action=""
+        <v-form
           method="post"
-        >-->
+          action="/api/pen/request"
+          ref="form"
+          v-model="validForm"
+          lazy-validation
+        >
         <v-window v-model="step">
 
             <v-window-item :value="1">
                 <v-card-text>
                     <v-row>
                         <v-col>
-                            <v-text-field id="legal_surname" color="#003366" outlined label="Legal Last Name"></v-text-field>
+                            <v-text-field id="legal_surname" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row class="bottom_group">
                         <v-col>
-                            <v-text-field  id="legal_first_name" color="#003366" hint="Optional (allow single names)" outlined label="Legal First Name(s)"></v-text-field>
+                            <v-text-field  id="legal_first_name" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
                         </v-col>
                         <v-col>
-                            <v-text-field id="legal_middle_name" color="#003366" outlined label="Legal Middle Name(s)"></v-text-field>
+                            <v-text-field id="legal_middle_name" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row class="top_group">
@@ -66,6 +67,8 @@
                                     readonly
                                     v-on="on"
                                     id="birthdate"
+                                    required
+                                    :rules="requiredRules"
                                   ></v-text-field>
                               </template>
                               <v-date-picker
@@ -80,12 +83,12 @@
                           </v-menu>
                         </v-col>
                       <v-col>
-                        <v-select color="#003366" id="gender" outlined :items="genders" label="Gender"></v-select>
+                        <v-select color="#003366" id="gender" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
                       </v-col>
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-text-field id="email_address" color="#003366" outlined label="E-mail Address"></v-text-field>
+                            <v-text-field id="email_address" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -123,7 +126,8 @@
                 dark
                 id="next"
                 depressed
-                @click="step++"
+                :disabled="!validForm"
+                @click="validate"
             >
             Next
             </v-btn>
@@ -134,12 +138,13 @@
               id="submit_form"
               depressed
               type="submit"
+              :disabled="!validForm"
               @click="submit"
             >
             Submit
             </v-btn>
         </v-card-actions>
-       <!-- </v-form> -->
+       </v-form> 
     </v-card>        
 </template>
 
@@ -151,12 +156,18 @@ export default {
       sexes: ['Male', 'Female', 'Intersex', 'Unknown'],
       step: 1,
       date: null,
+      requiredRules: [v => !!v || 'Required'],
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
       menu: false,
       entries: [],
       isLoading: false,
       model: null,
       search: null,
-      nameLimit: 80
+      nameLimit: 80,
+      validForm: true
     };
   },
   computed: {
@@ -222,6 +233,9 @@ export default {
     save (date) {
       this.$refs.menu.save(date);
     },
+    validate() {
+      this.$refs.form.validate();
+    }
   },
 };
 </script>
@@ -248,4 +262,5 @@ export default {
 .bottom_group{
   padding-bottom: 15px;
 }
+
 </style>

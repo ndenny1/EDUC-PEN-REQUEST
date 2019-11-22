@@ -32,10 +32,6 @@
             <v-col><b>Account Type: </b></v-col>
             <v-col><p id="account_type">{{ userInfo.accountType }}</p></v-col>
           </v-row>
-          <v-row>
-            <v-col><b>Personal Education Number: </b></v-col>
-            <v-col><p id="account_type">{{ userInfo.pen }}</p></v-col>
-          </v-row>
         </v-card-text>
         <v-card-text v-else>
           Couldn't recognize your account type. (Hint: account has 2 c's not 3)
