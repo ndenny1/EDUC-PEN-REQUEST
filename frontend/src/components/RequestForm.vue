@@ -127,7 +127,7 @@
                 id="next"
                 depressed
                 :disabled="!validForm"
-                @click="validate"
+                type="submit"
             >
             Next
             </v-btn>
