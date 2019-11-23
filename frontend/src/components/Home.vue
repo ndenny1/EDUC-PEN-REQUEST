@@ -29,6 +29,7 @@
     </article>
   </v-container>
 -->
+
   <v-container fluid class="full-height" v-else-if="isAuthenticated && dataReady">
     <!-- pen request form -->
     <article id="request-form-container" class="top-banner full-height">
