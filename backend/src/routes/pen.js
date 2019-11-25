@@ -16,8 +16,8 @@ router.get('/', (_req, res) => {
 router.post('/request', passport.authenticate('jwt', {
   failureRedirect: 'error'
 }),
-(req, res) => {
-  res.status(200).json(req);
+async (req, res) => {
+  return res.status(200).json(req);
 });
 
 module.exports = router;
