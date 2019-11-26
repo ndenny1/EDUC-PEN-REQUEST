@@ -14,7 +14,7 @@ router.get('/', (_req, res) => {
 });
 
 router.post('/request', passport.authenticate('jwt', {
-  failureRedirect: 'error'
+  session: false
 }),
 async (req, res) => {
   return res.status(200).json(req);
