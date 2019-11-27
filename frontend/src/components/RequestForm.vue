@@ -122,7 +122,7 @@
 
 <script>
 import apiAxios from '@/common/apiService';
-import ApiRoutes from '@/utils/constants';
+import { ApiRoutes } from '@/utils/constants';
 export default {
   data() {
     return {
