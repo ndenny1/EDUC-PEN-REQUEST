@@ -183,12 +183,10 @@ export default {
       this.$refs.form.validate();
     },
     async submitForm() {
-      this.validate();
+      console.log(ApiRoutes.PEN_REQUEST);
       console.log(this.user);
       if(this.validForm){
         try{
-          console.log(ApiRoutes.PEN_REQUEST);
-          console.log(this.user);
           await apiAxios.post(ApiRoutes.PEN_REQUEST, this.user);
         } catch (e) {
           throw e;
