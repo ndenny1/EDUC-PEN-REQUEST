@@ -111,7 +111,7 @@
               id="submit_form"
               type="submit"
               :disabled="!validForm"
-              @click="submitForm()"
+              @click="submitRequestForm()"
             >
             Submit
             </v-btn>
@@ -182,7 +182,7 @@ export default {
     validate() {
       this.$refs.form.validate();
     },
-    async submitForm() {
+    async submitRequestForm() {
       console.log(this.user);
       if(this.validForm){
         try{
