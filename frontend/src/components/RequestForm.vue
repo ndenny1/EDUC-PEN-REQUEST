@@ -3,7 +3,6 @@
         <v-card-title><h3>PEN Request Form</h3></v-card-title>
         <v-card-subtitle>Student Information</v-card-subtitle>
         <v-form
-          @submit="submitForm"
           ref="form"
           v-model="validForm"
           lazy-validation
