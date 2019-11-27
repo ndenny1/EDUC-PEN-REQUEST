@@ -13,11 +13,10 @@ router.get('/', (_req, res) => {
   });
 });
 
-router.post('/request', passport.authenticate('jwt', {
-  session: false
-}),
-async (req, res) => {
-  return res.status(200).json(req);
-});
+router.post('/request', passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    return res.status(200).json(req.body);
+  }
+);
 
 module.exports = router;

@@ -30,15 +30,16 @@
                 <li><a href="https://www2.gov.bc.ca/gov/content/education-training/k-12/support/transcripts-and-certificates">Student Transcript Service</a></li>
               </v-col>
               <v-col class="list-col">
-                <li><a href="/">Somewhere else</a></li>
+                <li><a href="https://studentaidbc.ca/">Student Aid B.C.</a></li>
               </v-col>
             </v-row>
+            <!-- student financial aid, and education planner bc , info page/help -->
             <v-row>
               <v-col class="list-col">
-                <li><a href="/">Somewhere else</a></li>
+                <li><a href="https://www.educationplannerbc.ca/">Education Planner B.C.</a></li>
               </v-col>
               <v-col class="list-col">
-                <li><a href="/">Somewhere else</a></li>
+                <li><a href="/">Help</a></li>
               </v-col>
             </v-row>
           </ul>
