@@ -112,7 +112,7 @@
               id="submit_form"
               type="submit"
               :disabled="!validForm"
-              @submit="submitForm"
+              @click="submitForm"
             >
             Submit
             </v-btn>
