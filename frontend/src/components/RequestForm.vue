@@ -187,7 +187,11 @@ export default {
       this.validate();
       console.log(this.user);
       if(this.validForm){
-        await apiAxios.post(ApiRoutes.PEN_REQUEST, this.user);
+        try{
+          await apiAxios.post(ApiRoutes.PEN_REQUEST, this.user);
+        } catch (e) {
+          throw e;
+        }
       }
     }
   },
