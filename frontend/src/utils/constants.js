@@ -1,4 +1,4 @@
-let baseRoot = '/api';
+const baseRoot = '/api';
 const authRoot = baseRoot + '/auth';
 const apiRoot = baseRoot + '/pen';
 let object;
