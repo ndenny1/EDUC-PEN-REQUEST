@@ -111,7 +111,7 @@
               id="submit_form"
               type="submit"
               :disabled="!validForm"
-              @click="submitForm"
+              @click="submitRequestForm()"
             >
             Submit
             </v-btn>
@@ -121,8 +121,8 @@
 </template>
 
 <script>
-import apiAxios from '../common/apiService';
-import ApiRoutes from '../utils/constants';
+import apiAxios from '@/common/apiService';
+import ApiRoutes from '@/utils/constants';
 export default {
   data() {
     return {
@@ -182,8 +182,7 @@ export default {
     validate() {
       this.$refs.form.validate();
     },
-    async submitForm() {
-      console.log(ApiRoutes.PEN_REQUEST);
+    async submitRequestForm() {
       console.log(this.user);
       if(this.validForm){
         try{
