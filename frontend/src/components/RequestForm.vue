@@ -3,7 +3,6 @@
         <v-card-title><h3>PEN Request Form</h3></v-card-title>
         <v-card-subtitle>Student Information</v-card-subtitle>
         <v-form
-          @submit="submitForm"
           ref="form"
           v-model="validForm"
           lazy-validation
@@ -187,7 +186,11 @@ export default {
       this.validate();
       console.log(this.user);
       if(this.validForm){
-        await apiAxios.post(ApiRoutes.PEN_REQUEST, this.user);
+        try{
+          await apiAxios.post(ApiRoutes.PEN_REQUEST, this.user);
+        } catch (e) {
+          throw e;
+        }
       }
     }
   },
