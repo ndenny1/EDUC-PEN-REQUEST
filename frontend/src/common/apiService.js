@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ApiRoutes } from '../utils/constants';
 import AuthService from '@/common/authService';
 
 // Buffer concurrent requests while refresh token is being acquired
@@ -77,6 +78,19 @@ export default {
       apiAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
       delete apiAxios.defaults.headers.common['Authorization'];
+    }
+  },
+
+  async postPenRequest(userInfo){
+    try{
+      const response = await apiAxios.post(ApiRoutes.PEN_REQUEST, userInfo);
+      if(response.status != 200){
+        console.log('Error sending data to nodejs API');
+      }
+      return true;
+    } catch(e) {
+      console.log(`Failed to post to Nodejs API - ${e}`);
+      throw e;
     }
   }
 };

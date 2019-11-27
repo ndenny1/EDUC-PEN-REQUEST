@@ -6,6 +6,7 @@
           ref="form"
           v-model="validForm"
           lazy-validation
+          @submit="submitRequestForm"
         >
           <v-card-text>
               <v-row>
@@ -111,7 +112,6 @@
               id="submit_form"
               type="submit"
               :disabled="!validForm"
-              @click="submitRequestForm()"
             >
             Submit
             </v-btn>
@@ -121,8 +121,6 @@
 </template>
 
 <script>
-import apiAxios from '@/common/apiService';
-import { ApiRoutes } from '@/utils/constants';
 export default {
   data() {
     return {
@@ -186,7 +184,7 @@ export default {
       console.log(this.user);
       if(this.validForm){
         try{
-          await apiAxios.post(ApiRoutes.PEN_REQUEST, this.user);
+          await this.$store.dispatch('penRequest/postRequest', this.user);
         } catch (e) {
           throw e;
         }
