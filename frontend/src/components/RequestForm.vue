@@ -183,11 +183,11 @@ export default {
     validate() {
       this.$refs.form.validate();
     },
-    submitForm() {
+    async submitForm() {
       this.validate();
       console.log(this.user);
       if(this.validForm){
-        apiAxios.post(ApiRoutes.PEN_REQUEST, this.user);
+        await apiAxios.post(ApiRoutes.PEN_REQUEST, this.user);
       }
     }
   },
