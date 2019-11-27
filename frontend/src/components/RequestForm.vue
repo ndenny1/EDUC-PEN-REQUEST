@@ -3,8 +3,6 @@
         <v-card-title><h3>PEN Request Form</h3></v-card-title>
         <v-card-subtitle>{{ currentSubtitle }}</v-card-subtitle>
         <v-form
-          method="post"
-          action="/api/pen/request"
           ref="form"
           v-model="validForm"
           lazy-validation
@@ -12,36 +10,36 @@
           <v-card-text>
               <v-row>
                   <v-col>
-                      <v-text-field id="legal_surname" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
+                      <v-text-field v-model="legalLastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field  id="legal_first_name" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
+                      <v-text-field  v-model="legalFirstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field id="legal_middle_name" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
+                      <v-text-field v-model="legalMiddleName" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
                   <v-col>
-                      <v-text-field id="usual_surname" color="#003366" outlined  hint="If different from legal last name" label="Usual Last Name"></v-text-field>
+                      <v-text-field v-model="usualLastName" color="#003366" outlined  hint="If different from legal last name" label="Usual Last Name"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field id="usual_first_name" color="#003366" outlined  hint="If different from legal first name(s)" label="Usual First Name(s)"></v-text-field>
+                      <v-text-field v-mdoel="usualFistName" color="#003366" outlined  hint="If different from legal first name(s)" label="Usual First Name(s)"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field id="usual_middle_name" color="#003366" outlined  hint="If different from legal middle name(s)" label="Usual Middle Name(s)"></v-text-field>
+                      <v-text-field v-model="usualMiddleName" color="#003366" outlined  hint="If different from legal middle name(s)" label="Usual Middle Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
                   <v-col>
-                      <v-text-field id="maiden_name" color="#003366"  hint="Optional" outlined label="Maiden Name"></v-text-field>
+                      <v-text-field v-model="maidenName" color="#003366"  hint="Optional" outlined label="Maiden Name"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field id="past_names" color="#003366" hint="Optional"  outlined label="Past Name(s)"></v-text-field>
+                      <v-text-field v-model="pastName" color="#003366" hint="Optional"  outlined label="Past Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row>
@@ -80,27 +78,27 @@
                     </v-menu>
                   </v-col>
                 <v-col>
-                  <v-select color="#003366" id="gender" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
+                  <v-select color="#003366" v-model="gender" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
                 </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field id="email_address" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
+                      <v-text-field v-model="email" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
                 <v-col>
-                  <v-text-field id="last_bc_school" color="#003366" outlined label="Last B.C. School Attended"></v-text-field>
+                  <v-text-field v-model="lastSchool" color="#003366" outlined label="Last B.C. School Attended"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <v-text-field id="student_id_number" color="#003366" hint="Optional"  outlined label="School Student ID Number"></v-text-field>
+                  <v-text-field v-model="studentIDNumber" color="#003366" hint="Optional"  outlined label="School Student ID Number"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <v-text-field id="current_school" color="#003366" outlined label="Current B.C. School Attending"></v-text-field>
+                  <v-text-field v-model="currentSchool" color="#003366" outlined label="Current B.C. School Attending"></v-text-field>
                 </v-col>
               </v-row>
           </v-card-text>
@@ -113,7 +111,7 @@
               id="submit_form"
               type="submit"
               :disabled="!validForm"
-              @click="validate"
+              @click="submit"
             >
             Submit
             </v-btn>
@@ -127,8 +125,6 @@ export default {
   data() {
     return {
       genders: ['Male', 'Female', 'Gender Diverse', 'Unknown'],
-      sexes: ['Male', 'Female', 'Intersex', 'Unknown'],
-      step: 1,
       date: null,
       requiredRules: [v => !!v || 'Required'],
       emailRules: [
@@ -206,6 +202,10 @@ export default {
     },
     validate() {
       this.$refs.form.validate();
+    },
+    submit() {
+      this.validate();
+      console.log(this.$refs.form);
     }
   },
 };
