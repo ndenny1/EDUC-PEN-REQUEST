@@ -40,7 +40,7 @@
                       <v-text-field v-model="user.maidenName" color="#003366"  hint="Optional" outlined label="Maiden Name"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field v-model="user.pastName" color="#003366" hint="Optional"  outlined label="Past Name(s)"></v-text-field>
+                      <v-text-field v-model="user.pastNames" color="#003366" hint="Optional"  outlined label="Past Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row>
@@ -58,7 +58,7 @@
                             <v-text-field
                               color="#003366"
                               outlined
-                              v-model="user.date"
+                              v-model="user.dob"
                               label="Birthdate"
                               readonly
                               v-on="on"
@@ -70,7 +70,7 @@
                         <v-date-picker
                           color="#003366"
                           ref="picker"
-                          v-model="user.date"
+                          v-model="user.dob"
                           show-current
                           :max="new Date().toISOString().substr(0, 10)"
                           min="1903-01-01"
@@ -79,7 +79,7 @@
                     </v-menu>
                   </v-col>
                 <v-col>
-                  <v-select color="#003366" v-model="user.gender" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
+                  <v-select color="#003366" v-model="user.genderCode" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
                 </v-col>
               </v-row>
               <v-row class="bottom_group">
@@ -89,12 +89,12 @@
               </v-row>
               <v-row class="top_group">
                 <v-col>
-                  <v-text-field v-model="user.lastSchool" color="#003366" outlined label="Last B.C. School Attended"></v-text-field>
+                  <v-text-field v-model="user.lastBCSchool" color="#003366" outlined label="Last B.C. School Attended"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <v-text-field v-model="user.studentIDNumber" color="#003366" hint="Optional"  outlined label="School Student ID Number"></v-text-field>
+                  <v-text-field v-model="user.lastBCSchoolStudentNumber" color="#003366" hint="Optional"  outlined label="School Student ID Number"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
@@ -112,6 +112,7 @@
               id="submit_form"
               type="submit"
               :disabled="!validForm"
+              @submit="submitForm"
             >
             Submit
             </v-btn>
@@ -127,7 +128,6 @@ export default {
   data() {
     return {
       genders: ['Male', 'Female', 'Gender Diverse', 'Unknown'],
-      date: null,
       requiredRules: [v => !!v || 'Required'],
       emailRules: [
         v => !!v || 'E-mail is required',
@@ -147,13 +147,13 @@ export default {
         usualLastName: null,
         usualFirstName: null,
         usualMiddleName: null,
-        maidenName: null,
+        maidenNames: null,
         pastName: null,
-        date: null,
-        gender: null,
+        dob: null,
+        genderCode: null,
         email: null,
-        lastSchool: null,
-        studentIDNumber: null,
+        lastBCSchool: null,
+        lastBCSchoolStudentNumber: null,
         currentSchool: null
       }
     };
@@ -186,7 +186,9 @@ export default {
     submitForm() {
       this.validate();
       console.log(this.user);
-      apiAxios.post(ApiRoutes.PEN_REQUEST, this.user);
+      if(this.validForm){
+        apiAxios.post(ApiRoutes.PEN_REQUEST, this.user);
+      }
     }
   },
 };
