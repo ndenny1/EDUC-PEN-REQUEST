@@ -1,5 +1,6 @@
 let baseRoot = '/api';
 const authRoot = baseRoot + '/auth';
+const apiRoot = baseRoot + '/pen';
 let object;
 
 if(process.env.NODE_ENV === 'development'){
@@ -19,3 +20,7 @@ if(process.env.NODE_ENV === 'development'){
 }
 //Authentication endpoints
 export const AuthRoutes = Object.freeze(object);
+
+export const ApiRoutes = Object.freeze({
+  PEN_REQUEST: apiRoot + '/request'
+});

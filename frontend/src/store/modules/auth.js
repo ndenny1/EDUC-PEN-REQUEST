@@ -72,7 +72,7 @@ export default {
             lastName: 'Denny',
             email: 'fake-email@not.real',
             accountType: 'BCEID',
-            pen: '4398745098098'
+            pen: null
           });
         } else {
           var token = localStorage.getItem('jwtToken');
