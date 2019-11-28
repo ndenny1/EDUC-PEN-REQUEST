@@ -8,7 +8,8 @@ export default {
   actions: {
     async postRequest(context, info){
       try {
-        await ApiService.postPenRequest(info);
+        const response = await ApiService.postPenRequest(info);
+        console.log(response);
       } catch(e) {
         console.log('Error while accessing API - ' + e);
       }
