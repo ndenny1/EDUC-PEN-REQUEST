@@ -18,7 +18,7 @@ router.get('/', (_req, res) => {
 
 router.post('/request', passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const newJwt = auth.renew(req.user.refreshToken).jwt;
+    const newJwt = auth.getApiJwt(config.get('penRequest:clientId'), config.get('penRequest:clientSecret')).jwt;
     axios.defaults.headers.common['Authorization'] = `Bearer ${newJwt}`;
 
     const response = axios.post(config.get('penRequest:apiEndpoint'), req.body);
