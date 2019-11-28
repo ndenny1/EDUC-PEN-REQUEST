@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiRoutes } from '../utils/constants';
+import { ApiRoutes } from '@/utils/constants';
 import AuthService from '@/common/authService';
 
 // Buffer concurrent requests while refresh token is being acquired
@@ -83,6 +83,7 @@ export default {
 
   async postPenRequest(userInfo){
     try{
+      console.log(ApiRoutes.PEN_REQUEST);
       const response = await apiAxios.post(ApiRoutes.PEN_REQUEST, userInfo);
       console.log(response);
       return true;
