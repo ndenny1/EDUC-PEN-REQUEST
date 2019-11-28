@@ -85,9 +85,6 @@ export default {
     try{
       const response = await apiAxios.post(ApiRoutes.PEN_REQUEST, userInfo);
       console.log(response);
-      if(response.status != 200){
-        console.log('Error sending data to nodejs API');
-      }
       return true;
     } catch(e) {
       console.log(`Failed to post to Nodejs API - ${e}`);
