@@ -89,7 +89,7 @@
               </v-row>
               <v-row class="top_group">
                 <v-col>
-                  <v-text-field v-model="user.lastBCSchool" color="#003366" outlined label="Last B.C. School Attended"></v-text-field>
+                  <v-text-field v-model="user.lastBCSchool" color="#003366" hint="Optional" outlined label="Last B.C. School Attended"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
@@ -99,7 +99,7 @@
               </v-row>
               <v-row>
                 <v-col>
-                  <v-text-field v-model="user.currentSchool" color="#003366" outlined label="Current B.C. School Attending"></v-text-field>
+                  <v-text-field v-model="user.currentSchool" color="#003366" hint="Optional" outlined label="Current B.C. School Attending"></v-text-field>
                 </v-col>
               </v-row>
           </v-card-text>
