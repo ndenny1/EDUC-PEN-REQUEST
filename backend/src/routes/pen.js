@@ -19,10 +19,10 @@ router.get('/', (_req, res) => {
 router.post('/request', passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try{
-      const newJwt = auth.getApiJwt(config.get('penRequest:clientId'), config.get('penRequest:clientSecret')).jwt;
+      const newJwt = await auth.getApiJwt(config.get('penRequest:clientId'), config.get('penRequest:clientSecret')).jwt;
       axios.defaults.headers.common['Authorization'] = `Bearer ${newJwt}`;
 
-      const response = axios.post(config.get('penRequest:apiEndpoint'), req.body);
+      const response = await axios.post(config.get('penRequest:apiEndpoint'), req.body);
       if(response.status !== 200){
         return res.status(response.status).json({
           message: 'API Post error'
