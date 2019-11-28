@@ -84,6 +84,7 @@ export default {
   async postPenRequest(userInfo){
     try{
       const response = await apiAxios.post(ApiRoutes.PEN_REQUEST, userInfo);
+      console.log(response);
       if(response.status != 200){
         console.log('Error sending data to nodejs API');
       }
