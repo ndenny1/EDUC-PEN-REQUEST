@@ -10,7 +10,7 @@ export default {
       try {
         await ApiService.postPenRequest(info);
       } catch(e) {
-        context.commit('addUser', e);
+        console.log('Error while accessing API - ' + e);
       }
     },
   }
