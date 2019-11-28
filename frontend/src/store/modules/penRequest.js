@@ -1,4 +1,4 @@
-import ApiService from '../../common/apiService';
+import ApiService from '@/common/apiService';
 
 export default {
   namespaced: true,
@@ -6,7 +6,7 @@ export default {
   getters: {},
   mutations: {},
   actions: {
-    async postRequest(context, info){
+    async postRequest(info){
       try {
         const response = await ApiService.postPenRequest(info);
         console.log(response);
