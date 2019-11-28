@@ -6,41 +6,40 @@
           ref="form"
           v-model="validForm"
           lazy-validation
-          @submit="submitRequestForm"
         >
           <v-card-text>
               <v-row>
                   <v-col>
-                      <v-text-field v-model="user.legalLastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
+                      <v-text-field v-model="userPost.legalLastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field  v-model="user.legalFirstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
+                      <v-text-field  v-model="userPost.legalFirstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field v-model="user.legalMiddleName" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
+                      <v-text-field v-model="userPost.legalMiddleName" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
                   <v-col>
-                      <v-text-field v-model="user.usualLastName" color="#003366" outlined  hint="If different from legal last name" label="Usual Last Name"></v-text-field>
+                      <v-text-field v-model="userPost.usualLastName" color="#003366" outlined  hint="If different from legal last name" label="Usual Last Name"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field v-model="user.usualFistName" color="#003366" outlined  hint="If different from legal first name(s)" label="Usual First Name(s)"></v-text-field>
+                      <v-text-field v-model="userPost.usualFistName" color="#003366" outlined  hint="If different from legal first name(s)" label="Usual First Name(s)"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field v-model="user.usualMiddleName" color="#003366" outlined  hint="If different from legal middle name(s)" label="Usual Middle Name(s)"></v-text-field>
+                      <v-text-field v-model="userPost.usualMiddleName" color="#003366" outlined  hint="If different from legal middle name(s)" label="Usual Middle Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
                   <v-col>
-                      <v-text-field v-model="user.maidenName" color="#003366"  hint="Optional" outlined label="Maiden Name"></v-text-field>
+                      <v-text-field v-model="userPost.maidenName" color="#003366"  hint="Optional" outlined label="Maiden Name"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field v-model="user.pastNames" color="#003366" hint="Optional"  outlined label="Past Name(s)"></v-text-field>
+                      <v-text-field v-model="userPost.pastNames" color="#003366" hint="Optional"  outlined label="Past Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row>
@@ -58,7 +57,7 @@
                             <v-text-field
                               color="#003366"
                               outlined
-                              v-model="user.dob"
+                              v-model="userPost.dob"
                               label="Birthdate"
                               readonly
                               v-on="on"
@@ -70,7 +69,7 @@
                         <v-date-picker
                           color="#003366"
                           ref="picker"
-                          v-model="user.dob"
+                          v-model="userPost.dob"
                           show-current
                           :max="new Date().toISOString().substr(0, 10)"
                           min="1903-01-01"
@@ -79,27 +78,27 @@
                     </v-menu>
                   </v-col>
                 <v-col>
-                  <v-select color="#003366" v-model="user.genderCode" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
+                  <v-select color="#003366" v-model="userPost.genderCode" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
                 </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field v-model="user.email" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
+                      <v-text-field v-model="userPost.email" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
                 <v-col>
-                  <v-text-field v-model="user.lastBCSchool" color="#003366" hint="Optional" outlined label="Last B.C. School Attended"></v-text-field>
+                  <v-text-field v-model="userPost.lastBCSchool" color="#003366" hint="Optional" outlined label="Last B.C. School Attended"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <v-text-field v-model="user.lastBCSchoolStudentNumber" color="#003366" hint="Optional"  outlined label="School Student ID Number"></v-text-field>
+                  <v-text-field v-model="userPost.lastBCSchoolStudentNumber" color="#003366" hint="Optional"  outlined label="School Student ID Number"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <v-text-field v-model="user.currentSchool" color="#003366" hint="Optional" outlined label="Current B.C. School Attending"></v-text-field>
+                  <v-text-field v-model="userPost.currentSchool" color="#003366" hint="Optional" outlined label="Current B.C. School Attending"></v-text-field>
                 </v-col>
               </v-row>
           </v-card-text>
@@ -110,7 +109,7 @@
               color="#003366"
               class="white--text"
               id="submit_form"
-              type="submit"
+              @click="submitRequestForm"
               :disabled="!validForm"
             >
             Submit
@@ -137,7 +136,7 @@ export default {
       search: null,
       nameLimit: 80,
       validForm: true,
-      user: {
+      userPost: {
         legalLastName: null,
         legalFirstName: null,
         legalMiddleName: null,
@@ -181,10 +180,9 @@ export default {
       this.$refs.form.validate();
     },
     async submitRequestForm() {
-      console.log(this.user);
       if(this.validForm){
         try{
-          await this.$store.dispatch('penRequest/postRequest', this.user);
+          await this.$store.dispatch('penRequest/postRequest', this.userPost);
         } catch (e) {
           throw e;
         }

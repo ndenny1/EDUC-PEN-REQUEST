@@ -6,10 +6,9 @@ export default {
   getters: {},
   mutations: {},
   actions: {
-    async postRequest(info){
+    async postRequest(_context, info){
       try {
-        const response = await ApiService.postPenRequest(info);
-        console.log(response);
+        await ApiService.postPenRequest(info);
       } catch(e) {
         console.log('Error while accessing API - ' + e);
       }
