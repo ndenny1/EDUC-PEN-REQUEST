@@ -21,6 +21,9 @@ nconf.overrides({
     clientId: process.env.ID,
     clientSecret: process.env.SECRET,
     discovery: process.env.DISCOVERY
+  },
+  penRequest: {
+    apiEndpoint: process.env.PEN_REQUEST_API
   }
 });
 

@@ -8,7 +8,11 @@ export default {
   actions: {
     async postRequest(_context, info){
       try {
-        await ApiService.postPenRequest(info);
+        const response = await ApiService.postPenRequest(info);
+        if(response.status !== 200){
+          return false;
+        }
+        return true;
       } catch(e) {
         console.log('Error while accessing API - ' + e);
       }

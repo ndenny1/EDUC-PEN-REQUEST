@@ -182,7 +182,13 @@ export default {
     async submitRequestForm() {
       if(this.validForm){
         try{
-          await this.$store.dispatch('penRequest/postRequest', this.userPost);
+          const resStatus = await this.$store.dispatch('penRequest/postRequest', this.userPost);
+          if(resStatus){
+            this.$refs.form.reset();
+            console.log('Submit success!');
+          } else {
+            console.log('API post failure :(');
+          }
         } catch (e) {
           throw e;
         }

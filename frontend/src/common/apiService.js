@@ -83,8 +83,8 @@ export default {
 
   async postPenRequest(userInfo){
     try{
-      await apiAxios.post('https://pen-request-c2mvws-dev.pathfinder.gov.bc.ca/api/pen/request', userInfo);
-      return true;
+      const response = await apiAxios.post(ApiRoutes.PEN_REQUEST, userInfo);
+      return response;
     } catch(e) {
       console.log(`Failed to post to Nodejs API - ${e}`);
       throw e;
