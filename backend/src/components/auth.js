@@ -92,7 +92,7 @@ const auth = {
   },
 
   //this is used to get JWTs for API consumption (eg. PEN Request API, Digital ID API, etc)
-  async getApiJwt(client, secret){
+  async getApiJwt(client, secret, optionalScope){
     let result ={};
     try {
       const discovery = await utils.getOidcDiscovery();
@@ -101,21 +101,21 @@ const auth = {
           client_id: client,
           client_secret: secret,
           grant_type: 'client_credentials',
-          scope: discovery.scopes_supported
+          scope: optionalScope
         }), {
           headers: {
             Accept: 'application/json',
             'Cache-Control': 'no-cache',
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/x-www-form-urlencoded'
           }
         }
       );
 
-      log.verbose('renew', utils.prettyStringify(response.data));
+      log.verbose('api jwt', utils.prettyStringify(response.data));
       result.jwt = response.data.access_token;
       result.refreshToken = response.data.refresh_token;
     } catch (error) {
-      log.error('renew', error.message);
+      log.error('api jwt', error.message);
       result = error.response.data;
     }
 
