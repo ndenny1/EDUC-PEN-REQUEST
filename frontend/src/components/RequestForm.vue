@@ -18,7 +18,7 @@
                       <v-text-field  v-model="userPost.legalFirstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field v-model="userPost.legalMiddleName" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
+                      <v-text-field v-model="userPost.legalMiddleNames" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
@@ -139,12 +139,12 @@ export default {
       userPost: {
         legalLastName: null,
         legalFirstName: null,
-        legalMiddleName: null,
+        legalMiddleNames: null,
         usualLastName: null,
         usualFirstName: null,
         usualMiddleName: null,
-        maidenNames: null,
-        pastName: null,
+        maidenName: null,
+        pastNames: null,
         dob: null,
         genderCode: null,
         email: null,
