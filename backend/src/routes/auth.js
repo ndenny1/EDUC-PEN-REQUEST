@@ -83,14 +83,16 @@ router.post('/refresh', [
     });
   }
 
-  const refresh = await auth.renew(req.body.refreshToken);
+  const refresh = await auth.generateUiToken();
   return res.status(200).json(refresh);
 });
 
 //provides a jwt to authenticated users
 router.use('/token', auth.refreshJWT, (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
-    res.status(200).json(req.user);
+    var webUser = req.user;
+    webUser.jwtFrontend = auth.generateUiToken();
+    res.status(200).json(webUser);
   } else {
     res.status(401).json({
       message: 'Not logged in'

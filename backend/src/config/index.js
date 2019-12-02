@@ -26,6 +26,9 @@ nconf.overrides({
     apiEndpoint: process.env.PEN_REQUEST_API,
     clientId: process.env.PEN_REQUEST_API_CLIENTID,
     clientSecret: process.env.PEN_REQUEST_API_SECRET
+  },
+  tokenGenerate: {
+    privateKey: process.env.UI_PRIVATE_KEY
   }
 });
 
