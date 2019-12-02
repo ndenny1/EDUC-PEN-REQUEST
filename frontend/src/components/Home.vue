@@ -19,7 +19,7 @@
       </v-row>
     </article>
   </v-container>
-<!--
+
   <v-container fluid class="full-height" v-else-if="isAuthenticated && dataReady && userInfo.pen">
     <article id="pen-display-container" class="top-banner full-height">
       <v-row align="center" justify="center">
@@ -27,7 +27,7 @@
       </v-row>
     </article>
   </v-container>
--->
+
   <v-container fluid class="full-height" v-else-if="isAuthenticated && dataReady">
     <!-- pen request form -->
     <article id="request-form-container" class="top-banner full-height">
