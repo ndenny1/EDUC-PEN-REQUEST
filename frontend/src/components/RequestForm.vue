@@ -209,6 +209,7 @@ export default {
       this.$refs.form.validate();
     },
     async submitRequestForm() {
+      console.log(this.userInfo);
       if(this.validForm){
         try{
           this.userPost.digitalID = this.userInfo.digitalID;
