@@ -165,9 +165,9 @@ export default {
       dialogMessage: null,
       userPost: {
         digitalID: null,
-        legalLastName: this.userInfo.lastName,
-        legalFirstName: this.userInfo.firstName,
-        legalMiddleNames: this.userInfo.middleNames,
+        legalLastName: null,
+        legalFirstName: null,
+        legalMiddleNames: null,
         usualLastName: null,
         usualFirstName: null,
         dataSourceCode: null,
@@ -176,7 +176,7 @@ export default {
         pastNames: null,
         dob: null,
         genderCode: null,
-        email: this.userInfo.emailAddress,
+        email: null,
         lastBCSchool: null,
         lastBCSchoolStudentNumber: null,
         currentSchool: null
