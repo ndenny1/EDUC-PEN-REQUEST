@@ -7,7 +7,7 @@
           v-model="validForm"
           lazy-validation
         >
-          <v-card-text>
+          <v-card-text class="noPadding">
               <v-row>
                   <v-col>
                       <v-text-field v-model="userPost.legalLastName" :value="userInfo.lastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
@@ -209,6 +209,7 @@ export default {
       this.$refs.form.validate();
     },
     async submitRequestForm() {
+      this.validate();
       console.log(this.userInfo);
       if(this.validForm){
         try{
@@ -250,7 +251,7 @@ export default {
     min-width: 500px;
     width: 65%;
 }
-.v-card-text{
+.noPadding{
     padding-top: 0px;
     margin-top: 0px;
 }
@@ -264,9 +265,5 @@ export default {
 
 .bottom_group{
   padding-bottom: 15px;
-}
-
-.full-padding{
-  padding-top: 24px !important;
 }
 </style>
