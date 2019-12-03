@@ -10,15 +10,15 @@
           <v-card-text>
               <v-row>
                   <v-col>
-                      <v-text-field v-model="userPost.legalLastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
+                      <v-text-field v-model="userPost.legalLastName" :value="userInfo.lastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field  v-model="userPost.legalFirstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
+                      <v-text-field  v-model="userPost.legalFirstName" :value="userInfo.firstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field v-model="userPost.legalMiddleNames" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
+                      <v-text-field v-model="userPost.legalMiddleNames" :value="userInfo.middleNames" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
@@ -83,7 +83,7 @@
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field v-model="userPost.email" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
+                      <v-text-field v-model="userPost.email" :value="userInfo.emailAddress" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
@@ -115,11 +115,36 @@
             Submit
             </v-btn>
         </v-card-actions>
-       </v-form> 
+       </v-form>
+       <v-dialog
+        v-model="dialog"
+        width="500"
+      >
+        <v-card>
+  
+          <v-card-text>
+            {{ dialogMessage }}
+          </v-card-text>
+  
+          <v-divider></v-divider>
+  
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary"
+              text
+              @click="dialog = false"
+            >
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-card>        
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -136,12 +161,16 @@ export default {
       search: null,
       nameLimit: 80,
       validForm: true,
+      dialog: false,
+      dialogMessage: null,
       userPost: {
+        digitalID: null,
         legalLastName: null,
         legalFirstName: null,
         legalMiddleNames: null,
         usualLastName: null,
         usualFirstName: null,
+        dataSourceCode: null,
         usualMiddleName: null,
         maidenName: null,
         pastNames: null,
@@ -155,7 +184,7 @@ export default {
     };
   },
   computed: {
-
+    ...mapGetters('auth', ['userInfo']),
     fields () {
       if (!this.model) return [];
 
@@ -182,12 +211,17 @@ export default {
     async submitRequestForm() {
       if(this.validForm){
         try{
+          this.userPost.digitalID = this.userInfo.digitalID;
+          this.userPost.dataSourceCode = this.userInfo.accountType;
           const resStatus = await this.$store.dispatch('penRequest/postRequest', this.userPost);
           if(resStatus){
             this.$refs.form.reset();
-            console.log('Submit success!');
+            this.dialogMessage = "Form submit success!"
+            this.dialog = true;
           } else {
-            console.log('API post failure :(');
+            this.$refs.form.reset();
+            this.dialogMessage = "Form submit failure. Blame John."
+            this.dialog = true;
           }
         } catch (e) {
           throw e;
