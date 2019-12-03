@@ -8,11 +8,20 @@
 
 <script>
 import UserCard from './UserCard';
+import { mapGetters } from 'vuex';
 export default {
   name: 'userInfo',
   components: {
     UserCard
-  }
+  },
+  computed: {
+    ...mapGetters('auth', ['isAuthenticated']),
+  },
+  mounted() {
+    if(!(this.isAuthenticated)){
+      window.location.href = '/';
+    }
+  },
 };
 </script>
 

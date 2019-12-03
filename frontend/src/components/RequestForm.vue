@@ -122,7 +122,7 @@
       >
         <v-card>
   
-          <v-card-text>
+          <v-card-text class="fullPadding">
             {{ dialogMessage }}
           </v-card-text>
   
@@ -209,9 +209,10 @@ export default {
       this.$refs.form.validate();
     },
     async submitRequestForm() {
+      console.log(this.userInfo);
       if(this.validForm){
         try{
-          this.userPost.digitalID = this.userInfo.digitalID;
+          this.userPost.digitalID = this.userInfo.digitalIdentityID;
           this.userPost.dataSourceCode = this.userInfo.accountType;
           const resStatus = await this.$store.dispatch('penRequest/postRequest', this.userPost);
           if(resStatus){
@@ -256,4 +257,7 @@ export default {
   padding-bottom: 15px;
 }
 
+.full-padding{
+  padding-top: 24px;
+}
 </style>

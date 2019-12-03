@@ -18,8 +18,8 @@
           </v-row>
           <v-row>
             <v-col><b>Middle Name(s): </b></v-col>
-            <v-col v-if="!userInfo.middle_name"><p> N/A </p></v-col>
-            <v-col v-else><p id="middle_name">{{ userInfo.middle_name }}</p></v-col>
+            <v-col v-if="!userInfo.middleNames"><p> N/A </p></v-col>
+            <v-col v-else><p id="middle_name">{{ userInfo.middleNames }}</p></v-col>
           </v-row>
           <!--
           <v-row>
@@ -46,7 +46,8 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'userCard',
   computed: {
-    ...mapGetters('auth', ['userInfo'])
+    ...mapGetters('auth', ['userInfo']),
+    
   },
   methods: {
     getAccountType(input) {
