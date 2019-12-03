@@ -120,6 +120,23 @@ const auth = {
     }
 
     return result;
+  },
+
+  async generateUiToken() {
+    var i  = 'PEN Request Backend';
+    var s = 'user@' + config.get('server:frontend');
+    var a  = config.get('server:frontend'); // Audience// SIGNING OPTIONS
+    var signOptions = {
+      issuer:  i,
+      subject: s,
+      audience:  a,
+      expiresIn:  '12h',
+      algorithm:  'RS256'
+    };
+
+    const privateKey = config.get('tokenGenerate:privateKey');
+    const uiToken = jsonwebtoken.sign({}, privateKey, signOptions);
+    return uiToken;
   }
 };
 
