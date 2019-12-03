@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mainCard">
+    <v-card class="mainCard" v-if="dataReady">
         <v-card-title><h3>PEN Request Form</h3></v-card-title>
         <v-card-subtitle>Student Information</v-card-subtitle>
         <v-form
@@ -194,6 +194,12 @@ export default {
           value: this.model[key] || 'n/a',
         };
       });
+    },
+    dataReady () {
+      if(this.userInfo !== null){
+        return true
+      }
+      return false;
     }
   },
   watch: {
@@ -224,6 +230,11 @@ export default {
           } else {
             this.userPost.genderCode = 'U';
           }
+
+          if(this.userPost.dataSourceCode === 'BCEID'){
+            this.userPost.dataSourceCode = 'DIRECT';
+          }
+
           const resStatus = await this.$store.dispatch('penRequest/postRequest', this.userPost);
           if(resStatus){
             this.$refs.form.reset();
@@ -250,6 +261,9 @@ export default {
     max-width: 1000px;
     min-width: 500px;
     width: 65%;
+}
+.v-card__text {
+  padding: 24px 24px 20px;
 }
 .noPadding{
     padding-top: 0px;
