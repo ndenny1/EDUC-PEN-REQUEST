@@ -214,14 +214,23 @@ export default {
         try{
           this.userPost.digitalID = this.userInfo.digitalIdentityID;
           this.userPost.dataSourceCode = this.userInfo.accountType;
+          if(this.userPost.genderCode === 'Male'){
+            this.userPost.genderCode = 'M';
+          } else if (this.userPost.genderCode === 'Female'){
+            this.userPost.genderCode = 'F';
+          } else if (this.userPost.genderCode === 'Gender Diverse'){
+            this.userPost.genderCode = 'X';
+          } else {
+            this.userPost.genderCode = 'U';
+          }
           const resStatus = await this.$store.dispatch('penRequest/postRequest', this.userPost);
           if(resStatus){
             this.$refs.form.reset();
-            this.dialogMessage = "Form submit success!"
+            this.dialogMessage = 'Form submit success!';
             this.dialog = true;
           } else {
             this.$refs.form.reset();
-            this.dialogMessage = "Form submit failure. Blame John."
+            this.dialogMessage = 'Form submit failure. Blame John.';
             this.dialog = true;
           }
         } catch (e) {
@@ -258,6 +267,6 @@ export default {
 }
 
 .full-padding{
-  padding-top: 24px;
+  padding-top: 24px !important;
 }
 </style>
