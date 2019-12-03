@@ -207,6 +207,12 @@ export default {
       val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'));
     },
   },
+  mounted() {
+    this.userPost.legalLastName = this.userInfo.lastName;
+    this.userPost.legalFirstName = this.userInfo.firstName;
+    this.userPost.email = this.userInfo.emailAddress;
+    this.userPost.legalMiddleNames = this.userInfo.middleNames;
+  },
   methods: {
     save (date) {
       this.$refs.menu.save(date);
@@ -262,7 +268,7 @@ export default {
     min-width: 500px;
     width: 65%;
 }
-.v-card__text {
+.v-dialog > .v-card > .v-card__text {
   padding: 24px 24px 20px;
 }
 .noPadding{
