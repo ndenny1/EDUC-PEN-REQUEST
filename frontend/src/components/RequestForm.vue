@@ -10,15 +10,15 @@
           <v-card-text class="noPadding">
               <v-row>
                   <v-col>
-                      <v-text-field v-model="userPost.legalLastName" :value="userInfo.lastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
+                      <v-text-field v-model="userPost.legalLastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field  v-model="userPost.legalFirstName" :value="userInfo.firstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
+                      <v-text-field  v-model="userPost.legalFirstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field v-model="userPost.legalMiddleNames" :value="userInfo.middleNames" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
+                      <v-text-field v-model="userPost.legalMiddleNames" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
@@ -165,9 +165,9 @@ export default {
       dialogMessage: null,
       userPost: {
         digitalID: null,
-        legalLastName: null,
-        legalFirstName: null,
-        legalMiddleNames: null,
+        legalLastName: this.userInfo.lastName,
+        legalFirstName: this.userInfo.firstName,
+        legalMiddleNames: this.userInfo.middleNames,
         usualLastName: null,
         usualFirstName: null,
         dataSourceCode: null,
@@ -176,7 +176,7 @@ export default {
         pastNames: null,
         dob: null,
         genderCode: null,
-        email: null,
+        email: this.userInfo.emailAddress,
         lastBCSchool: null,
         lastBCSchoolStudentNumber: null,
         currentSchool: null
@@ -197,7 +197,7 @@ export default {
     },
     dataReady () {
       if(this.userInfo !== null){
-        return true
+        return true;
       }
       return false;
     }
