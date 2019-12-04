@@ -124,7 +124,7 @@ const auth = {
 
   async generateUiToken() {
     var i  = 'PEN Request Backend';
-    var s = 'user@' + config.get('server:frontend');
+    var s = 'user@penrequest.ca';
     var a  = config.get('server:frontend'); // Audience// SIGNING OPTIONS
     var signOptions = {
       issuer:  i,
@@ -136,6 +136,7 @@ const auth = {
 
     const privateKey = config.get('tokenGenerate:privateKey');
     const uiToken = jsonwebtoken.sign({}, privateKey, signOptions);
+    log.verbose('Generated JWT', uiToken);
     return uiToken;
   }
 };
