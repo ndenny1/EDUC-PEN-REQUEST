@@ -28,7 +28,7 @@
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field v-model="userPost.usualFistName" color="#003366" outlined  hint="If different from legal first name(s)" label="Usual First Name(s)"></v-text-field>
+                      <v-text-field v-model="userPost.usualFirstName" color="#003366" outlined  hint="If different from legal first name(s)" label="Usual First Name(s)"></v-text-field>
                   </v-col>
                   <v-col>
                       <v-text-field v-model="userPost.usualMiddleName" color="#003366" outlined  hint="If different from legal middle name(s)" label="Usual Middle Name(s)"></v-text-field>
@@ -125,8 +125,6 @@
           <v-card-text class="fullPadding">
             {{ dialogMessage }}
           </v-card-text>
-  
-          <v-divider></v-divider>
   
           <v-card-actions>
             <v-spacer></v-spacer>
