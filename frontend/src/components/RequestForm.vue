@@ -126,8 +126,6 @@
             {{ dialogMessage }}
           </v-card-text>
   
-          <v-divider></v-divider>
-  
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
