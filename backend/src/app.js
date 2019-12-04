@@ -10,6 +10,7 @@ const passport = require('passport');
 const helmet = require('helmet');
 const cors = require('cors');
 const utils = require('./components/utils');
+const auth = require('./components/auth');
 //const cookieSession = require('cookie-session')
 
 dotenv.config();
@@ -80,7 +81,10 @@ utils.getOidcDiscovery().then(discovery => {
       return done('No access token', null);
     }
 
+    var token = auth.generateUiToken();
+
     //set access and refresh tokens
+    profile.uiJwt = token;
     profile.jwt = accessToken;
     profile.refreshToken = refreshToken;
     return done(null, profile);

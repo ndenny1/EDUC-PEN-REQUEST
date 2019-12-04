@@ -90,10 +90,7 @@ router.post('/refresh', [
 //provides a jwt to authenticated users
 router.use('/token', auth.refreshJWT, (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
-    var webUser = req.user;
-    var uiToken = auth.generateUiToken();
-    webUser.jwtFrontend = uiToken;
-    res.status(200).json(webUser);
+    res.status(200).json(req.user);
   } else {
     res.status(401).json({
       message: 'Not logged in'
