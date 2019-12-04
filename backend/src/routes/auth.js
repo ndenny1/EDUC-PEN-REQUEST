@@ -83,7 +83,7 @@ router.post('/refresh', [
     });
   }
 
-  const refresh = await auth.generateUiToken();
+  const refresh = auth.generateUiToken();
   return res.status(200).json(refresh);
 });
 
@@ -91,7 +91,8 @@ router.post('/refresh', [
 router.use('/token', auth.refreshJWT, (req, res) => {
   if (req.user && req.user.jwt && req.user.refreshToken) {
     var webUser = req.user;
-    webUser.jwtFrontend = auth.generateUiToken();
+    var uiToken = auth.generateUiToken();
+    webUser.jwtFrontend = uiToken;
     res.status(200).json(webUser);
   } else {
     res.status(401).json({

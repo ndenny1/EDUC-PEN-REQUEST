@@ -122,7 +122,7 @@ const auth = {
     return result;
   },
 
-  async generateUiToken() {
+  generateUiToken() {
     var i  = 'PEN Request Backend';
     var s = 'user@penrequest.ca';
     var a  = config.get('server:frontend'); // Audience// SIGNING OPTIONS
@@ -138,6 +138,25 @@ const auth = {
     const uiToken = jsonwebtoken.sign({}, privateKey, signOptions);
     log.verbose('Generated JWT', uiToken);
     return uiToken;
+  },
+
+  verifyUiToken(token) {
+    var i  = 'PEN Request Backend';
+    var s = 'user@penrequest.ca';
+    var a  = config.get('server:frontend'); // Audience// SIGNING OPTIONS
+    var verifyOptions = {
+      issuer:  i,
+      subject: s,
+      audience:  a,
+      expiresIn:  '12h',
+      algorithm:  ['RS256']
+    };
+
+    try{
+      return jsonwebtoken.verify(token, config.get('tokenGenerate:publicKey'), verifyOptions);
+    }catch (err){
+      return false;
+    }
   }
 };
 
