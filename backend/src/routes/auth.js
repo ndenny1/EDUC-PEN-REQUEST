@@ -95,7 +95,8 @@ router.use('/token', auth.refreshJWT, (req, res) => {
     res.status(200).json(req.user._json);
   } else {
     res.status(401).json({
-      message: 'Not logged in'
+      message: 'Not logged in',
+      user: req.user
     });
   }
 });
