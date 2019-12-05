@@ -12,7 +12,6 @@ export default {
     acronyms: state => state.acronyms,
     isAuthenticated: state => state.isAuthenticated,
     jwtToken: () => localStorage.getItem('jwtToken'),
-    refreshToken: () => localStorage.getItem('refreshToken'),
     userInfo: state => state.userInfo,
   },
   mutations: {
@@ -47,15 +46,7 @@ export default {
     },
 
     //sets the token required for refresing expired json web tokens
-    setRefreshToken: (_state, token = null) => {
-      if (token) {
-        localStorage.setItem('refreshToken', token);
-      } else {
-        localStorage.removeItem('refreshToken');
-      }
-    },
     logoutState: (state) => {
-      localStorage.removeItem('refreshToken');
       localStorage.removeItem('jwtToken');
       state.userInfo = false;
       state.isAuthenticated = false;
@@ -92,47 +83,38 @@ export default {
     //retrieves the json web token from local storage. If not in local storage, retrieves it from API
     async getJwtToken(context) {
       try {
-        if (context.getters.isAuthenticated && !!context.getters.refreshToken) {
+        if (context.getters.isAuthenticated && !!context.getters.jwtToken) {
           if(process.env.NODE_ENV === 'development'){
             context.commit('setJwtToken', 'testToken');
-            context.commit('setRefreshToken', 'fakeRefreshToken');
           } else{
             const now = Date.now().valueOf() / 1000;
             const jwtPayload = context.getters.jwtToken.split('.')[1];
             const payload = JSON.parse(window.atob(jwtPayload));
 
             if (payload.exp > now) {
-              const response = await AuthService.refreshAuthToken(context.getters.refreshToken);
+              const response = await AuthService.refreshAuthToken(context.getters.jwtToken);
 
-              if (response.jwt) {
-                context.commit('setJwtToken', response.jwt);
+              if (response.jwtFrontend) {
+                context.commit('setJwtToken', response.jwtFrontend);
               }
-              if (response.refreshToken) {
-                context.commit('setRefreshToken', response.refreshToken);
-              }
-              ApiService.setAuthHeader(response.jwt);
+              ApiService.setAuthHeader(response.jwtFrontend);
             }
           }
         } else {
           if(process.env.NODE_ENV === 'development'){
             context.commit('setJwtToken', 'testToken');
-            context.commit('setRefreshToken', 'fakeRefreshToken');
           } else {
             const response = await AuthService.getAuthToken();
 
-            if (response.jwt) {
-              context.commit('setJwtToken', response.jwt);
+            if (response.jwtFrontend) {
+              context.commit('setJwtToken', response.jwtFrontend);
             }
-            if (response.refreshToken) {
-              context.commit('setRefreshToken', response.refreshToken);
-            }
-            ApiService.setAuthHeader(response.jwt);
+            ApiService.setAuthHeader(response.jwtFrontend);
           }
         }
       } catch (e) {
         // Remove tokens from localStorage and update state
         context.commit('setJwtToken');
-        context.commit('setRefreshToken');
       }
     },
   }

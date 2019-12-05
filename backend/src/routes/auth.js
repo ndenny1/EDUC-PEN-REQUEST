@@ -8,7 +8,6 @@ const {
   body,
   validationResult
 } = require('express-validator');
-
 const router = express.Router();
 
 
@@ -83,17 +82,14 @@ router.post('/refresh', [
     });
   }
 
-  const refresh = auth.generateUiToken();
+  const refresh = await auth.renew(req.body.jwtFrontend);
   return res.status(200).json(refresh);
 });
 
 //provides a jwt to authenticated users
 router.use('/token', auth.refreshJWT, (req, res) => {
-  if (req.user && req.user.jwt && req.user.refreshToken) {
-    var webUser = req.user;
-    var uiToken = auth.generateUiToken();
-    webUser.jwtFrontend = uiToken;
-    res.status(200).json(webUser);
+  if (req.user && req.user.jwtFrontend && req.user.refreshToken) {
+    res.status(200).json(req.user);
   } else {
     res.status(401).json({
       message: 'Not logged in'

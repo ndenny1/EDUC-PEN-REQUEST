@@ -72,7 +72,6 @@ export default {
   methods: {
     clearStorage() {
       this.$store.commit('auth/setJwtToken');
-      this.$store.commit('auth/setRefreshToken');
     }
   }
 };

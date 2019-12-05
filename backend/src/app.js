@@ -10,6 +10,7 @@ const passport = require('passport');
 const helmet = require('helmet');
 const cors = require('cors');
 const utils = require('./components/utils');
+const auth = require('./components/auth');
 //const cookieSession = require('cookie-session')
 
 dotenv.config();
@@ -80,21 +81,24 @@ utils.getOidcDiscovery().then(discovery => {
       return done('No access token', null);
     }
 
+    var token = auth.generateUiToken();
+
     //set access and refresh tokens
+    profile.uiJwt = token;
     profile.jwt = accessToken;
     profile.refreshToken = refreshToken;
     return done(null, profile);
   }));
   //JWT strategy is used for authorization
   passport.use('jwt', new JWTStrategy({
-    algorithms: discovery.token_endpoint_auth_signing_alg_values_supported,
+    algorithms: ['RS256'],
     // Keycloak 7.3.0 no longer automatically supplies matching client_id audience.
     // If audience checking is needed, check the following SO to update Keycloak first.
     // Ref: https://stackoverflow.com/a/53627747
-    //audience: config.get('oidc:clientID'),
-    issuer: discovery.issuer,
+    audience: config.get('server:frontend'),
+    issuer: config.get('tokenGenerate:issuer'),
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: config.get('oidc:publicKey')
+    secretOrKey: config.get('tokenGenerate:publicKey')
   }, (jwtPayload, done) => {
     if ((typeof (jwtPayload) === 'undefined') || (jwtPayload === null)) {
       return done('No JWT token', null);

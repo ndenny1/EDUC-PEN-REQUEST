@@ -29,7 +29,9 @@ nconf.overrides({
   },
   tokenGenerate: {
     privateKey: process.env.UI_PRIVATE_KEY,
-    publicKey: process.env.UI_PUBLIC_KEY
+    publicKey: process.env.UI_PUBLIC_KEY,
+    audience: process.env.AUDIENCE,
+    issuer: process.env.ISSUER
   }
 });
 
