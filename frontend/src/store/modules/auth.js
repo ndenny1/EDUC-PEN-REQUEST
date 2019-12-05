@@ -18,21 +18,9 @@ export default {
     //sets Json web token and determines whether user is authenticated
     setJwtToken: (state, token = null) => {
       if (token) {
-        //if we aren't in test mode, verify the token contains expected elements
-        if(process.env.NODE_ENV !== 'development'){
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          const roles = payload.realm_access.roles;
-
-          if (typeof roles === 'object' && roles instanceof Array) {
-            state.acronyms = roles.filter(role => !role.match(/offline_access|uma_authorization/));
-          } else {
-            state.acronyms = [];
-          }
-        }
         state.isAuthenticated = true;
         localStorage.setItem('jwtToken', token);
       } else {
-        state.acronyms = [];
         state.isAuthenticated = false;
         localStorage.removeItem('jwtToken');
       }
