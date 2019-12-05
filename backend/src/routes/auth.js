@@ -85,8 +85,11 @@ router.post('/refresh', [
     });
   }
 
-  const refresh = await auth.renew(req.body.jwtFrontend);
-  return res.status(200).json(refresh);
+  await auth.renew(req.user.refreshToken);
+  if(req.user){
+    var newUiToken = auth.generateUiToken();
+  }
+  return res.status(200).json(newUiToken);
 });
 
 //provides a jwt to authenticated users
