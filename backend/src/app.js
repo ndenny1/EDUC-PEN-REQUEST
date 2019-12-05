@@ -52,13 +52,6 @@ app.use(session({
   expires: expiryDate,
 }));
 
-app.use((req, res, next) => {
-  if (req.cookies.pen_request_cookie && !req.session.user) {
-    res.clearCookie('pen_request_cookie');        
-  }
-  next();
-});
-
 //initialize routing and session. Cookies are now only reachable via requests (not js)
 app.use(passport.initialize());
 app.use(passport.session());
