@@ -81,10 +81,10 @@ utils.getOidcDiscovery().then(discovery => {
       return done('No access token', null);
     }
 
-    var token = auth.generateUiToken();
+    //var token = auth.generateUiToken();
 
     //set access and refresh tokens
-    profile.uiJwt = token;
+    //profile.uiJwt = token;
     profile.jwt = accessToken;
     profile.refreshToken = refreshToken;
     return done(null, profile);
