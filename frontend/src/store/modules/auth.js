@@ -54,7 +54,7 @@ export default {
             pen: null
           });
         } else {
-          var token = AuthService.getJwtToken();
+          var token = AuthService.getAuthToken();
           var tokenJson = token._json;
           context.commit('setUserInfo', tokenJson);
         }
