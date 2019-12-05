@@ -54,9 +54,9 @@ export default {
             pen: null
           });
         } else {
-          var token = AuthService.getAuthToken();
+          var token = await AuthService.getAuthToken();
           console.log(token);
-          var tokenJson = token.json;
+          var tokenJson = token._json;
           console.log(tokenJson);
           context.commit('setUserInfo', tokenJson);
         }
