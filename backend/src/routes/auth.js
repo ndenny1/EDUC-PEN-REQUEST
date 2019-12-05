@@ -53,6 +53,7 @@ router.get('/login', passport.authenticate('oidc', {
 router.get('/logout', async (req, res) => {
   if(req.user.jwt){
     const token = req.user.jwt;
+    res.clearCookie('pen_request_cookie');
     req.logout();
     req.session.destroy();
     res.redirect(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend'));
@@ -60,10 +61,12 @@ router.get('/logout', async (req, res) => {
     const refresh = await auth.renew(req.body.refreshToken);
     if(req.user){
       req.logout();
+      res.clearCookie('pen_request_cookie');
       req.session.destroy();
       res.redirect(config.get('logoutEndpoint') + '?id_token_hint=' + refresh.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend'));
     } else{
       req.logout();
+      res.clearCookie('pen_request_cookie');
       req.session.destroy();
       res.redirect(config.get('server:frontend'));
     }

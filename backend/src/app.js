@@ -52,6 +52,13 @@ app.use(session({
   expires: expiryDate,
 }));
 
+app.use((req, res, next) => {
+  if (req.cookies.pen_request_cookie && !req.session.user) {
+    res.clearCookie('pen_request_cookie');        
+  }
+  next();
+});
+
 //initialize routing and session. Cookies are now only reachable via requests (not js)
 app.use(passport.initialize());
 app.use(passport.session());
@@ -81,10 +88,10 @@ utils.getOidcDiscovery().then(discovery => {
       return done('No access token', null);
     }
 
-    //var token = auth.generateUiToken();
+    var token = auth.generateUiToken();
 
     //set access and refresh tokens
-    //profile.uiJwt = token;
+    profile.uiJwt = token;
     profile.jwt = accessToken;
     profile.refreshToken = refreshToken;
     return done(null, profile);
