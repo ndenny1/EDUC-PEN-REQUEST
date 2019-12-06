@@ -1,5 +1,81 @@
+def nodejsTester () {
+  openshift.withCluster() {
+    openshift.withProject() {
+      podTemplate(label: 'node-tester', name: 'node-tester', serviceAccount: 'jenkins', cloud: 'openshift', containers: [
+        containerTemplate(
+          name: 'jnlp',
+          image: 'registry.access.redhat.com/openshift3/jenkins-agent-nodejs-8-rhel7',
+          resourceRequestCpu: '500m',
+          resourceLimitCpu: '800m',
+          resourceRequestMemory: '2Gi',
+          resourceLimitMemory: '4Gi',
+          workingDir: '/tmp',
+          command: '',
+        )
+      ]) {
+        node("node-tester") {
+          checkout scm
+          sh 'cd backend'
+          sh 'npm i'
+          try {
+            sh 'npm run test'
+          } finally {
+            echo "Unit Tests Passed"
+          }
+        }
+      }
+      return true
+    }
+  }
+}
+
+// todo templates can be pulled from a repository, instead of declared here
+def nodejsSonarqube () {
+  openshift.withCluster() {
+    openshift.withProject() {
+      podTemplate(label: 'node-sonarqube', name: 'node-sonarqube', serviceAccount: 'jenkins', cloud: 'openshift', containers: [
+        containerTemplate(
+          name: 'jnlp',
+          image: 'registry.access.redhat.com/openshift3/jenkins-agent-nodejs-8-rhel7',
+          resourceRequestCpu: '500m',
+          resourceLimitCpu: '1000m',
+          resourceRequestMemory: '2Gi',
+          resourceLimitMemory: '4Gi',
+          workingDir: '/tmp',
+          command: '',
+          args: '${computer.jnlpmac} ${computer.name}',
+        )
+      ]) {
+        node("node-sonarqube") {
+          checkout scm
+          dir('sonar-runner') {
+            try {
+              // run scan
+              SONARQUBE_URL = 'https://sonarqube-c2mvws-tools.pathfinder.gov.bc.ca/'
+
+              sh "npm install typescript"
+              sh returnStdout: true, script: "./gradlew sonarqube -Dsonar.host.url=${SONARQUBE_URL} -Dsonar. -Dsonar.verbose=true --stacktrace --info"
+
+              // wiat for scan status to update
+              sleep(30)
+            } catch (error) {
+              throw error
+            } finally {
+              echo "Scan Complete"
+            }
+          }
+        }
+      }
+      return true
+    }
+  }
+}
+
 pipeline{
     agent any
+
+    def BE_COV_STASH = 'backend-coverage'
+    def FE_COV_STASH = 'frontend-coverage'
 
     environment{
         DEBUG_OUTPUT = 'false'
@@ -41,53 +117,25 @@ pipeline{
                 }
             }
         }
-        /*
         stage('Unit Tests') {
-            agent{
-                node{
-                    label 'nodejs10'
-                }
-            }
             steps {
-                script {
-                   parallel(
-                        Backend: {
-                            dir('backend') {
-                                try {
-                                    timeout(10){
-                                        echo 'Running backend lint checks and tests...'
-                                        sh 'npm ci'
-                                        sh 'npm run lint:fix'
-                                        sh 'npm run setlocal'
-                                        sh 'npm run test'
-                                        echo 'Backend lint checks and tests passed!'
-                                    }
-                                } catch(e) {
-                                    echo 'Backend lint checks and tests failed'
-                                    throw e
-                                }
-                            }
-                        },
-                        Frontend: {
-                            dir('frontend') {
-                                try {
-                                    timeout(10){
-                                        echo 'Running frontend lint checks and tests...'
-                                        sh 'npm ci'
-                                        sh 'npm run lint:fix'
-                                        sh 'npm run test:unit'
-                                        echo 'Frontend lint checks and tests passed!'
-                                    }
-                                } catch(e) {
-                                    echo 'Frontend lint checks and tests failed'
-                                    throw e
-                                }
-                            }
-                        }
-                    )
+                script{
+                    echo "Running Unit Tests"
+                    def result = nodeJsTester()
                 }
             }
-        }*/
+        }
+        /*
+        stage('SonarQube Analysis'){
+            openshift.withProject() {
+                unstash BE_COV_STASH
+                unstash FE_COV_STASH
+                echo "Triggering SonarQube analysis..."
+                def sonar = openshift.selector("bc", "sonarqube-scanner")
+                sonar.startBuild()
+            }
+        }
+        */
         stage('Build'){
             steps{
                 script {
