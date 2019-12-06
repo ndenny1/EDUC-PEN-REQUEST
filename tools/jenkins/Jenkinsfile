@@ -104,11 +104,9 @@ pipeline{
                     stash name: FE_COV_STASH, includes: 'frontend/coverage/**'
 
                     echo 'All Lint Checks and Tests passed'
-                    notifyStageStatus('Tests', 'SUCCESS')
                 }
                 failure {
                     echo 'Some Lint Checks and Tests failed'
-                    notifyStageStatus('Tests', 'FAILURE')
                 }
             }
         }
