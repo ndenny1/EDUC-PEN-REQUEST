@@ -8,7 +8,9 @@ def FE_COV_STASH = 'frontend-coverage'
 pipeline{
     agent any
 
-    tools {nodejs "nodejs"}
+    tools {
+        nodejs "nodejs"
+    }
 
     environment{
         DEBUG_OUTPUT = 'false'
@@ -114,6 +116,11 @@ pipeline{
         }
         stage('SonarQube Analysis'){
             agent any
+
+            environment {
+                scannerHome = tool 'SonarQubeScanner'
+            }
+
             steps {
                 script {
                     openshift.withCluster() {
@@ -122,16 +129,13 @@ pipeline{
                                 echo "DEBUG - Using project: ${openshift.project()}"
                             }
 
-                             unstash BE_COV_STASH
+                            unstash BE_COV_STASH
                             unstash FE_COV_STASH
 
                             echo 'Performing SonarQube static code analysis...'
-                            sh """
-                            sonar-scanner \
-                                -Dsonar.host.url='${SONARQUBE_URL_INT}' \
-                                -Dsonar.projectKey='${REPO_NAME}' \
-                                -Dsonar.projectName='PEN Retrieval Frontend'
-                            """
+                            withSonarQubeEnv('sonarqube') {
+                                sh "${scannerHome}/bin/sonar-scanner"
+                            }
                         }
 
                     }
