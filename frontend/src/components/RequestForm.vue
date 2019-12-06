@@ -183,16 +183,6 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['userInfo']),
-    fields () {
-      if (!this.model) return [];
-
-      return Object.keys(this.model).map(key => {
-        return {
-          key,
-          value: this.model[key] || 'n/a',
-        };
-      });
-    },
     dataReady () {
       if(this.userInfo !== null){
         return true;
@@ -246,7 +236,7 @@ export default {
             this.dialog = true;
           } else {
             this.$refs.form.reset();
-            this.dialogMessage = 'Form submit failure. Blame John.';
+            this.dialogMessage = 'Form submit failure.';
             this.dialog = true;
           }
         } catch (e) {

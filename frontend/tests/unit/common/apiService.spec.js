@@ -1,8 +1,12 @@
 //import axios from 'axios';
 import ApiService from '@/common/apiService';
+import MockAdapter from 'axios-mock-adapter';
+import { ApiRoutes } from '@/utils/constants.js';
+
+const mockAxios = new MockAdapter(ApiService.apiAxios);
 
 describe('apiService.js', () => {
-  const spy = jest.spyOn(ApiService.apiAxios, 'get');
+  const spy = jest.spyOn(ApiService.apiAxios, 'post');
 
   beforeEach(() => {
     ApiService.apiAxios.interceptors.response.eject(ApiService.intercept);
@@ -26,5 +30,13 @@ describe('apiService.js', () => {
   it('process items in queue with successful promise', () => {
     ApiService.failedQueue = ['itemA', 'itemB', 'itemC'];
     ApiService.processQueue(null, 'token');
+  });
+
+  it('should respond to axios post with 200', () => {
+    mockAxios.onPost(ApiRoutes.PEN_REQUEST).reply(200);
+
+    const info = {message: 'fakeMessage'};
+    const response = ApiService.postPenRequest(info);
+    expect(response).toBeTruthy();
   });
 });

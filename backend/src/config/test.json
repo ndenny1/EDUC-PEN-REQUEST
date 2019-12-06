@@ -1,3 +1,27 @@
 {
-    
+  "environment": "env",
+  "logoutEndpoint": "process.env.KC_DOMAIN + '/auth/realms/master/protocol/openid-connect/logout'",
+  "server": {
+    "frontend": "process.env.SERVER_FRONTEND",
+    "logLevel": "",
+    "morganFormat": "",
+    "port": ""
+  },
+  "oidc": {
+    "publicKey": "process.env.PUBLIC_KEY",
+    "clientId": "process.env.ID",
+    "clientSecret": "process.env.SECRET",
+    "discovery": "process.env.DISCOVERY"
+  },
+  "penRequest": {
+    "apiEndpoint": "process.env.PEN_REQUEST_API",
+    "clientId": "process.env.PEN_REQUEST_API_CLIENTID",
+    "clientSecret": "process.env.PEN_REQUEST_API_SECRET"
+  },
+  "tokenGenerate": {
+    "privateKey": "process.env.UI_PRIVATE_KEY",
+    "publicKey": "process.env.UI_PUBLIC_KEY",
+    "audience": "process.env.AUDIENCE",
+    "issuer": "process.env.ISSUER"
+  }
 }

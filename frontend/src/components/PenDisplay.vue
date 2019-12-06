@@ -15,7 +15,7 @@
               @click:append="copyClipboard"
             ></v-text-field>
             
-        <v-snackbar v-model="clipboard" color="info" timeout="2000">
+        <v-snackbar v-model="clipboard" color="info" timeout=2000>
           PEN Copied to Clipboard!
         </v-snackbar>
 
