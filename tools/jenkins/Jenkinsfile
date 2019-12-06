@@ -74,9 +74,6 @@ def nodejsSonarqube () {
 pipeline{
     agent any
 
-    def BE_COV_STASH = 'backend-coverage'
-    def FE_COV_STASH = 'frontend-coverage'
-
     environment{
         DEBUG_OUTPUT = 'false'
 
