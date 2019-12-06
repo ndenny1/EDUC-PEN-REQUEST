@@ -300,12 +300,13 @@ def nodejsTester () {
       ]) {
         node("node-tester") {
           checkout scm
-          sh 'cd backend'
-          sh 'npm i'
-          try {
-            sh 'npm run test'
-          } finally {
-            echo "Unit Tests Passed"
+          dir('backend'){
+            sh 'npm ci'
+            try {
+                sh 'npm run test'
+            } finally {
+                echo "Unit Tests Passed"
+            }
           }
         }
       }
