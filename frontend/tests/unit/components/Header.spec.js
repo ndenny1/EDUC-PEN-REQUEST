@@ -30,4 +30,8 @@ describe('Header.vue', () => {
   test('logout of site', () => {
     wrapper.vm.clearStorage();
   });
+
+  test('test computed values', () => {
+    expect(wrapper.vm.dataReady).toBeFalsy();
+  });
 });

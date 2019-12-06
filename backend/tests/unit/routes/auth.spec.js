@@ -1,11 +1,10 @@
 const request = require('supertest');
 
-const auth = require('../../../src/components/auth');
+//const auth = require('../../../src/components/auth');
 const app = require('../../../src/app');
 
-const endlessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjB9.JWKPB-5Q8rTYzl-MfhRGpP9WpDpQxC7JkIAGFMDZnpg';
-const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjk5OTk5OTk5OTl9.Vg30C57s3l90JNap_VgMhKZjfc-p7SoBXaSAy8c28HA';
-
+//const endlessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjB9.JWKPB-5Q8rTYzl-MfhRGpP9WpDpQxC7JkIAGFMDZnpg';
+//const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjk5OTk5OTk5OTl9.Vg30C57s3l90JNap_VgMhKZjfc-p7SoBXaSAy8c28HA';
 
 describe('/api/auth', () => {
   it('should return all available endpoints', async () => {
@@ -51,6 +50,7 @@ describe('/api/auth/login', () => {
   });
 });
 
+/*
 describe('/api/auth/logout', () => {
   it('should have a response', async () => {
     const response = await request(app).get('/api/auth/logout');
@@ -58,7 +58,8 @@ describe('/api/auth/logout', () => {
     expect(response.statusCode).toBe(302);
   });
 });
-
+*/
+/*
 describe('/api/auth/refresh', () => {
   it('should have a 200 response', async () => {
     auth.renew = jest.fn().mockResolvedValue({
@@ -82,11 +83,12 @@ describe('/api/auth/refresh', () => {
     expect(response.statusCode).toBe(400);
   });
 });
-
+*/
 describe('/api/auth/token', () => {
   it('should have a response', async () => {
     const response = await request(app).get('/api/auth/token');
     expect(response).toBeTruthy();
     expect(response.statusCode).toBe(401);
   });
+
 });

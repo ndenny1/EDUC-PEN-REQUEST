@@ -49,12 +49,6 @@ export default {
     ...mapGetters('auth', ['userInfo']),
     
   },
-  methods: {
-    getAccountType(input) {
-      const res = input.split('@');
-      return res[1];
-    }
-  },
 };
 </script>
 

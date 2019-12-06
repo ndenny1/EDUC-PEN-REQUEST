@@ -22,4 +22,8 @@ describe('Home.vue', () => {
   it('Check that text body exists', () => {
     expect(wrapper.html()).toContain('<h4 class="gov-header">Who has a PEN?</h4>');
   });
+
+  it('Check that computed properties are accurate', () => {
+    expect(wrapper.vm.dataReady).toBeFalsy();
+  });
 });
