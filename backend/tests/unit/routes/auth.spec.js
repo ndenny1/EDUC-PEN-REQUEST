@@ -30,7 +30,7 @@ describe('/api/auth/callback', () => {
     expect(response).toBeTruthy();
   });
 });
-
+/*
 describe('/api/auth/error', () => {
   it('should return the OpenAPI yaml spec', async () => {
     const response = await request(app).get('/api/auth/error');
@@ -50,7 +50,6 @@ describe('/api/auth/login', () => {
   });
 });
 
-/*
 describe('/api/auth/logout', () => {
   it('should have a response', async () => {
     const response = await request(app).get('/api/auth/logout');
