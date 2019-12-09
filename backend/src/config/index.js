@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 dotenv.config();
 
-const env = 'local';//process.env.NODE_ENV;
+const env = process.env.NODE_ENV;
 
 //injects environment variables into the json file
 nconf.overrides({
@@ -13,7 +13,7 @@ nconf.overrides({
   server: {
     logLevel: 'verbose',
     morganFormat: 'dev',
-    port: 8080
+    port: 8081
   },
   oidc: {
     discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
@@ -32,7 +32,7 @@ nconf.defaults({
     frontend: process.env.SERVER_FRONTEND,
     logLevel: 'verbose',
     morganFormat: 'dev',
-    port: 8080
+    port: 8081
   },
   oidc: {
     publicKey: process.env.PUBLIC_KEY,
