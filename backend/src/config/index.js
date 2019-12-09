@@ -11,10 +11,28 @@ nconf.overrides({
   environment: env,
   logoutEndpoint: process.env.KC_DOMAIN + '/auth/realms/master/protocol/openid-connect/logout',
   server: {
+    logLevel: 'verbose',
+    morganFormat: 'dev',
+    port: 8080
+  },
+  oidc: {
+    discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
+  },
+});
+
+
+nconf.argv()
+  .env()
+  .file({ file: path.join(__dirname, `${env}.json`) });
+
+nconf.defaults({
+  environment: env,
+  logoutEndpoint: process.env.KC_DOMAIN + '/auth/realms/master/protocol/openid-connect/logout',
+  server: {
     frontend: process.env.SERVER_FRONTEND,
     logLevel: 'verbose',
     morganFormat: 'dev',
-    port: '8080'
+    port: 8080
   },
   oidc: {
     publicKey: process.env.PUBLIC_KEY,
@@ -33,15 +51,7 @@ nconf.overrides({
     audience: process.env.AUDIENCE,
     issuer: process.env.ISSUER
   }
-});
-
-
-nconf.argv()
-  .env()
-  .file({ file: path.join(__dirname, `${env}.json`) });
-
-nconf.defaults({
-
+}
 });
 
 module.exports = nconf;
