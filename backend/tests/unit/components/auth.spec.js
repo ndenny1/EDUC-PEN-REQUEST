@@ -133,7 +133,7 @@ describe('getApiJwt', () => {
   const apiToken = auth.getApiJwt('fakeClient', 'fakeSecret');
   expect(apiToken).toBeTruthy();
 });
-
+/*
 describe('generateUiToken', () => {
   var s = 'user@penrequest.ca';
   var a  = config.get('server:frontend');
@@ -150,3 +150,4 @@ describe('generateUiToken', () => {
 
   expect(verified).toBeTruthy();
 });
+*/
