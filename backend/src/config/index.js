@@ -20,7 +20,7 @@ nconf.overrides({
     publicKey: process.env.PUBLIC_KEY,
     clientId: process.env.ID,
     clientSecret: process.env.SECRET,
-    discovery: process.env.DISCOVERY
+    discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
   },
   penRequest: {
     apiEndpoint: process.env.PEN_REQUEST_API,
