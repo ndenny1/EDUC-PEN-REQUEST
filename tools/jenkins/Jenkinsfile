@@ -124,7 +124,7 @@ pipeline{
             steps {
                 script {
                     openshift.withCluster() {
-                        openshift.withProject(TOOLS_PROJECT) {
+                        openshift.withProject(TOOLS) {
                             if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
                                 echo "DEBUG - Using project: ${openshift.project()}"
                             }
