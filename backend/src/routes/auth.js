@@ -102,9 +102,8 @@ router.use('/token', auth.refreshJWT, (req, res) => {
     };
     res.status(200).json(responseJson);
   } else {
-    res.status(401).json({
-      message: 'Not logged in',
-      user: req.user
+    res.status(200).json({
+      message: 'Not logged in'
     });
   }
 });
