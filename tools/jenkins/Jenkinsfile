@@ -68,7 +68,7 @@ pipeline{
 
                                 echo 'Linting and Testing Backend...'
                                 sh'npm run lint:fix'
-                                sh 'npm run test'
+                                sh 'npm run test:unit'
 
                                 echo 'Backend Lint Checks and Tests passed'
                             }
