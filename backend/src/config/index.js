@@ -51,7 +51,6 @@ nconf.defaults({
     audience: process.env.AUDIENCE,
     issuer: process.env.ISSUER
   }
-}
 });
 
 module.exports = nconf;
