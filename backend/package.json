@@ -5,6 +5,7 @@
   "scripts": {
     "build": "babel /opt/app-root/src/ --out-dir dist --ignore 'node_modules/**/*.js'",
     "serve": "npm run setlocal && npm run servecmd",
+    "settest": "set NODE_ENV='test",
     "setlocal": "set NODE_ENV='local'",
     "servecmd": "nodemon ./src/server.js",
     "start": "node ./src/server.js",
