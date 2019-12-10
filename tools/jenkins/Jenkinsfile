@@ -131,7 +131,6 @@ pipeline{
 
                             unstash BE_COV_STASH
                             unstash FE_COV_STASH
-
                             echo 'Performing SonarQube static code analysis...'
                             withSonarQubeEnv('sonarqube') {
                                 sh "${scannerHome}/bin/sonar-scanner"
