@@ -13,7 +13,7 @@ nconf.overrides({
   server: {
     logLevel: 'verbose',
     morganFormat: 'dev',
-    port: 8081
+    port: 8080
   },
   oidc: {
     discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
@@ -32,7 +32,7 @@ nconf.defaults({
     frontend: process.env.SERVER_FRONTEND,
     logLevel: 'verbose',
     morganFormat: 'dev',
-    port: 8081
+    port: 8080
   },
   oidc: {
     publicKey: process.env.PUBLIC_KEY,
