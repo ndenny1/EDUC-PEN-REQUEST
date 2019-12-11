@@ -2,7 +2,7 @@ const axios = require('axios');
 const config = require('../../../src/config/index');
 const log = require('npmlog');
 const MockAdapter = require('axios-mock-adapter');
-const jsonwebtoken = require('jsonwebtoken');
+//const jsonwebtoken = require('jsonwebtoken');
 
 const auth = require('../../../src/components/auth');
 const utils = require('../../../src/components/utils');
@@ -132,7 +132,7 @@ describe('refreshJWT', () => {
 describe('getApiJwt', () => {
   const apiToken = auth.getApiJwt('fakeClient', 'fakeSecret');
   expect(apiToken).toBeTruthy();
-});*/
+});
 describe('generateUiToken', () => {
   var s = 'user@penrequest.ca';
   var a  = config.get('server:frontend');
@@ -149,4 +149,4 @@ describe('generateUiToken', () => {
 
   expect(verified).toBeTruthy();
 });
-
+*/
