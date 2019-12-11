@@ -92,7 +92,7 @@ const auth = {
   },
 
   //this is used to get JWTs for API consumption (eg. PEN Request API, Digital ID API, etc)
-  async getApiJwt(client, secret, optionalScope){
+  /*async getApiJwt(client, secret, optionalScope){
     let result ={};
     try {
       const discovery = await utils.getOidcDiscovery();
@@ -120,7 +120,7 @@ const auth = {
     }
 
     return result;
-  },
+  },*/
 
   generateUiToken() {
     var i  = config.get('tokenGenerate:issuer');
