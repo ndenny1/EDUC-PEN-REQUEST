@@ -65,43 +65,39 @@ objects:
             value: "https://${HOST_ROUTE}"
           - name: ISSUER
             valueFrom:
-              configKeyRef:
+              configMapKeyRef:
                 key: ISSUER
                 name: pen-request-config
           - name: UI_PRIVATE_KEY
             valueFrom:
-              configKeyRef:
+              configMapKeyRef:
                 key: UI_PRIVATE_KEY
                 name: pen-request-config
           - name: UI_PUBLIC_KEY
             valueFrom:
-              configKeyRef:
+              configMapKeyRef:
                 key: UI_PUBLIC_KEY
                 name: pen-request-config
           - name: SOAM_PUBLIC_KEY
             valueFrom:
-              configKeyRef:
+              configMapKeyRef:
                 key: SOAM_PUBLIC_KEY
                 name: pen-request-config
           - name: SOAM_DISCOVERY
             valueFrom:
-              configKeyRef:
+              configMapKeyRef:
                 key: SOAM_DISCOVERY
                 name: pen-request-config
           - name: SOAM_CLIENT_ID
             valueFrom:
-              configKeyRef:
+              configMapKeyRef:
                 key: SOAM_CLIENT_ID
                 name: pen-request-config
           - name: SOAM_URL
             valueFrom:
-              configKeyRef
-          - name: SOAM_URL
-            valueFrom:
-              configKeyRef:
+              configMapKeyRef:
                 key: SOAM_CLIENT_SECRET
-                name: pen-request-config
-          
+                name: pen-request-config   
     test: false
     triggers:
     - type: ConfigChange
