@@ -4,7 +4,7 @@
           <h4 id="login_text">Log In</h4>
         </v-card-title>
         <v-card-text id="login_descriptor">
-          To access the PEN Retrieval Application, you must have a Basic BCeID or a B.C. Services Card.
+          To access the {{ appTitle }} Application, you must have a Basic BCeID or a B.C. Services Card.
         </v-card-text>
         <v-card-actions>
             <v-row align="center" justify="center">
@@ -21,6 +21,8 @@ export default {
   name: 'Login',
   data() {
     return {
+      
+      appTitle: process.env.VUE_APP_TITLE,
       authRoutes: AuthRoutes
     };
   },

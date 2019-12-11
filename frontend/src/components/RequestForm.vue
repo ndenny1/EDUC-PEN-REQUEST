@@ -1,6 +1,6 @@
 <template>
     <v-card class="mainCard" v-if="dataReady">
-        <v-card-title><h3>PEN Request Form</h3></v-card-title>
+        <v-card-title><h3>{{ appTitle }} Form</h3></v-card-title>
         <v-card-subtitle>Student Information</v-card-subtitle>
         <v-form
           ref="form"
@@ -153,6 +153,7 @@ export default {
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
       ],
       menu: false,
+      appTitle: process.env.VUE_APP_TITLE,
       entries: [],
       isLoading: false,
       model: null,

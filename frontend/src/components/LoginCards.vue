@@ -16,7 +16,7 @@
             <v-card outlined height='170px' dark color="#6c757d">
                 <v-card-title> <v-icon>$fast</v-icon>Fast Results</v-card-title>
                 <v-card-text>
-                    The PEN Retrieval app instantly returns your PEN if it can confidently identify the user. If you can not be instantly identified, you will recieve an email once manual identification has been completed.
+                    The {{ appTitle }} app instantly returns your PEN if it can confidently identify the user. If you can not be instantly identified, you will recieve an email once manual identification has been completed.
                 </v-card-text>
             </v-card>
         </v-col>
@@ -28,7 +28,7 @@ export default {
   name: 'LoginCards',
   data() {
     return {
-            
+        appTitle: process.env.VUE_APP_TITLE,
     };
   },
 };
