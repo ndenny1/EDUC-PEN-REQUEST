@@ -4,6 +4,21 @@ This project contains the frontend for PEN requests.
 # Ministry of Education PEN Request
 The PEN request application consists of a Vue.js frontend (UI and UX) and a Node.js backend (auth and session management). Currently early in the development process, so the front and backend are currently quite thin (only a single UI page).
 
+## Before deployment
+In order to deploy this project into OpenShift, you must create a config-map by running the following command (be sure to replace the values in curly brackets with actual values):
+``` sh
+oc create -n {YOUR_OPENSHIFT_ENVIRONMENT} configmap pen-request-config \
+--from-literal=ISSUER={ISSUER FOR JWT}
+--from-literal=UI_PRIVATE_KEY={KEY_PAIR_VALUE}
+--from-literal=UI_PUBLIC_KEY={KEY_PAIR_VALUE}
+--from-literal=SOAM_PUBLIC_KEY={}
+--from-literal=SOAM_DISCOVERY={SOAM DISCOVER}
+--from-literal=SOAM_CLIENT_ID={SOAM CLIENT ID}
+--from-literal=SOAM_URL={SOAM BASE URL}
+--from-literal=SOAM_CLIENT_SECRET={SOAM CLIENT SECRET}
+```
+
+
 ## Reusable Templates
 This repository contains multiple OpenShift templates that can be used to instantly spin up builds, deployments, and pipelines. These templates can be found in the [templates folder](https://github.com/bcgov/EDUC-PEN-REQUEST/tree/master/tools/templates).
 
