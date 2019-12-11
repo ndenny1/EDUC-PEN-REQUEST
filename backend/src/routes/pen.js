@@ -3,7 +3,7 @@
 const passport = require('passport');
 const express = require('express');
 const axios = require('axios');
-const auth = require('../components/auth');
+//const auth = require('../components/auth');
 const config = require('../config/index');
 
 const router = express.Router();
@@ -19,9 +19,6 @@ router.get('/', (_req, res) => {
 router.post('/request', passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try{
-      const newJwt = await auth.getApiJwt(config.get('penRequest:clientId'), config.get('penRequest:clientSecret'), 'WRITE_PEN_REQUEST');
-      axios.defaults.headers.common['Authorization'] = `Bearer ${newJwt.jwt}`;
-
       const response = await axios.post(config.get('penRequest:apiEndpoint'), req.body);
       if(response.status !== 200){
         return res.status(response.status).json({

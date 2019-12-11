@@ -64,6 +64,45 @@ objects:
           env:
           - name: SERVER_FRONTEND
             value: "https://${HOST_ROUTE}"
+          - name: ISSUER
+            valueFrom:
+              configKeyRef:
+                key: ISSUER
+                name: pen-request-config
+          - name: UI_PRIVATE_KEY
+            valueFrom:
+              configKeyRef:
+                key: UI_PRIVATE_KEY
+                name: pen-request-config
+          - name: UI_PUBLIC_KEY
+            valueFrom:
+              configKeyRef:
+                key: UI_PUBLIC_KEY
+                name: pen-request-config
+          - name: SOAM_PUBLIC_KEY
+            valueFrom:
+              configKeyRef:
+                key: SOAM_PUBLIC_KEY
+                name: pen-request-config
+          - name: SOAM_DISCOVERY
+            valueFrom:
+              configKeyRef:
+                key: SOAM_DISCOVERY
+                name: pen-request-config
+          - name: SOAM_CLIENT_ID
+            valueFrom:
+              configKeyRef:
+                key: SOAM_CLIENT_ID
+                name: pen-request-config
+          - name: SOAM_URL
+            valueFrom:
+              configKeyRef
+          - name: SOAM_URL
+            valueFrom:
+              configKeyRef:
+                key: SOAM_CLIENT_SECRET
+                name: pen-request-config
+          
     test: false
     triggers:
     - type: ConfigChange

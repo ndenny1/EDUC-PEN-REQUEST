@@ -2,7 +2,7 @@
     <div class="word-container">
         <h2 class="gov-header"> <v-icon large color="#003366">info</v-icon>About PEN Request</h2>
         <p class="paragraph">
-            The PEN Request application is aimed at making it fast and easy for students to get their PEN. 
+            The {{ appTitle }} application is aimed at making it fast and easy for students to get their PEN. 
             This application strives to be widely accessible and easily usable for all potential users.
         </p>
         <h4 class='gov-header'>What is a PEN?</h4>
@@ -33,7 +33,7 @@ export default {
   name: 'Info',
   data() {
     return {
-            
+        appTitle: process.env.VUE_APP_TITLE,
     };
   },
 };
