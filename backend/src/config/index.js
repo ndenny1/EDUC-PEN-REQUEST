@@ -27,7 +27,7 @@ nconf.argv()
 
 nconf.defaults({
   environment: env,
-  logoutEndpoint: process.env.KC_DOMAIN + '/auth/realms/master/protocol/openid-connect/logout',
+  logoutEndpoint: process.env.SOAM_URL + '/auth/realms/master/protocol/openid-connect/logout',
   server: {
     frontend: process.env.SERVER_FRONTEND,
     logLevel: 'verbose',
@@ -35,20 +35,18 @@ nconf.defaults({
     port: 8081
   },
   oidc: {
-    publicKey: process.env.PUBLIC_KEY,
-    clientId: process.env.ID,
-    clientSecret: process.env.SECRET,
+    publicKey: process.env.SOAM_PUBLIC_KEY,
+    clientId: process.env.SOAM_CLIENT_ID,
+    clientSecret: process.env.SOAM_SECRET,
     discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
   },
   penRequest: {
-    apiEndpoint: process.env.PEN_REQUEST_API,
-    clientId: process.env.PEN_REQUEST_API_CLIENTID,
-    clientSecret: process.env.PEN_REQUEST_API_SECRET
+    apiEndpoint: process.env.PEN_REQUEST_API_ENDPOINT,
   },
   tokenGenerate: {
     privateKey: process.env.UI_PRIVATE_KEY,
     publicKey: process.env.UI_PUBLIC_KEY,
-    audience: process.env.AUDIENCE,
+    audience: process.env.SERVER_FRONTEND,
     issuer: process.env.ISSUER
   }
 });
