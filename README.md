@@ -18,6 +18,19 @@ oc create -n {YOUR_OPENSHIFT_ENVIRONMENT} configmap pen-request-config
 --from-literal=SOAM_CLIENT_SECRET={SOAM CLIENT SECRET}
 ```
 
+## Environment Variables
+The following is a list of all environment variables consumed by the PEN Request Service
+
+| Environment Variables    | Description                                                      |
+|-------------------------:|:-----------------------------------------------------------------|
+| SERVER_FRONTEND          | The URL of the frontend application                              |
+| SOAM_PUBLIC_KEY          | The public key of the SOAM instance                              |
+| SOAM_CLIENT_ID           | The client ID for the PEN Request client in the SOAM instance    |
+| SOAM_SECRET              | The secret for the PEN Request Client in the SOAM instance       |
+| PEN_REQUEST_API_ENDPOINT | The endpoint for the PEN Request API                             |
+| UI_PRIVATE_KEY           | A self-generated key for signing JWTs                            |
+| UI_PUBLIC_KEY            | A self-generated key for verifying JWTs                          |
+| ISSUER                   | A string which identifies where the JWT was signed from          |
 
 ## Reusable Templates
 This repository contains multiple OpenShift templates that can be used to instantly spin up builds, deployments, and pipelines. These templates can be found in the [templates folder](https://github.com/bcgov/EDUC-PEN-REQUEST/tree/master/tools/templates).
