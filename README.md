@@ -8,14 +8,14 @@ The PEN request application consists of a Vue.js frontend (UI and UX) and a Node
 In order to deploy this project into OpenShift, you must create a config-map by running the following command (be sure to replace the values in curly brackets with actual values):
 ``` sh
 oc create -n {YOUR_OPENSHIFT_ENVIRONMENT} configmap pen-request-config \
---from-literal=ISSUER={ISSUER FOR JWT}
---from-literal=UI_PRIVATE_KEY={KEY_PAIR_VALUE}
---from-literal=UI_PUBLIC_KEY={KEY_PAIR_VALUE}
---from-literal=SOAM_PUBLIC_KEY={}
---from-literal=SOAM_DISCOVERY={SOAM DISCOVER}
---from-literal=SOAM_CLIENT_ID={SOAM CLIENT ID}
---from-literal=SOAM_URL={SOAM BASE URL}
---from-literal=SOAM_CLIENT_SECRET={SOAM CLIENT SECRET}
+--from-literal=ISSUER={ISSUER FOR JWT} \
+--from-literal=UI_PRIVATE_KEY={KEY_PAIR_VALUE} \
+--from-literal=UI_PUBLIC_KEY={KEY_PAIR_VALUE} \
+--from-literal=SOAM_PUBLIC_KEY={SOAM PUBLIC KEY} \
+--from-literal=SOAM_DISCOVERY={SOAM DISCOVER} \
+--from-literal=SOAM_CLIENT_ID={SOAM CLIENT ID} \
+--from-literal=SOAM_URL={SOAM BASE URL} \
+--from-literal=SOAM_CLIENT_SECRET={SOAM CLIENT SECRET} \
 ```
 
 
