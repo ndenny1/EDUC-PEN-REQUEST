@@ -22,7 +22,7 @@ oc create -n {YOUR_OPENSHIFT_ENVIRONMENT} configmap pen-request-config
 The following is a list of all environment variables consumed by the PEN Request Service
 
 | Environment Variables    | Description                                                      |
-|-------------------------:|:-----------------------------------------------------------------|
+|--------------------------|:-----------------------------------------------------------------|
 | SERVER_FRONTEND          | The URL of the frontend application                              |
 | SOAM_PUBLIC_KEY          | The public key of the SOAM instance                              |
 | SOAM_CLIENT_ID           | The client ID for the PEN Request client in the SOAM instance    |
