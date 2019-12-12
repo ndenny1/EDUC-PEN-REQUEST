@@ -21,7 +21,7 @@ router.post('/request', passport.authenticate('jwt', { session: false }),
     try{
       //await auth.refreshJWT();
       const token = req.user.jwt;
-      axios.defaults.headers.common = {'Authorization': `Bearer ${token}`};
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       const response = await axios.post(config.get('penRequest:apiEndpoint'), req.body);
       if(response.status !== 200){
         return res.status(response.status).json({
@@ -40,7 +40,7 @@ router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
     try{
       //await auth.refreshJWT();
       const token = req.user.jwt;
-      axios.defaults.headers.common = {'Authorization': `Bearer ${token}`};
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       const response = await axios.get(config.get('codeTable:genderEndpoint'));
       if(response.status !== 200){
         return res.status(response.status).json({

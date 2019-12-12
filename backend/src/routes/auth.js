@@ -85,12 +85,15 @@ router.post('/refresh', [
       errors: errors.array()
     });
   }
-
-  await auth.renew(req.user.refreshToken);
-  if(req.user){
-    var newUiToken = auth.generateUiToken();
+  if(!req.user.refreshToken){
+    res.redirect('/logout');
+  } else{
+    await auth.renew(req.user.refreshToken);
+    if(req.user){
+      var newUiToken = auth.generateUiToken();
+    }
+    return res.status(200).json(newUiToken);
   }
-  return res.status(200).json(newUiToken);
 });
 
 //provides a jwt to authenticated users
