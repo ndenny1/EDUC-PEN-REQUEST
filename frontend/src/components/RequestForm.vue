@@ -196,7 +196,7 @@ export default {
       val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'));
     },
   },
-  mounted() {
+  async mounted() {
     const genderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
     console.log(genderCodes);
     this.userPost.legalLastName = this.userInfo.lastName;
