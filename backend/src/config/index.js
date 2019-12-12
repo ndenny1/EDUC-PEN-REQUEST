@@ -37,7 +37,7 @@ nconf.defaults({
   oidc: {
     publicKey: process.env.SOAM_PUBLIC_KEY,
     clientId: process.env.SOAM_CLIENT_ID,
-    clientSecret: process.env.SOAM_SECRET,
+    clientSecret: process.env.SOAM_CLIENT_SECRET,
     discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
   },
   penRequest: {
