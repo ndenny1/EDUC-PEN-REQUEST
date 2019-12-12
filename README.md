@@ -26,7 +26,7 @@ The following is a list of all environment variables consumed by the PEN Request
 | SERVER_FRONTEND          | The URL of the frontend application                              |
 | SOAM_PUBLIC_KEY          | The public key of the SOAM instance                              |
 | SOAM_CLIENT_ID           | The client ID for the PEN Request client in the SOAM instance    |
-| SOAM_SECRET              | The secret for the PEN Request Client in the SOAM instance       |
+| SOAM_CLIENT_SECRET              | The secret for the PEN Request Client in the SOAM instance       |
 | PEN_REQUEST_API_ENDPOINT | The endpoint for the PEN Request API                             |
 | UI_PRIVATE_KEY           | A self-generated key for signing JWTs                            |
 | UI_PUBLIC_KEY            | A self-generated key for verifying JWTs                          |
