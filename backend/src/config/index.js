@@ -9,7 +9,7 @@ const env = process.env.NODE_ENV;
 //injects environment variables into the json file
 nconf.overrides({
   environment: env,
-  logoutEndpoint: process.env.KC_DOMAIN + '/auth/realms/master/protocol/openid-connect/logout',
+  logoutEndpoint: process.env.SOAM_URL + '/auth/realms/master/protocol/openid-connect/logout',
   server: {
     logLevel: 'verbose',
     morganFormat: 'dev',
@@ -42,6 +42,9 @@ nconf.defaults({
   },
   penRequest: {
     apiEndpoint: process.env.PEN_REQUEST_API_ENDPOINT,
+  },
+  codeTable: {
+    genderEndpoint: process.env.CODE_TABLE_GENDER_ENDPOINT
   },
   tokenGenerate: {
     privateKey: process.env.UI_PRIVATE_KEY,

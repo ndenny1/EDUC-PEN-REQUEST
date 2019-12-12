@@ -103,6 +103,11 @@ objects:
               configMapKeyRef:
                 key: SOAM_URL
                 name: pen-request-config
+          - name: CODE_TABLE_GENDER_ENDPOINT
+            valueFrom: 
+              configMapKeyRef:
+                key: CODE_TABLE_GENDER_ENDPOINT
+                name: pen-request-config
     test: false
     triggers:
     - type: ConfigChange
