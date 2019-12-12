@@ -3,7 +3,7 @@
 const passport = require('passport');
 const express = require('express');
 const axios = require('axios');
-//const auth = require('../components/auth');
+const auth = require('../components/auth');
 const config = require('../config/index');
 
 const router = express.Router();
@@ -20,6 +20,7 @@ router.post('/request', passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try{
       //await auth.refreshJWT();
+      await auth.renew(req.user.refreshToken);
       const token = req.user.jwt;
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       const response = await axios.post(config.get('penRequest:apiEndpoint'), req.body);
@@ -39,6 +40,7 @@ router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try{
       //await auth.refreshJWT();
+      await auth.renew(req.user.refreshToken);
       const token = req.user.jwt;
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       const response = await axios.get(config.get('codeTable:genderEndpoint'));
