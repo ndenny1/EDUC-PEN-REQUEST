@@ -197,6 +197,8 @@ export default {
     },
   },
   mounted() {
+    const genderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
+    console.log(genderCodes);
     this.userPost.legalLastName = this.userInfo.lastName;
     this.userPost.legalFirstName = this.userInfo.firstName;
     this.userPost.email = this.userInfo.emailAddress;

@@ -85,5 +85,15 @@ export default {
       console.log(`Failed to post to Nodejs API - ${e}`);
       throw e;
     }
+  },
+
+  async getGenderCodes() {
+    try{
+      const response = await apiAxios.get(ApiRoutes.GENDER_CODES);
+      return response;
+    } catch(e) {
+      console.log(`Failed to get from Nodejs API - ${e}`);
+      throw e;
+    }
   }
 };

@@ -22,5 +22,6 @@ if(process.env.NODE_ENV === 'development'){
 export const AuthRoutes = Object.freeze(object);
 
 export const ApiRoutes = Object.freeze({
-  PEN_REQUEST: apiRoot + '/request'
+  PEN_REQUEST: apiRoot + '/request',
+  GENDER_CODES: apiRoot + '/gender_codes'
 });
