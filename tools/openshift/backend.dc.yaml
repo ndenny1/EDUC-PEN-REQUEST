@@ -93,11 +93,16 @@ objects:
               configMapKeyRef:
                 key: SOAM_CLIENT_ID
                 name: pen-request-config
-          - name: SOAM_URL
+          - name: SOAM_CLIENT_SECRET
             valueFrom:
               configMapKeyRef:
                 key: SOAM_CLIENT_SECRET
-                name: pen-request-config   
+                name: pen-request-config
+          - name: SOAM_URL
+            valueFrom:
+              configMapKeyRef:
+                key: SOAM_URL
+                name: pen-request-config
     test: false
     triggers:
     - type: ConfigChange
