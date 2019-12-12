@@ -9,28 +9,30 @@ In order to deploy this project into OpenShift, you must create a config-map by 
 ``` sh
 oc create -n {YOUR_OPENSHIFT_ENVIRONMENT} configmap pen-request-config 
 --from-literal=ISSUER={ISSUER FOR JWT} 
---from-literal=UI_PRIVATE_KEY={KEY_PAIR_VALUE} 
---from-literal=UI_PUBLIC_KEY={KEY_PAIR_VALUE} 
+--from-literal=UI_PRIVATE_KEY={PRIVATE KEY} 
+--from-literal=UI_PUBLIC_KEY={PUBLIC KEY} 
 --from-literal=SOAM_PUBLIC_KEY={SOAM PUBLIC KEY} 
 --from-literal=SOAM_DISCOVERY={SOAM DISCOVER} 
 --from-literal=SOAM_CLIENT_ID={SOAM CLIENT ID} 
 --from-literal=SOAM_URL={SOAM BASE URL} 
 --from-literal=SOAM_CLIENT_SECRET={SOAM CLIENT SECRET}
+--from-literal=CODE_TABLE_GENDER_ENDPOINT={CODE TABLE ENDPOINT}
 ```
 
 ## Environment Variables
 The following is a list of all environment variables consumed by the PEN Request Service
 
-| Environment Variables    | Description                                                      |
-|--------------------------|:-----------------------------------------------------------------|
-| SERVER_FRONTEND          | The URL of the frontend application                              |
-| SOAM_PUBLIC_KEY          | The public key of the SOAM instance                              |
-| SOAM_CLIENT_ID           | The client ID for the PEN Request client in the SOAM instance    |
-| SOAM_CLIENT_SECRET              | The secret for the PEN Request Client in the SOAM instance       |
-| PEN_REQUEST_API_ENDPOINT | The endpoint for the PEN Request API                             |
-| UI_PRIVATE_KEY           | A self-generated key for signing JWTs                            |
-| UI_PUBLIC_KEY            | A self-generated key for verifying JWTs                          |
-| ISSUER                   | A string which identifies where the JWT was signed from          |
+| Environment Variables      | Description                                                      |
+|----------------------------|:-----------------------------------------------------------------|
+| SERVER_FRONTEND            | The URL of the frontend application                              |
+| SOAM_PUBLIC_KEY            | The public key of the SOAM instance                              |
+| SOAM_CLIENT_ID             | The client ID for the PEN Request client in the SOAM instance    |
+| SOAM_CLIENT_SECRET         | The secret for the PEN Request Client in the SOAM instance       |
+| PEN_REQUEST_API_ENDPOINT   | The endpoint for the PEN Request API                             |
+| UI_PRIVATE_KEY             | A self-generated key for signing JWTs                            |
+| UI_PUBLIC_KEY              | A self-generated key for verifying JWTs                          |
+| ISSUER                     | A string which identifies where the JWT was signed from          |
+| CODE_TABLE_GENDER_ENDPOINT | The API endpoint to retrieve gender codes                        |
 
 ## Reusable Templates
 This repository contains multiple OpenShift templates that can be used to instantly spin up builds, deployments, and pipelines. These templates can be found in the [templates folder](https://github.com/bcgov/EDUC-PEN-REQUEST/tree/master/tools/templates).
