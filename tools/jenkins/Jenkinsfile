@@ -240,11 +240,6 @@ pipeline{
             }
         }
         stage('e2e tests'){
-            agent{
-                node{
-                    label 'nodejs10'
-                }
-            }
             steps{
                 script{
                     timeout(10){
