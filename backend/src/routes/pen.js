@@ -39,6 +39,11 @@ router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
     try{
       const token = req.user.jwt;
       // eslint-disable-next-line no-console
+      console.log('Request Obect:');
+      // eslint-disable-next-line no-console
+      console.log(req);
+
+      // eslint-disable-next-line no-console
       console.log('Session ID:');
       // eslint-disable-next-line no-console
       console.log(req.sessionID);
