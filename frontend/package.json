@@ -2,8 +2,8 @@
   "name": "pen-request",
   "version": "1.0.0",
   "private": true,
-  "description": "Simple PEN request UI.",
-  "author": "Marco Villeneuve",
+  "description": "PEN request UI.",
+  "author": "Nathan Denny",
   "scripts": {
     "serve": "node_modules/.bin/vue-cli-service serve",
     "build": "node_modules/.bin/vue-cli-service build",
