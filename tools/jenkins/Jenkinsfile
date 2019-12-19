@@ -246,6 +246,7 @@ pipeline{
                         dir('frontend'){
                             echo 'Running e2e tests'
                             sh 'npm install'
+                            sh 'npm install -g testcafe'
                             sh 'npm run test:e2e'
                         }
                     }

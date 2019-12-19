@@ -9,7 +9,7 @@
     "build": "node_modules/.bin/vue-cli-service build",
     "test:unit": "node_modules/.bin/vue-cli-service test:unit",
     "local:e2e": "testcafe chrome:headless,firefox:headless ./tests/e2e/test.ts",
-    "test:e2e": "node_modules/testcafe/bin/testcafe.js chrome:headless --no-sandbox ./tests/e2e/test.ts",
+    "test:e2e": "testcafe --no-sandbox ./tests/e2e/test.ts",
     "lint:fix": "node_modules/.bin/vue-cli-service lint --fix",
     "lint": "node_modules/.bin/vue-cli-service lint --no-fix",
     "purge": "rm -rf node_modules",
