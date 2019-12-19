@@ -42,6 +42,7 @@ router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
       //await auth.refreshJWT();
       await auth.renew(req.user.refreshToken);
       const token = req.user.jwt;
+      console.log(token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       const response = await axios.get(config.get('codeTable:genderEndpoint'));
       if(response.status !== 200){
