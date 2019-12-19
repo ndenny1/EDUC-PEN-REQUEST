@@ -3,7 +3,7 @@
 const passport = require('passport');
 const express = require('express');
 const axios = require('axios');
-const auth = require('../components/auth');
+//const auth = require('../components/auth');
 const config = require('../config/index');
 
 const router = express.Router();

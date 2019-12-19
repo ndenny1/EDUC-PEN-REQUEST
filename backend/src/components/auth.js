@@ -54,7 +54,7 @@ const auth = {
     } catch (error) {
       log.error('renew', error.message);
       result = error.response.data;
-      window.location.redirect = config.get('server:frontend') + '/api/auth/logout';
+      //window.location.redirect = config.get('server:frontend') + '/api/auth/logout';
     }
 
     return result;
