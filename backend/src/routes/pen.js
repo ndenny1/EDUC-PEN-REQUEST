@@ -21,7 +21,7 @@ router.post('/request', passport.authenticate('jwt', { session: false }),
     try{
       const token = req.user.jwt;
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      const response = await axios.post(config.get('penRequest:apiEndpoint'), req.body);
+      const response = await axios.post(config.get('penRequest:apiEndpoint') + '/penrequest', req.body);
       if(response.status !== 200){
         return res.status(response.status).json({
           message: 'API Post error'
@@ -42,9 +42,13 @@ router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
 
       // eslint-disable-next-line no-console
       console.log(req.sessionStore.sessions[sessID]);
-      
+      var thisSession = JSON.parse(req.sessionStore.sessions[sessID]);
+      var userToken = thisSession.passport.user.jwt;
+      // eslint-disable-next-line no-console
+      console.log(userToken);
+
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      const response = await axios.get(config.get('codeTable:genderEndpoint'));
+      const response = await axios.get(config.get('codeTable:genderEndpoint') + '/gender');
       if(response.status !== 200){
         return res.status(response.status).json({
           message: 'API Post error'
