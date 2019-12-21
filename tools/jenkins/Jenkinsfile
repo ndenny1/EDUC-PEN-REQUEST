@@ -22,7 +22,7 @@ pipeline{
 
         REPO_NAME = 'educ-pen-request'
         OWNER = 'bcgov'
-        JOB_NAME = 'nathan-test'
+        JOB_NAME = 'master'
         
         APP_NAME = 'pen-request'
         APP_DOMAIN = 'pathfinder.gov.bc.ca'

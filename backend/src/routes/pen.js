@@ -19,8 +19,16 @@ router.get('/', (_req, res) => {
 router.post('/request', passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try{
-      const token = req.user.jwt;
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      var sessID = req.sessionID;
+
+      // eslint-disable-next-line no-console
+      console.log(req.sessionStore.sessions[sessID]);
+      var thisSession = JSON.parse(req.sessionStore.sessions[sessID]);
+      var userToken = thisSession.passport.user.jwt;
+      // eslint-disable-next-line no-console
+      console.log(userToken);
+
+      axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
       const response = await axios.post(config.get('penRequest:apiEndpoint') + '/penrequest', req.body);
       if(response.status !== 200){
         return res.status(response.status).json({
@@ -37,7 +45,6 @@ router.post('/request', passport.authenticate('jwt', { session: false }),
 router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     try{
-      const token = req.user.jwt;
       var sessID = req.sessionID;
 
       // eslint-disable-next-line no-console
@@ -47,7 +54,7 @@ router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
       // eslint-disable-next-line no-console
       console.log(userToken);
 
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
       const response = await axios.get(config.get('codeTable:genderEndpoint') + '/gender');
       if(response.status !== 200){
         return res.status(response.status).json({
