@@ -13,7 +13,7 @@ nconf.overrides({
   server: {
     logLevel: 'verbose',
     morganFormat: 'dev',
-    port: 8081
+    port: 8080
   },
   oidc: {
     discovery: process.env.SOAM_URL + '/auth/realms/master/.well-known/openid-configuration'
@@ -32,7 +32,7 @@ nconf.defaults({
     frontend: process.env.SERVER_FRONTEND,
     logLevel: 'verbose',
     morganFormat: 'dev',
-    port: 8081
+    port: 8080
   },
   oidc: {
     publicKey: process.env.SOAM_PUBLIC_KEY,
