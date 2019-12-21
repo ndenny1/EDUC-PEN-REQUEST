@@ -38,13 +38,13 @@ nconf.defaults({
     publicKey: process.env.SOAM_PUBLIC_KEY,
     clientId: process.env.SOAM_CLIENT_ID,
     clientSecret: process.env.SOAM_CLIENT_SECRET,
-    discovery: process.env.SOAM_URL + '/auth/realms/master/.well-known/openid-configuration'
+    discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
   },
   penRequest: {
     apiEndpoint: process.env.PEN_REQUEST_API_ENDPOINT,
   },
   codeTable: {
-    genderEndpoint: process.env.CODE_TABLE_GENDER_ENDPOINT
+    genderEndpoint: process.env.CODE_TABLE_GENDER_ENDPOINT + '/gender'
   },
   tokenGenerate: {
     privateKey: process.env.UI_PRIVATE_KEY,
