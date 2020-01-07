@@ -67,47 +67,47 @@ objects:
             valueFrom:
               configMapKeyRef:
                 key: ISSUER
-                name: pen-request-config
+                name: pen-request-backend-config-map
           - name: UI_PRIVATE_KEY
             valueFrom:
               configMapKeyRef:
                 key: UI_PRIVATE_KEY
-                name: pen-request-config
+                name: pen-request-backend-config-map
           - name: UI_PUBLIC_KEY
             valueFrom:
               configMapKeyRef:
                 key: UI_PUBLIC_KEY
-                name: pen-request-config
+                name: pen-request-backend-config-map
           - name: SOAM_PUBLIC_KEY
             valueFrom:
               configMapKeyRef:
                 key: SOAM_PUBLIC_KEY
-                name: pen-request-config
+                name: pen-request-backend-config-map
           - name: SOAM_DISCOVERY
             valueFrom:
               configMapKeyRef:
                 key: SOAM_DISCOVERY
-                name: pen-request-config
+                name: pen-request-backend-config-map
           - name: SOAM_CLIENT_ID
             valueFrom:
               configMapKeyRef:
                 key: SOAM_CLIENT_ID
-                name: pen-request-config
+                name: pen-request-backend-config-map
           - name: SOAM_CLIENT_SECRET
             valueFrom:
               configMapKeyRef:
                 key: SOAM_CLIENT_SECRET
-                name: pen-request-config
+                name: pen-request-backend-config-map
           - name: SOAM_URL
             valueFrom:
               configMapKeyRef:
                 key: SOAM_URL
-                name: pen-request-config
+                name: pen-request-backend-config-map
           - name: CODE_TABLE_GENDER_ENDPOINT
             valueFrom: 
               configMapKeyRef:
                 key: CODE_TABLE_GENDER_ENDPOINT
-                name: pen-request-config
+                name: pen-request-backend-config-map
     test: false
     triggers:
     - type: ConfigChange

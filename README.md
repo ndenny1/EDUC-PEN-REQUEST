@@ -7,7 +7,7 @@ The PEN request application consists of a Vue.js frontend (UI and UX) and a Node
 ## Before deployment
 In order to deploy this project into OpenShift, you must create a config-map by running the following command (be sure to replace the values in curly brackets with actual values):
 ``` sh
-oc create -n {YOUR_OPENSHIFT_ENVIRONMENT} configmap pen-request-config 
+oc create -n {YOUR_OPENSHIFT_ENVIRONMENT} configmap pen-request-backend-config-map 
 --from-literal=ISSUER={ISSUER FOR JWT} 
 --from-literal=UI_PRIVATE_KEY={PRIVATE KEY} 
 --from-literal=UI_PUBLIC_KEY={PUBLIC KEY} 
