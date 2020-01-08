@@ -16,7 +16,7 @@ nconf.overrides({
     port: 8080
   },
   oidc: {
-    discovery: process.env.DISCOVERY
+    discovery: process.env.SOAM_DISCOVERY
   },
 });
 
@@ -38,7 +38,7 @@ nconf.defaults({
     publicKey: process.env.SOAM_PUBLIC_KEY,
     clientId: process.env.SOAM_CLIENT_ID,
     clientSecret: process.env.SOAM_CLIENT_SECRET,
-    discovery: process.env.DISCOVERY
+    discovery: process.env.SOAM_DISCOVERY
   },
   penRequest: {
     apiEndpoint: process.env.PEN_REQUEST_API_ENDPOINT,
