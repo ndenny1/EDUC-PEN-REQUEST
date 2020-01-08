@@ -29,7 +29,7 @@ router.post('/request', passport.authenticate('jwt', { session: false }),
       console.log(userToken);
 
       axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
-      const response = await axios.post(config.get('penRequest:apiEndpoint') + '/penrequest', req.body);
+      const response = await axios.post(config.get('penRequest:apiEndpoint') + '/', req.body);
       if(response.status !== 200){
         return res.status(response.status).json({
           message: 'API Post error'
