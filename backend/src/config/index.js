@@ -16,7 +16,7 @@ nconf.overrides({
     port: 8080
   },
   oidc: {
-    discovery: process.env.SOAM_DISCOVERY
+    discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
   },
 });
 
