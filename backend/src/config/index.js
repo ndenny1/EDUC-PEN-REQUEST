@@ -14,10 +14,10 @@ nconf.overrides({
     logLevel: 'verbose',
     morganFormat: 'dev',
     port: 8080
-  },
-  oidc: {
-    discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
-  },
+  }
+  // oidc: {
+  //   discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
+  // },
 });
 
 
