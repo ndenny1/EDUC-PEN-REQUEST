@@ -9,5 +9,8 @@
     "publicKey": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCCwwpHw1vbpRG4aG1OTG+L+HOE\nTTQypRgkU5I8MPNgRLDlo5JZMlSiON7rU45+CkSHsWuk3HcZEdu6ly9A9LtMt24J\neWW/olcpzDO+U0DBleW1qDxkce5DfiUVdd6EYHvD+kfEa1IlSAoWbT65u9EqEm9G\nJtZ3sWFEhuekpZdE1QIDAQAB\n-----END PUBLIC KEY-----",
     "audience": "TEST AUDIENCE",
     "issuer": "TEST ISSUER"
+  },
+  "oidc": {
+    "discovery": "https://c2mvws-test.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration"
   }
 }
