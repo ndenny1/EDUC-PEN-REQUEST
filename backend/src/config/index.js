@@ -29,7 +29,7 @@ nconf.defaults({
     frontend: process.env.SERVER_FRONTEND,
     logLevel: 'verbose',
     morganFormat: 'dev',
-    port: 8081
+    port: 8080
   },
   oidc: {
     publicKey: process.env.SOAM_PUBLIC_KEY,
