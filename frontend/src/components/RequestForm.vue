@@ -83,7 +83,7 @@
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field v-model="userPost.email" :value="userInfo.emailAddress" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
+                      <v-text-field v-model="userPost.email" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
@@ -199,9 +199,9 @@ export default {
   async mounted() {
     const genderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
     console.log(genderCodes);
-    this.userPost.legalLastName = this.userInfo.lastName;
+    //this.userPost.legalLastName = this.userInfo.lastName;
     this.userPost.legalFirstName = this.userInfo.firstName;
-    this.userPost.email = this.userInfo.emailAddress;
+    //this.userPost.email = this.userInfo.emailAddress;
     this.userPost.legalMiddleNames = this.userInfo.middleNames;
   },
   methods: {
