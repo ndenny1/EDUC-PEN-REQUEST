@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Home from '@/components/Home.vue';
-import User from '@/components/UserInfo.vue';
+//import User from '@/components/UserInfo.vue';
 //import store from '@/store/index.js';
 
 Vue.use(VueRouter);
@@ -16,6 +16,7 @@ const router = new VueRouter({
       name: 'home',
       component: Home
     },
+    /*
     {
       path: '/user',
       name: 'user',
@@ -25,6 +26,7 @@ const router = new VueRouter({
         name: 'User Info'
       }
     },
+    */
     {
       path: '*',
       name: 'notfound',

@@ -33,7 +33,9 @@
             </v-chip>
           </template>
           <v-list dark color="#003366">
-            <v-list-item id="user_info_link" to='/user'><v-list-title>User Info</v-list-title></v-list-item>
+            <!--
+              <v-list-item id="user_info_link" to='/user'><v-list-title>User Info</v-list-title></v-list-item>
+            -->
             <v-list-item id="logout_button" @click="clearStorage" :href='authRoutes.LOGOUT'><v-list-title>Logout</v-list-title></v-list-item>
           </v-list>
         </v-menu>
