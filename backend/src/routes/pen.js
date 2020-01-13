@@ -47,14 +47,14 @@ router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
     try{
       var sessID = req.sessionID;
 
-      // eslint-disable-next-line no-console
       var thisSession = JSON.parse(req.sessionStore.sessions[sessID]);
       var userToken = thisSession.passport.user.jwt;
-      // eslint-disable-next-line no-console
 
       axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
+      // eslint-disable-next-line no-console
       console.log(config.get('codeTable:genderEndpoint') + '/gender');
       const response = await axios.get(config.get('codeTable:apiEndpoint') + '/gender');
+      // eslint-disable-next-line no-console
       console.log(response);
       if(response.status !== 200){
         return res.status(response.status).json({
