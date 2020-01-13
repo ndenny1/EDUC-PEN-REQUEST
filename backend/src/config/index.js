@@ -41,7 +41,7 @@ nconf.defaults({
     apiEndpoint: process.env.PEN_REQUEST_API_ENDPOINT,
   },
   codeTable: {
-    genderEndpoint: process.env.CODE_TABLE_GENDER_ENDPOINT + '/gender'
+    apiEndpoint: process.env.CODE_TABLE_GENDER_ENDPOINT,
   },
   tokenGenerate: {
     privateKey: process.env.UI_PRIVATE_KEY,

@@ -48,14 +48,14 @@ router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
       var sessID = req.sessionID;
 
       // eslint-disable-next-line no-console
-      console.log(req.sessionStore.sessions[sessID]);
       var thisSession = JSON.parse(req.sessionStore.sessions[sessID]);
       var userToken = thisSession.passport.user.jwt;
       // eslint-disable-next-line no-console
-      console.log(userToken);
 
       axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
-      const response = await axios.get(config.get('codeTable:genderEndpoint') + '/gender');
+      console.log(config.get('codeTable:genderEndpoint') + '/gender');
+      const response = await axios.get(config.get('codeTable:apiEndpoint') + '/gender');
+      console.log(response);
       if(response.status !== 200){
         return res.status(response.status).json({
           message: 'API Post error'
