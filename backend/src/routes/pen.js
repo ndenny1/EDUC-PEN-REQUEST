@@ -22,11 +22,11 @@ router.post('/request', passport.authenticate('jwt', { session: false }),
       var sessID = req.sessionID;
 
       // eslint-disable-next-line no-console
-      console.log(req.sessionStore.sessions[sessID]);
+      //console.log(req.sessionStore.sessions[sessID]);
       var thisSession = JSON.parse(req.sessionStore.sessions[sessID]);
       var userToken = thisSession.passport.user.jwt;
       // eslint-disable-next-line no-console
-      console.log(userToken);
+      //console.log(userToken);
 
       axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
       const response = await axios.post(config.get('penRequest:apiEndpoint') + '/', req.body);
