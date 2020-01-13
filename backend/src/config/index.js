@@ -13,11 +13,8 @@ nconf.overrides({
   server: {
     logLevel: 'verbose',
     morganFormat: 'dev',
-    port: 8081
-  },
-  oidc: {
-    discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
-  },
+    port: 8080
+  }
 });
 
 
@@ -38,7 +35,7 @@ nconf.defaults({
     publicKey: process.env.SOAM_PUBLIC_KEY,
     clientId: process.env.SOAM_CLIENT_ID,
     clientSecret: process.env.SOAM_CLIENT_SECRET,
-    discovery: 'https://c2mvws-dev.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration'
+    discovery: process.env.SOAM_DISCOVERY
   },
   penRequest: {
     apiEndpoint: process.env.PEN_REQUEST_API_ENDPOINT,
