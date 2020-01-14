@@ -146,7 +146,7 @@ import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      genders: ['Male', 'Female', 'Gender Diverse', 'Unknown'],
+      genders: [],
       requiredRules: [v => !!v || 'Required'],
       emailRules: [
         v => !!v || 'E-mail is required',
@@ -198,7 +198,8 @@ export default {
   },
   async mounted() {
     const genderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
-    console.log(genderCodes);
+    this.genders = genderCodes.map(a => a.genderCode);
+    console.log(this.genders);
     //this.userPost.legalLastName = this.userInfo.lastName;
     this.userPost.legalFirstName = this.userInfo.firstName;
     //this.userPost.email = this.userInfo.emailAddress;
