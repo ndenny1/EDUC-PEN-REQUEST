@@ -146,6 +146,7 @@ import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
+      genders: [],
       requiredRules: [v => !!v || 'Required'],
       emailRules: [
         v => !!v || 'E-mail is required',
@@ -197,11 +198,9 @@ export default {
     },
   },
   async mounted() {
-    this.genderCode = await this.$store.dispatch('penRequest/getGenderCodes');
-    this.genderCode.forEach(element => {
-      this.genderCodeLabels.push(element.label);
-    });
-    console.log(this.genderCode);
+    const genderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
+    this.genders = genderCodes.map(a => a.label);
+    console.log(this.genders);
     //this.userPost.legalLastName = this.userInfo.lastName;
     this.userPost.legalFirstName = this.userInfo.firstName;
     //this.userPost.email = this.userInfo.emailAddress;

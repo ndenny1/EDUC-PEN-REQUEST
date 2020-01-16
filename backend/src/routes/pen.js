@@ -25,6 +25,7 @@ router.post('/request', passport.authenticate('jwt', { session: false }),
       //console.log(req.sessionStore.sessions[sessID]);
       var thisSession = JSON.parse(req.sessionStore.sessions[sessID]);
       var userToken = thisSession.passport.user.jwt;
+
       // eslint-disable-next-line no-console
       //console.log(userToken);
 
