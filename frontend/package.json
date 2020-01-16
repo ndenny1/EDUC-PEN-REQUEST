@@ -24,7 +24,7 @@
     "@fortawesome/fontawesome-free": "5.11.2",
     "axios": "^0.19.0",
     "axios-mock-adapter": "1.17.0",
-    "chromedriver": "^76.0.0",
+    "chromedriver": "^79.0.0",
     "core-js": "^2.6.10",
     "cryptico-js": "^1.1.0",
     "dotenv": "^8.2.0",
