@@ -247,7 +247,7 @@ pipeline{
                             echo 'Running e2e tests'
                             sh 'npm install'
                             sh 'npm install -g testcafe'
-                            sh 'node_modules/.bin/testcafe chrome ./tests/e2e/test.ts'
+                            sh 'node_modules/.bin/testcafe -b chrome'
                         }
                     }
                 }
