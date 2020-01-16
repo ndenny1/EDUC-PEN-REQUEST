@@ -247,7 +247,8 @@ pipeline{
                             echo 'Running e2e tests'
                             sh 'npm install'
                             sh 'npm install -g testcafe'
-                            sh 'testcafe -b'
+                            sh 'npm install testcafe-browser-provider-selenium'
+                            sh 'testcafe selenium:chrome ./tests/e2e/test.ts'
                         }
                     }
                 }
