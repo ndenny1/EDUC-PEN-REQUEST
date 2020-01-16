@@ -113,7 +113,7 @@ pipeline{
                     echo 'Some Lint Checks and Tests failed'
                 }
             }
-        }
+        }/*
         stage('SonarQube Analysis'){
             agent any
 
@@ -140,7 +140,7 @@ pipeline{
                     }
                 }
             }
-        }
+        }*/
         stage('Build'){
             steps{
                 script {
