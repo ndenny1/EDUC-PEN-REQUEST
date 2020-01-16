@@ -27,7 +27,7 @@ router.post('/request', passport.authenticate('jwt', { session: false }),
       var userToken = thisSession.passport.user.jwt;
 
       // eslint-disable-next-line no-console
-      //console.log(userToken);
+      console.log(req.body);
 
       axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
       const response = await axios.post(config.get('penRequest:apiEndpoint') + '/', req.body);
