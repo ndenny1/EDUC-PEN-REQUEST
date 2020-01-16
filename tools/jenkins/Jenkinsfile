@@ -53,7 +53,7 @@ pipeline{
                     }
                 }
             }
-        }
+        }/*
         stage('Unit Tests') {
             agent any
             steps {
@@ -113,7 +113,7 @@ pipeline{
                     echo 'Some Lint Checks and Tests failed'
                 }
             }
-        }/*
+        }
         stage('SonarQube Analysis'){
             agent any
 
@@ -140,7 +140,7 @@ pipeline{
                     }
                 }
             }
-        }*/
+        }
         stage('Build'){
             steps{
                 script {
@@ -238,7 +238,7 @@ pipeline{
                     echo 'Deployment to Test failed'
                 }
             }
-        }
+        }*/
         stage('e2e tests'){
             steps{
                 script{
@@ -247,7 +247,7 @@ pipeline{
                             echo 'Running e2e tests'
                             sh 'npm install'
                             sh 'npm install -g testcafe'
-                            sh 'node_modules/.bin/testcafe \'chrome --no-sandbox\' /tests/e2e/test.ts'
+                            sh 'node_modules/.bin/testcafe \'path:`./.bin/chromedriver`\' ./tests/e2e/test.ts'
                         }
                     }
                 }
