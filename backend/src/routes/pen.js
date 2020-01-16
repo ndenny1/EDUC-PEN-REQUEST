@@ -52,8 +52,6 @@ router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
 
       axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
       const response = await axios.get(config.get('codeTable:apiEndpoint') + '/gender');
-      // eslint-disable-next-line no-console
-      console.log(response.data);
       if(response.status !== 200){
         return res.status(response.status).json({
           message: 'API Post error'
