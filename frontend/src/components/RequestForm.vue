@@ -78,7 +78,7 @@
                     </v-menu>
                   </v-col>
                 <v-col>
-                  <v-select color="#003366" v-model="userPost.genderCode" required :rules="requiredRules" outlined :items="genderCodeLabels" label="Gender"></v-select>
+                  <v-select color="#003366" v-model="userPost.genderCode" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
                 </v-col>
               </v-row>
               <v-row class="bottom_group">
@@ -200,7 +200,6 @@ export default {
   async mounted() {
     const genderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
     this.genders = genderCodes.map(a => a.label);
-    console.log(this.genders);
     //this.userPost.legalLastName = this.userInfo.lastName;
     this.userPost.legalFirstName = this.userInfo.firstName;
     //this.userPost.email = this.userInfo.emailAddress;
@@ -226,7 +225,7 @@ export default {
           if(this.userPost.dataSourceCode === 'BCEID'){
             this.userPost.dataSourceCode = 'DIRECT';
           }
-
+          console.log(this.userPost);
           const resStatus = await this.$store.dispatch('penRequest/postRequest', this.userPost);
           if(resStatus){
             this.$refs.form.reset();
