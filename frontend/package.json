@@ -26,6 +26,7 @@
     "axios-mock-adapter": "1.17.0",
     "chromedriver": "^79.0.0",
     "chromium": "^2.1.1",
+    "electron": "7.1.9",
     "core-js": "^2.6.10",
     "cryptico-js": "^1.1.0",
     "dotenv": "^8.2.0",
@@ -158,7 +159,8 @@
       "src/**/*.{js,vue}",
       "!src/main.js",
       "!src/plugins/*.*",
-      "!src/router.js"
+      "!src/router.js",
+      "!tests/e2e/*.*"
     ],
     "testResultsProcessor": "jest-sonar-reporter"
   },

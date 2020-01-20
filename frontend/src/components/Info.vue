@@ -33,7 +33,7 @@ export default {
   name: 'Info',
   data() {
     return {
-        appTitle: process.env.VUE_APP_TITLE,
+      appTitle: process.env.VUE_APP_TITLE,
     };
   },
 };
