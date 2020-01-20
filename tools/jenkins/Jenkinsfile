@@ -10,7 +10,6 @@ pipeline{
 
     tools {
         nodejs "nodejs"
-        org.jenkinsci.plugins.docker.commons.tools.DockerTool
     }
 
     environment{
@@ -242,7 +241,9 @@ pipeline{
         }*/
         stage('e2e tests'){
             agent{
-                docker { image 'selenium/node-chrome:latest'}
+                dockerfile {
+                    filename 'tools/jenkins/Docker-jenkins'
+                }
             }
             steps{
                 script{
