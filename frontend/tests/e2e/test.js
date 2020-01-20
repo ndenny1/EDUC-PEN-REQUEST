@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Selector } from 'testcafe';
 
 fixture `Basic Test`.page `https://pen-request-c2mvws-dev.pathfinder.gov.bc.ca`;

@@ -75,7 +75,6 @@
     "not ie <= 8"
   ],
   "eslintConfig": {
-    "ignorePatterns": ["test.js"],
     "root": true,
     "env": {
       "es6": true,
