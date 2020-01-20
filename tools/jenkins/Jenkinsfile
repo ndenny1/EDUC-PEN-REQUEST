@@ -53,7 +53,7 @@ pipeline{
                     }
                 }
             }
-        }/*
+        }
         stage('Unit Tests') {
             agent any
             steps {
@@ -238,7 +238,7 @@ pipeline{
                     echo 'Deployment to Test failed'
                 }
             }
-        }*/
+        }
         stage('e2e tests'){
             steps{
                 script{
