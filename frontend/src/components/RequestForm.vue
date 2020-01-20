@@ -198,7 +198,7 @@ export default {
     },
   },
   async mounted() {
-    const genderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
+    this.userPost.genderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
     this.genders = genderCodes.map(a => a.label);
     //this.userPost.legalLastName = this.userInfo.lastName;
     this.userPost.legalFirstName = this.userInfo.firstName;
