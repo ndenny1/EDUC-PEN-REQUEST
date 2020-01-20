@@ -6,9 +6,7 @@ def BE_COV_STASH = 'backend-coverage'
 def FE_COV_STASH = 'frontend-coverage'
 
 pipeline{
-    agent{
-        label 'docker'
-    }
+    agent any
 
     tools {
         nodejs "nodejs"
