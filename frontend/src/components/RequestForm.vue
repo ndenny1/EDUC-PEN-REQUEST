@@ -221,8 +221,8 @@ export default {
           this.userPost.digitalID = this.userInfo.digitalIdentityID;
           this.userPost.dataSourceCode = this.userInfo.accountType;
           const code = this.apiGenderCodes.filter(it => (it.label === this.genderLabel));
-          console.log(code);
-          this.userPost.genderCode = code.genderCode;
+          this.userPost.genderCode = code[0].genderCode;
+          console.log(this.userPost.genderCode);
 
           if(this.userPost.dataSourceCode === 'BCEID'){
             this.userPost.dataSourceCode = 'DIRECT';
