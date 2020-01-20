@@ -75,6 +75,7 @@
     "not ie <= 8"
   ],
   "eslintConfig": {
+    "ignorePatterns": ["test.js"],
     "root": true,
     "env": {
       "es6": true,
@@ -160,7 +161,7 @@
       "!src/main.js",
       "!src/plugins/*.*",
       "!src/router.js",
-      "!tests/e2e/*.*"
+      "!tests/e2e/test.js"
     ],
     "testResultsProcessor": "jest-sonar-reporter"
   },
