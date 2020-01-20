@@ -199,7 +199,7 @@ export default {
   },
   async mounted() {
     this.userPost.genderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
-    this.genders = genderCodes.map(a => a.label);
+    this.genders = this.userPost.genderCodes.map(a => a.label);
     //this.userPost.legalLastName = this.userInfo.lastName;
     this.userPost.legalFirstName = this.userInfo.firstName;
     //this.userPost.email = this.userInfo.emailAddress;
