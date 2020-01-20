@@ -8,6 +8,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import chromium from 'chromium';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -22,6 +23,7 @@ export default {
     ...mapGetters('auth', ['userInfo'])
   },
   async created() {
+    console.log(chromium.path);
     this.$store.dispatch('auth/getJwtToken').then(() => {
       this.$store.dispatch('auth/getUserInfo');
     });
