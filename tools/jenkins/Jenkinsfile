@@ -53,7 +53,7 @@ pipeline{
                     }
                 }
             }
-        }
+        }/*
         stage('Unit Tests') {
             agent any
             steps {
@@ -113,7 +113,7 @@ pipeline{
                     echo 'Some Lint Checks and Tests failed'
                 }
             }
-        }/*
+        }
         stage('SonarQube Analysis'){
             agent any
 
@@ -140,7 +140,7 @@ pipeline{
                     }
                 }
             }
-        }*/
+        }
         stage('Build'){
             steps{
                 script {
@@ -238,7 +238,7 @@ pipeline{
                     echo 'Deployment to Test failed'
                 }
             }
-        }
+        }*/
         stage('e2e tests'){
             agent{
                 docker { image 'selenium/node-chrome:latest'}
