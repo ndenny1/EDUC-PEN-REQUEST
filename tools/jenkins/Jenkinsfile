@@ -113,7 +113,7 @@ pipeline{
                     echo 'Some Lint Checks and Tests failed'
                 }
             }
-        }
+        }/*
         stage('SonarQube Analysis'){
             agent any
 
@@ -140,7 +140,7 @@ pipeline{
                     }
                 }
             }
-        }
+        }*/
         stage('Build'){
             steps{
                 script {
@@ -240,15 +240,18 @@ pipeline{
             }
         }
         stage('e2e tests'){
+            agent{
+                docker { image 'selenium/node-chrome:latest'}
+            }
             steps{
                 script{
                     timeout(10){
                         dir('frontend'){
+                            checkout scm
                             echo 'Running e2e tests'
                             sh 'npm install'
                             sh 'npm install -g testcafe'
-                            sh 'npm install testcafe-browser-provider-selenium'
-                            sh 'testcafe selenium:chrome ./tests/e2e/test.ts'
+                            sh 'testcafe -b'
                         }
                     }
                 }
