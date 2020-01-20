@@ -6,7 +6,9 @@ def BE_COV_STASH = 'backend-coverage'
 def FE_COV_STASH = 'frontend-coverage'
 
 pipeline{
-    agent any
+    agent{
+        docker { image 'selenium/node-chrome:latest'}
+    }
 
     tools {
         nodejs "nodejs"
@@ -240,9 +242,6 @@ pipeline{
             }
         }*/
         stage('e2e tests'){
-            agent{
-                docker { image 'selenium/node-chrome:latest'}
-            }
             steps{
                 script{
                     timeout(10){
