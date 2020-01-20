@@ -78,7 +78,7 @@
                     </v-menu>
                   </v-col>
                 <v-col>
-                  <v-select color="#003366" v-model="userPost.genderLabel" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
+                  <v-select color="#003366" v-model="genderLabel" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
                 </v-col>
               </v-row>
               <v-row class="bottom_group">
@@ -163,6 +163,7 @@ export default {
       dialog: false,
       dialogMessage: null,
       apiGenderCodes: [],
+      genderLabel: null,
       userPost: {
         digitalID: null,
         legalLastName: null,
@@ -176,7 +177,6 @@ export default {
         pastNames: null,
         dob: null,
         genderCode: null,
-        genderLabel: null,
         email: null,
         lastBCSchool: null,
         lastBCSchoolStudentNumber: null,
@@ -220,7 +220,8 @@ export default {
         try{
           this.userPost.digitalID = this.userInfo.digitalIdentityID;
           this.userPost.dataSourceCode = this.userInfo.accountType;
-          const code = this.apiGenderCodes.filter(it => (it.label === this.userPost.genderLabel));
+          const code = this.apiGenderCodes.filter(it => (it.label === this.genderLabel));
+          console.log(code);
           this.userPost.genderCode = code.genderCode;
 
           if(this.userPost.dataSourceCode === 'BCEID'){
