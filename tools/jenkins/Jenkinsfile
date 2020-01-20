@@ -6,7 +6,9 @@ def BE_COV_STASH = 'backend-coverage'
 def FE_COV_STASH = 'frontend-coverage'
 
 pipeline{
-    agent any
+    agent{
+        label 'docker'
+    }
 
     tools {
         nodejs "nodejs"
@@ -142,6 +144,7 @@ pipeline{
             }
         }
         stage('Build'){
+            agent any
             steps{
                 script {
                     openshift.withCluster(){
@@ -214,6 +217,7 @@ pipeline{
             }
         }
         stage('Deploy to Dev'){
+            agent any
             steps{
                 deployStage('Dev', DEV, DEV_HOST_ROUTE)
             } 
@@ -227,6 +231,7 @@ pipeline{
             }
         }
         stage('Deploy to Test'){
+            agent any
             steps{
                 deployStage('Test', TEST, TEST_HOST_ROUTE)
             } 
@@ -241,9 +246,7 @@ pipeline{
         }*/
         stage('e2e tests'){
             agent{
-                dockerfile {
-                    filename 'tools/jenkins/Docker-jenkins'
-                }
+                docker { image 'selenium/node-chrome:latest'}
             }
             steps{
                 script{
