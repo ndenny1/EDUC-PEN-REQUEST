@@ -83,7 +83,7 @@ pipeline{
                     }
                 }
             }
-        }
+        }/*
         stage('Unit Tests') {
             agent any
             steps {
@@ -143,7 +143,7 @@ pipeline{
                     echo 'Some Lint Checks and Tests failed'
                 }
             }
-        }/*
+        }
         stage('SonarQube Analysis'){
             agent any
 
@@ -170,7 +170,7 @@ pipeline{
                     }
                 }
             }
-        }*/
+        }
         stage('Build'){
             agent any
             steps{
@@ -271,7 +271,7 @@ pipeline{
                     echo 'Deployment to Test failed'
                 }
             }
-        }
+        }*/
         stage('e2e tests'){
             steps{
                 script{
