@@ -37,10 +37,6 @@ pipeline{
                 claimName: 'node-slave-pvc'      
         """
         }
-  }
-
-    tools {
-        nodejs "nodejs"
     }
 
     environment{
