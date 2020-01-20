@@ -78,7 +78,7 @@
                     </v-menu>
                   </v-col>
                 <v-col>
-                  <v-select color="#003366" v-model="userPost.genderCode" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
+                  <v-select color="#003366" v-model="userPost.genderLabel" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
                 </v-col>
               </v-row>
               <v-row class="bottom_group">
@@ -162,6 +162,7 @@ export default {
       validForm: true,
       dialog: false,
       dialogMessage: null,
+      apiGenderCodes: [],
       userPost: {
         digitalID: null,
         legalLastName: null,
@@ -174,8 +175,8 @@ export default {
         maidenName: null,
         pastNames: null,
         dob: null,
-        genderCode: [],
-        genderCodeLabels: null,
+        genderCode: null,
+        genderLabel: null,
         email: null,
         lastBCSchool: null,
         lastBCSchoolStudentNumber: null,
@@ -198,8 +199,8 @@ export default {
     },
   },
   async mounted() {
-    this.userPost.genderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
-    this.genders = this.userPost.genderCodes.map(a => a.label);
+    this.apiGenderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
+    this.genders = this.apiGenderCodes.map(a => a.label);
     //this.userPost.legalLastName = this.userInfo.lastName;
     this.userPost.legalFirstName = this.userInfo.firstName;
     //this.userPost.email = this.userInfo.emailAddress;
@@ -219,7 +220,7 @@ export default {
         try{
           this.userPost.digitalID = this.userInfo.digitalIdentityID;
           this.userPost.dataSourceCode = this.userInfo.accountType;
-          const code = this.genderCode.filter(it => (it.label === this.userPost.genderCode));
+          const code = this.apiGenderCodes.filter(it => (it.label === this.userPost.genderLabel));
           this.userPost.genderCode = code.genderCode;
 
           if(this.userPost.dataSourceCode === 'BCEID'){
