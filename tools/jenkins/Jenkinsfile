@@ -84,6 +84,7 @@ pipeline{
                 }
             }
         }
+        
         stage('Unit Tests') {
             agent any
             steps {
@@ -281,7 +282,7 @@ pipeline{
                             echo 'Running e2e tests'
                             sh 'npm install'
                             sh 'npm install -g testcafe'
-                            sh 'testcafe \'chrome:./.bin/chromedriver\' ./tests/e2e/test.js'
+                            sh 'testcafe \'path:`/.bin/chromedriver`\' ./tests/e2e/test.js'
                         }
                     }
                 }
