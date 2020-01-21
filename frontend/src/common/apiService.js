@@ -95,5 +95,39 @@ export default {
       console.log(`Failed to get from Nodejs API - ${e}`);
       throw e;
     }
-  }
+  },
+
+  async getDocumentTypeCodes() {
+    try{
+      const response = await apiAxios.get(ApiRoutes.DOCUMENT_TYPE_CODES);
+      return response;
+    } catch(e) {
+      console.log(`Failed to get from Nodejs getDocumentTypeCodes API - ${e}`);
+      throw e;
+    }
+  },
+
+  async getFileRequirements() {
+    try{
+      const response = await apiAxios.get(ApiRoutes.FILE_REQUIREMENTS);
+      return response;
+    } catch(e) {
+      console.log(`Failed to get from Nodejs getFileRequirements API - ${e}`);
+      throw e;
+    }
+  },
+
+  async uploadFile(fileData){
+    try{
+      const response = await apiAxios.post(ApiRoutes.FILE_UPLOAD, fileData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      return response;
+    } catch(e) {
+      console.log(`Failed to post to Nodejs uploadFile API - ${e}`);
+      throw e;
+    }
+  },
 };
