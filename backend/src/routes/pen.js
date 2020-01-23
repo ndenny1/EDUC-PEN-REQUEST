@@ -36,7 +36,7 @@ router.get('/file_requirements', passport.authenticate('jwt', { session: false }
   (req, res) => getData(req, res, config.get('document:apiEndpoint') + '/file-requirements')
 );
 
-router.post('/request', passport.authenticate('jwt', { session: false }),
+router.post('/document', passport.authenticate('jwt', { session: false }),
   (req, res) => postData(req, res, config.get('document:apiEndpoint') + '/', req.body)
 );
 
@@ -74,12 +74,13 @@ async function postData(req, res, url, data) {
 
     axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
     const response = await axios.post(url, data);
+    console.log(response.body);
     if(response.status !== 200){
       return res.status(response.status).json({
         message: 'API Post error'
       });
     }
-    return res.status(200).json(res.body);
+    return res.status(200).json({status:200});
   } catch(e) {
     return res.status(500).json(e);
   }

@@ -89,49 +89,49 @@ describe('DocumentUpload.vue', () => {
     expect(wrapper.vm.dataReady).toBeFalsy();
   });
 
-  test('upload file with successful API response', async () => {    
-    const input = wrapper.find({name: 'v-file-input'});
-    input.vm.internalValue = oneMBFile;
+  // test('upload file with successful API response', async () => {    
+  //   const input = wrapper.find({name: 'v-file-input'});
+  //   input.vm.internalValue = oneMBFile;
 
-    const select = wrapper.find({name: 'v-select'});
-    select.findAll('.v-list-item').at(1).trigger('click');
+  //   const select = wrapper.find({name: 'v-select'});
+  //   select.findAll('.v-list-item').at(1).trigger('click');
 
-    wrapper.vm.validate();
-    wrapper.vm.validForm = true;
-    expect(wrapper.vm.dataReady).toBeTruthy();
+  //   wrapper.vm.validate();
+  //   wrapper.vm.validForm = true;
+  //   expect(wrapper.vm.dataReady).toBeTruthy();
 
-    await localVue.nextTick();
+  //   await localVue.nextTick();
 
-    const button = wrapper.find('#upload_form');
-    button.trigger('click');
+  //   const button = wrapper.find('#upload_form');
+  //   button.trigger('click');
 
-    await localVue.nextTick();
-    await localVue.nextTick();
-    expect(wrapper.vm.alert).toBeTruthy();
-    expect(wrapper.vm.alertMessage).toContain('success');
-  });
+  //   await localVue.nextTick();
+  //   await localVue.nextTick();
+  //   expect(wrapper.vm.alert).toBeTruthy();
+  //   expect(wrapper.vm.alertMessage).toContain('success');
+  // });
 
-  test('upload file with failed API response', async () => {    
-    const input = wrapper.find({name: 'v-file-input'});
-    input.vm.internalValue = oneMBFile;
+  // test('upload file with failed API response', async () => {    
+  //   const input = wrapper.find({name: 'v-file-input'});
+  //   input.vm.internalValue = oneMBFile;
 
-    const select = wrapper.find({name: 'v-select'});
-    select.findAll('.v-list-item').at(1).trigger('click');
+  //   const select = wrapper.find({name: 'v-select'});
+  //   select.findAll('.v-list-item').at(1).trigger('click');
 
-    wrapper.vm.validate();
-    wrapper.vm.validForm = true;
-    expect(wrapper.vm.dataReady).toBeTruthy();
+  //   wrapper.vm.validate();
+  //   wrapper.vm.validForm = true;
+  //   expect(wrapper.vm.dataReady).toBeTruthy();
 
-    await localVue.nextTick();
+  //   await localVue.nextTick();
 
-    const button = wrapper.find('#upload_form');
-    button.trigger('click');
+  //   const button = wrapper.find('#upload_form');
+  //   button.trigger('click');
 
-    await localVue.nextTick();
-    await localVue.nextTick();
-    expect(wrapper.vm.alert).toBeTruthy();
-    expect(wrapper.vm.alertMessage).toContain('failure');
-  });
+  //   await localVue.nextTick();
+  //   await localVue.nextTick();
+  //   expect(wrapper.vm.alert).toBeTruthy();
+  //   expect(wrapper.vm.alertMessage).toContain('failure');
+  // });
 
 });
 

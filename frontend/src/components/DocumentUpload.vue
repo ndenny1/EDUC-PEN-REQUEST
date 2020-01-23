@@ -42,7 +42,7 @@
           color="#003366"
           class="white--text"
           id="upload_form"
-          @click="uploadFile"
+          @click="submitRequest"
           :disabled="!dataReady"
         >
           <div v-if="active">
@@ -122,6 +122,7 @@ export default {
       this.$refs.form.reset();
       this.fileInputError = [];
       this.alert = false;
+      this.active = false;
     },
     setSuccessAlert() {
       this.alertMessage = 'File upload success!';
@@ -144,26 +145,49 @@ export default {
     validate() {
       this.$refs.form.validate();
     },
-    async uploadFile() {
+    submitRequest() {
       if(this.dataReady){
-        let formData = new FormData();
-        formData.append('documentTypeCode', this.documentTypeCode);
-        formData.append('documentOwnerTypeCode', this.documentOwnerTypeCode);
-        formData.append('documentOwnerId', this.documentOwnerId);
         try {
           this.active = true;
-          const resStatus = await this.$store.dispatch('document/uploadFile', formData);
-          if(resStatus){
-            this.resetForm();
-            this.setSuccessAlert();
-          } else {
-            this.setErrorAlert();
-          }
+          const reader = new FileReader(); 
+          reader.onload = this.uploadFile;
+          reader.onabort = this.handleFileReadErr;
+          reader.onerror = this.handleFileReadErr;
+          reader.readAsBinaryString(this.file);
         } catch (e) {
+          this.handleFileReadErr();
           throw e;
-        } finally {
-          this.active = false;
         }
+      }
+    },
+    handleFileReadErr() {
+      this.active = false;
+      this.setErrorAlert();
+    },
+    async uploadFile(env) {
+      let document = {
+        documentTypeCode: this.documentTypeCode,
+        fileName: this.file.name,
+        fileExtension: this.file.type,
+        fileSize: this.file.size,
+        documentData: btoa(env.target.result),
+        documentOwners: [{
+          documentOwnerTypeCode: this.documentOwnerTypeCode,
+          documentOwnerID: this.documentOwnerId
+        }]
+      };
+
+      try {
+        const resStatus = await this.$store.dispatch('document/uploadFile', document);
+        if(resStatus){
+          this.resetForm();
+          this.setSuccessAlert();
+        } else {
+          this.handleFileReadErr();
+        }
+      } catch (e) {
+        this.handleFileReadErr();
+        throw e;
       }
     },
     async getDocumentTypeCodes() {
@@ -178,7 +202,6 @@ export default {
       ];
       this.fileAccept = fileRequirements.extensions.join();
     },
-
   },
 };
 </script>

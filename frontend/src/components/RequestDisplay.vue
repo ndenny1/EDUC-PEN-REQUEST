@@ -152,11 +152,12 @@ export default {
       if(this.penRequestId) {
         try {
           const penRequest = await this.$store.dispatch('penRequest/getPenRequest', this.penRequestId);
+          console.log('penRequest:' + penRequest);
           if(penRequest) {
-            penRequest.legalFirstName = this.penRequest.legalFirstName;
-            penRequest.legalLastName = this.penRequest.legalLastName;
-            penRequest.dob = this.penRequest.dob;
-            penRequest.penRequestStatusCode = this.penRequest.penRequestStatusCode;
+            this.penRequest.legalFirstName = penRequest.legalFirstName;
+            this.penRequest.legalLastName = penRequest.legalLastName;
+            this.penRequest.dob = penRequest.dob.substring(0,10);
+            this.penRequest.penRequestStatusCode = penRequest.penRequestStatusCode;
           } else {
             this.alert = true;
           }

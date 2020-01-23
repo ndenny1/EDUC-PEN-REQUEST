@@ -119,11 +119,7 @@ export default {
 
   async uploadFile(fileData){
     try{
-      const response = await apiAxios.post(ApiRoutes.FILE_UPLOAD, fileData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const response = await apiAxios.post(ApiRoutes.FILE_UPLOAD, fileData);
       return response;
     } catch(e) {
       console.log(`Failed to post to Nodejs uploadFile API - ${e}`);

@@ -87,14 +87,21 @@ router.post('/refresh', [
       errors: errors.array()
     });
   }
-  if(!req.user.refreshToken){
+  if(!req.user.refreshToken){  //user is null?
     res.redirect('/logout');
   } else{
-    await auth.renew(req.user.refreshToken);
+    await auth.renew(req.user.refreshToken);  //need to update req.user?
     if(req.user){
       var newUiToken = auth.generateUiToken();
+      const responseJson = {
+        jwtFrontend: newUiToken
+      };
+      res.status(200).json(responseJson);
+    } else {
+      res.status(200).json({
+        message: 'Not logged in'
+      });
     }
-    return res.status(200).json(newUiToken);
   }
 });
 
