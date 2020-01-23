@@ -15,7 +15,7 @@ pipeline{
                             echo 'Running e2e tests'
                             sh 'npm install'
                             sh 'npm install -g testcafe'
-                            sh 'testcafe \'path:`/node_modules/.bin/chromedriver`\' ./tests/e2e/test.js'
+                            sh 'testcafe \'path:./node_modules/.bin/chromedriver\' ./tests/e2e/test.js'
                         }
                     }
                 }
