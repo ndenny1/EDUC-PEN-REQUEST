@@ -1,4 +1,5 @@
 import ApiService from '@/common/apiService';
+import {getData} from '@/store/modules/helpers';
 
 export default {
   namespaced: true,
@@ -17,17 +18,7 @@ export default {
         console.log('Error while accessing API - ' + e);
       }
     },
-    async getGenderCodes(){
-      try {
-        const response = await ApiService.getGenderCodes();
-        if(response.status !== 200){
-          return false;
-        }
-        console.log(response.data);
-        return response.data;
-      } catch(e) {
-        console.log('Error while accessing API - ' + e);
-      }
-    },
+    getGenderCodes: () => getData(ApiService.getGenderCodes),
+    getPenRequest: (_context, penRequestId) => getData(ApiService.getPenRequest, penRequestId),
   }
 };
