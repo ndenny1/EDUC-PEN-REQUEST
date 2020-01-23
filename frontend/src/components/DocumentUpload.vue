@@ -24,9 +24,18 @@
         :accept="fileAccept"
         placeholder="Select your file"
         label="File"
-        :error="fileInputError"
+        :error-messages="fileInputError"
         @change="selectFile"
       ></v-file-input>
+      <v-alert
+        dense
+        text
+        dismissible
+        v-model="alert"
+        :type="alertType"
+      >
+         {{ alertMessage }}
+      </v-alert>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -46,29 +55,15 @@
             Upload
           </div>
         </v-btn>
+        <v-btn
+          color="#003366"
+          class="white--text"
+          @click="closeForm"
+        >
+          Close
+        </v-btn>
       </v-card-actions>
     </v-form>
-
-    <v-dialog
-      v-model="dialog"
-      width="500"
-    >
-      <v-card>
-        <v-card-text class="fullPadding">
-          {{ dialogMessage }}
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            text
-            @click="dialog = false"
-          >
-            Close
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 
   </v-card>
 </template>
@@ -98,14 +93,15 @@ export default {
       fileAccept: '',
       requiredRules: [v => !!v || 'Required'],
       validForm: true,
-      fileInputError: false,
+      fileInputError: [],
       documentTypeCode: null,
       file: null,
-      documentTypes: null,
+      documentTypes: [],
       active: false,
 
-      dialog: false,
-      dialogMessage: null
+      alert: false,
+      alertMessage: null,
+      alertType: null
       
     };
   },
@@ -118,12 +114,31 @@ export default {
     }
   },
   methods: {
+    closeForm() {
+      this.resetForm();
+      this.$emit('close:form');
+    },
+    resetForm() {
+      this.$refs.form.reset();
+      this.fileInputError = [];
+      this.alert = false;
+    },
+    setSuccessAlert() {
+      this.alertMessage = 'File upload success!';
+      this.alertType = 'success';
+      this.alert = true;
+    },
+    setErrorAlert() {
+      this.alertMessage = 'File upload failure.';
+      this.alertType = 'error';
+      this.alert = true;
+    },
     selectFile(file) {
       this.file = file;
       if(!this.file && !this.active) {
-        this.fileInputError = true;
+        this.fileInputError = 'Required';
       } else {
-        this.fileInputError = false;
+        this.fileInputError = [];
       }
     },
     validate() {
@@ -139,13 +154,10 @@ export default {
           this.active = true;
           const resStatus = await this.$store.dispatch('document/uploadFile', formData);
           if(resStatus){
-            this.$refs.form.reset();
-            this.dialogMessage = 'File upload success!';
-            this.dialog = true;
+            this.resetForm();
+            this.setSuccessAlert();
           } else {
-            this.$refs.form.reset();
-            this.dialogMessage = 'File upload failure.';
-            this.dialog = true;
+            this.setErrorAlert();
           }
         } catch (e) {
           throw e;
@@ -173,7 +185,7 @@ export default {
 
 <style scoped>
 .document-upload{
-  margin: 20px 0px;
+  /* margin: 20px 0px; */
   padding: 20px;
 }
 

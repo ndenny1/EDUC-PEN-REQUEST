@@ -31,9 +31,11 @@ router.get('/callback',
   (_req, res) => {
     //redirect to localhost if running locally
     if(process.env.NODE_ENV === 'local'){
-      res.redirect('localhost:8080');
+      res.redirect('localhost:8081');
+    } else {
+      res.redirect(config.get('server:frontend'));
     }
-    res.redirect(config.get('server:frontend'));
+    
   }
 );
 

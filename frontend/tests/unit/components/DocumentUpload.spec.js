@@ -65,7 +65,7 @@ describe('DocumentUpload.vue', () => {
 
     input.vm.validate();
     expect(input.vm.hasError).toBeFalsy();
-    expect(wrapper.vm.fileInputError).toBeFalsy();
+    expect(wrapper.vm.fileInputError.length).toBe(0);
     expect(wrapper.vm.file.name).toBe('test.jpg');
   });
 
@@ -85,7 +85,7 @@ describe('DocumentUpload.vue', () => {
     input.vm.internalValue = null;
 
     input.vm.validate();
-    expect(wrapper.vm.fileInputError).toBeTruthy();
+    expect(wrapper.vm.fileInputError).toContain('Required');
     expect(wrapper.vm.dataReady).toBeFalsy();
   });
 
@@ -107,8 +107,8 @@ describe('DocumentUpload.vue', () => {
 
     await localVue.nextTick();
     await localVue.nextTick();
-    expect(wrapper.vm.dialog).toBeTruthy();
-    expect(wrapper.vm.dialogMessage).toContain('success');
+    expect(wrapper.vm.alert).toBeTruthy();
+    expect(wrapper.vm.alertMessage).toContain('success');
   });
 
   test('upload file with failed API response', async () => {    
@@ -129,8 +129,8 @@ describe('DocumentUpload.vue', () => {
 
     await localVue.nextTick();
     await localVue.nextTick();
-    expect(wrapper.vm.dialog).toBeTruthy();
-    expect(wrapper.vm.dialogMessage).toContain('failure');
+    expect(wrapper.vm.alert).toBeTruthy();
+    expect(wrapper.vm.alertMessage).toContain('failure');
   });
 
 });

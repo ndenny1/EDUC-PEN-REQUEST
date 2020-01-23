@@ -1,6 +1,6 @@
-export async function getCodes(apiMethod) {
+export async function getData(apiMethod, queryParam) {
   try {
-    const response = await apiMethod();
+    const response = await apiMethod(queryParam);
     if(response.status !== 200){
       return false;
     }

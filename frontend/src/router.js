@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 import Home from '@/components/Home.vue';
 //import User from '@/components/UserInfo.vue';
 //import store from '@/store/index.js';
+import PenRequest from '@/components/RequestDisplay.vue';
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,11 @@ const router = new VueRouter({
       }
     },
     */
+    {
+      path: '/pen-request',
+      name: 'pen-request',
+      component: PenRequest
+    },
     {
       path: '*',
       name: 'notfound',

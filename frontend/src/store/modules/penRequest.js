@@ -1,5 +1,5 @@
 import ApiService from '@/common/apiService';
-import {getCodes} from '@/store/modules/helpers';
+import {getData} from '@/store/modules/helpers';
 
 export default {
   namespaced: true,
@@ -18,6 +18,7 @@ export default {
         console.log('Error while accessing API - ' + e);
       }
     },
-    getGenderCodes: () => getCodes(ApiService.getGenderCodes),
+    getGenderCodes: () => getData(ApiService.getGenderCodes),
+    getPenRequest: (_context, penRequestId) => getData(ApiService.getPenRequest, penRequestId),
   }
 };

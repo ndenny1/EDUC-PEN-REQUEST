@@ -130,4 +130,14 @@ export default {
       throw e;
     }
   },
+
+  async getPenRequest(penRequestId) {
+    try{
+      const response = await apiAxios.get(ApiRoutes.PEN_REQUEST + `/${penRequestId}`);
+      return response;
+    } catch(e) {
+      console.log(`Failed to get from Nodejs getPenRequest API - ${e}`);
+      throw e;
+    }
+  },
 };

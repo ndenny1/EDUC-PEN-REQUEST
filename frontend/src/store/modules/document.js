@@ -1,5 +1,5 @@
 import ApiService from '@/common/apiService';
-import {getCodes, postData} from '@/store/modules/helpers';
+import {getData, postData} from '@/store/modules/helpers';
 
 export default {
   namespaced: true,
@@ -7,8 +7,8 @@ export default {
   getters: {},
   mutations: {},
   actions: {
-    getDocumentTypeCodes: () => getCodes(ApiService.getDocumentTypeCodes),
-    getFileRequirements: () => getCodes(ApiService.getFileRequirements),
+    getDocumentTypeCodes: () => getData(ApiService.getDocumentTypeCodes),
+    getFileRequirements: () => getData(ApiService.getFileRequirements),
     uploadFile: (_context, fileData) => postData(ApiService.uploadFile, _context, fileData),
   }
 };
