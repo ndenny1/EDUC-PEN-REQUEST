@@ -34,7 +34,7 @@ const auth = {
       const discovery = await utils.getOidcDiscovery();
       const response = await axios.post(discovery.token_endpoint,
         qs.stringify({
-          client_id: config.get('oidc:clientID'),
+          client_id: config.get('oidc:clientId'),
           client_secret: config.get('oidc:clientSecret'),
           grant_type: 'refresh_token',
           refresh_token: refreshToken,

@@ -23,5 +23,8 @@ export const AuthRoutes = Object.freeze(object);
 
 export const ApiRoutes = Object.freeze({
   PEN_REQUEST: apiRoot + '/request',
-  GENDER_CODES: apiRoot + '/gender_codes'
+  GENDER_CODES: apiRoot + '/gender_codes',
+  DOCUMENT_TYPE_CODES: apiRoot + '/document_type_codes',
+  FILE_REQUIREMENTS: apiRoot + '/file_requirements',
+  FILE_UPLOAD: apiRoot + '/document',
 });

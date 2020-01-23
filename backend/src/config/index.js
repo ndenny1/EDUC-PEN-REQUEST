@@ -43,6 +43,9 @@ nconf.defaults({
   codeTable: {
     apiEndpoint: process.env.CODE_TABLE_ENDPOINT,
   },
+  document: {
+    apiEndpoint: process.env.DOCUMENT_API_ENDPOINT,
+  },
   tokenGenerate: {
     privateKey: process.env.UI_PRIVATE_KEY,
     publicKey: process.env.UI_PUBLIC_KEY,
