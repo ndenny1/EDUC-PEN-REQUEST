@@ -84,7 +84,6 @@ pipeline{
                 }
             }
         }
-        
         stage('Unit Tests') {
             agent any
             steps {
@@ -145,7 +144,7 @@ pipeline{
                 }
             }
         }
-        /*stage('SonarQube Analysis'){
+        stage('SonarQube Analysis'){
             agent any
 
             environment {
@@ -171,7 +170,7 @@ pipeline{
                     }
                 }
             }
-        }*/
+        }
         stage('Build'){
             agent any
             steps{
@@ -273,21 +272,6 @@ pipeline{
                 }
             }
         }
-        /*stage('e2e tests'){
-            steps{
-                script{
-                    timeout(10){
-                        dir('frontend'){
-                            checkout scm
-                            echo 'Running e2e tests'
-                            sh 'npm install'
-                            sh 'npm install -g testcafe'
-                            sh 'testcafe \'path:`/node_modules/chromedriver/chromedriver`\' ./tests/e2e/test.js'
-                        }
-                    }
-                }
-            }
-        }*/
     }
 }
 
