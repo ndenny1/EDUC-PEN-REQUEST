@@ -84,7 +84,7 @@ pipeline{
                 }
             }
         }
-        
+        /*
         stage('Unit Tests') {
             agent any
             steps {
@@ -145,7 +145,7 @@ pipeline{
                 }
             }
         }
-        /*stage('SonarQube Analysis'){
+        stage('SonarQube Analysis'){
             agent any
 
             environment {
@@ -171,7 +171,7 @@ pipeline{
                     }
                 }
             }
-        }*/
+        }
         stage('Build'){
             agent any
             steps{
@@ -273,7 +273,8 @@ pipeline{
                 }
             }
         }
-        /*stage('e2e tests'){
+        */
+        stage('e2e tests'){
             steps{
                 script{
                     timeout(10){
@@ -287,7 +288,7 @@ pipeline{
                     }
                 }
             }
-        }*/
+        }
     }
 }
 
