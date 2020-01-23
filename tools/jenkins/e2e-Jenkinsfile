@@ -13,7 +13,7 @@ pipeline{
                         dir('frontend'){
                             checkout scm
                             echo 'Running e2e tests'
-                            sh 'testcafe \"path:`/var/lib/jenkins/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/nodejs/lib/node_modules/chromium/lib/chromium/chrome-linux/chrome:headless`\" ./tests/e2e/test.js'
+                            sh 'testcafe \"path:`/var/lib/jenkins/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/nodejs/lib/node_modules/chromium/lib/chromium/chrome-linux/chrome`\" ./tests/e2e/test.js'
                         }
                     }
                 }
