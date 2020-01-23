@@ -1,0 +1,19 @@
+pipeline{
+    stages{
+        stage('e2e tests'){
+            steps{
+                script{
+                    timeout(10){
+                        dir('frontend'){
+                            checkout scm
+                            echo 'Running e2e tests'
+                            sh 'npm install'
+                            sh 'npm install -g testcafe'
+                            sh 'testcafe \'chrome:`/node_modules/chromedriver/chromedriver`\' ./tests/e2e/test.js'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
