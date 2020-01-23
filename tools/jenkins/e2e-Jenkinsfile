@@ -13,8 +13,7 @@ pipeline{
                         dir('frontend'){
                             checkout scm
                             echo 'Running e2e tests'
-                            sh 'apk add libxcursor-dev:i386'
-                            sh 'testcafe \"chrome:`/var/lib/jenkins/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/nodejs/lib/node_modules/chromium/lib/chromium/chrome-linux/chrome`\" ./tests/e2e/test.js'
+                            sh 'testcafe \"chrome:`/var/lib/jenkins/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/nodejs/lib/node_modules/chromium/lib/chromium/chrome-linux/chrome_sandbox`\" ./tests/e2e/test.js'
                         }
                     }
                 }
