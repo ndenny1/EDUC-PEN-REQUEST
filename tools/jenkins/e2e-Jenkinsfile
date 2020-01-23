@@ -13,6 +13,7 @@ pipeline{
                         dir('frontend'){
                             checkout scm
                             echo 'Running e2e tests'
+                            sh 'apt-get install libxcursor-dev:i386'
                             sh 'testcafe \"chrome:`/var/lib/jenkins/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/nodejs/lib/node_modules/chromium/lib/chromium/chrome-linux/chrome`\" ./tests/e2e/test.js'
                         }
                     }
