@@ -14,7 +14,6 @@ pipeline{
                             checkout scm
                             echo 'Running e2e tests'
                             sh 'npm install'
-                            sh 'npm install -g chromium'
                             sh 'npm install -g testcafe'
                             sh 'testcafe --list-browsers'
                             sh 'testcafe \'path:`/var/lib/jenkins/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/nodejs/lib/node_modules/chromium/lib/chromium/chrome-win/chrome.exe`\' ./tests/e2e/test.js'
