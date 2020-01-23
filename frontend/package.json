@@ -24,7 +24,6 @@
     "@fortawesome/fontawesome-free": "5.11.2",
     "axios": "^0.19.0",
     "axios-mock-adapter": "1.17.0",
-    "chromium": "2.1.1",
     "chromedriver": "^79.0.0",
     "electron": "7.1.9",
     "core-js": "^2.6.10",
