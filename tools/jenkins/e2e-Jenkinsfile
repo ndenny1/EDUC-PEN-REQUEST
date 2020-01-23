@@ -8,6 +8,7 @@ pipeline{
     environment{
         REPO_NAME = 'educ-pen-request'
         JOB_NAME = 'master'
+        OWNER = 'bcgov'
 
         SOURCE_REPO_REF = 'master'
         SOURCE_REPO_URL = 'https://github.com/${OWNER}/${REPO_NAME}.git'
