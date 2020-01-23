@@ -14,8 +14,10 @@ pipeline{
                             checkout scm
                             echo 'Running e2e tests'
                             sh 'npm install'
+                            sh 'npm install -g chromium'
                             sh 'npm install -g testcafe'
-                            sh 'testcafe path:./node_modules/.bin/chromedriver ./tests/e2e/test.js'
+                            sh 'testcafe --list-browsers'
+                            sh 'testcafe \'path:`./node_modules/.bin/chromedriver`\'./tests/e2e/test.js'
                         }
                     }
                 }
