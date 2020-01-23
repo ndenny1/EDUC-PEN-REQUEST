@@ -7,4 +7,4 @@ COPY package*.json ./
 COPY . /opt/app-root/src
 
 EXPOSE 8080 443
-RUN testcafe firefox,chromium /opt/app-root/src/tests/e2e/test.js
+RUN testcafe firefox,chrome /opt/app-root/src/tests/e2e/test.js
