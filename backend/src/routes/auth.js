@@ -87,8 +87,8 @@ router.post('/refresh', [
       errors: errors.array()
     });
   }
-  if(!req.user.refreshToken){  //user is null?
-    res.redirect('/logout');
+  if(!req.user || !req.user.refreshToken){
+    res.redirect('/logout');  //
   } else{
     await auth.renew(req.user.refreshToken);  //need to update req.user?
     if(req.user){

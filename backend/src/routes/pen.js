@@ -5,6 +5,7 @@ const express = require('express');
 const axios = require('axios');
 //const auth = require('../components/auth');
 const config = require('../config/index');
+const log = require('npmlog');
 
 const router = express.Router();
 
@@ -70,17 +71,17 @@ async function postData(req, res, url, data) {
     var userToken = thisSession.passport.user.jwt;
 
     // eslint-disable-next-line no-console
-    console.log(req.body);
+    log.verbose('post Data',req.body);
 
     axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
     const response = await axios.post(url, data);
-    console.log(response.body);
     if(response.status !== 200){
       return res.status(response.status).json({
         message: 'API Post error'
       });
     }
-    return res.status(200).json({status:200});
+    log.verbose('post Data', response.data);
+    return res.status(200).json(response.data);
   } catch(e) {
     return res.status(500).json(e);
   }
