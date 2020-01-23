@@ -1,4 +1,4 @@
-FROM testcafe/testcafe
+FROM testcafe/testcafe:latest
 
 WORKDIR /opt/app-root/src
 
@@ -9,4 +9,4 @@ COPY . /opt/app-root/src
 EXPOSE 8080 443
 
 RUN testcafe -b
-RUN testcafe firefox /opt/app-root/src/tests/e2e/test.js
+RUN testcafe firefox:headless /opt/app-root/src/tests/e2e/test.js
