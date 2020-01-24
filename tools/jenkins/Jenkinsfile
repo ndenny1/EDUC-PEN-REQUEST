@@ -144,33 +144,33 @@ pipeline{
                 }
             }
         }
-        stage('SonarQube Analysis'){
-            agent any
+        // stage('SonarQube Analysis'){
+        //     agent any
 
-            environment {
-                scannerHome = tool 'SonarQubeScanner'
-            }
+        //     environment {
+        //         scannerHome = tool 'SonarQubeScanner'
+        //     }
 
-            steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(TOOLS) {
-                            if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
-                                echo "DEBUG - Using project: ${openshift.project()}"
-                            }
+        //     steps {
+        //         script {
+        //             openshift.withCluster() {
+        //                 openshift.withProject(TOOLS) {
+        //                     if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
+        //                         echo "DEBUG - Using project: ${openshift.project()}"
+        //                     }
 
-                            unstash BE_COV_STASH
-                            unstash FE_COV_STASH
-                            echo 'Performing SonarQube static code analysis...'
-                            withSonarQubeEnv('sonarqube') {
-                                sh "${scannerHome}/bin/sonar-scanner"
-                            }
-                        }
+        //                     unstash BE_COV_STASH
+        //                     unstash FE_COV_STASH
+        //                     echo 'Performing SonarQube static code analysis...'
+        //                     withSonarQubeEnv('sonarqube') {
+        //                         sh "${scannerHome}/bin/sonar-scanner"
+        //                     }
+        //                 }
 
-                    }
-                }
-            }
-        }
+        //             }
+        //         }
+        //     }
+        // }
         stage('Build'){
             agent any
             steps{

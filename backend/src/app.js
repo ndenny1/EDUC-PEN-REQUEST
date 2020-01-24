@@ -32,7 +32,7 @@ app.use(helmet());
 app.use(helmet.noCache());
 
 //tells the app to use json as means of transporting data
-app.use(express.json());
+app.use(express.json({limit: '5mb', extended: true}));
 app.use(express.urlencoded({
   extended: false
 }));

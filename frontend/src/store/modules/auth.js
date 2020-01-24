@@ -1,5 +1,7 @@
 import ApiService from '@/common/apiService';
 import AuthService from '@/common/authService';
+import router from '@/router';
+import { AuthRoutes } from '@/utils/constants';
 
 export default {
   namespaced: true,
@@ -55,9 +57,7 @@ export default {
           });
         } else {
           var token = await AuthService.getAuthToken();
-          console.log(token);
           var tokenJson = token._json;
-          console.log(tokenJson);
           context.commit('setUserInfo', tokenJson);
         }
       } catch(e) {
@@ -79,10 +79,13 @@ export default {
             if (payload.exp > now) {
               const response = await AuthService.refreshAuthToken(context.getters.jwtToken);
 
-              if (response.jwtFrontend) {
+              if (!response.error && response.jwtFrontend) {
                 context.commit('setJwtToken', response.jwtFrontend);
+                ApiService.setAuthHeader(response.jwtFrontend);
+              } else {
+                context.commit('logoutState');
+                router.push(AuthRoutes.LOGOUT);
               }
-              ApiService.setAuthHeader(response.jwtFrontend);
             }
           }
         } else {

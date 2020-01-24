@@ -76,6 +76,11 @@ router.get('/logout', async (req, res) => {
   }
 });
 
+const UnauthorizedRsp = {
+  error: 'Unauthorized',
+  error_description: 'Not logged in'
+};
+
 //refreshes jwt on refresh if refreshToken is valid
 router.post('/refresh', [
   body('refreshToken').exists()
@@ -88,7 +93,7 @@ router.post('/refresh', [
     });
   }
   if(!req.user || !req.user.refreshToken){
-    res.redirect('/logout');  //
+    res.status(200).json(UnauthorizedRsp);
   } else{
     await auth.renew(req.user.refreshToken);  //need to update req.user?
     if(req.user){
@@ -98,9 +103,7 @@ router.post('/refresh', [
       };
       res.status(200).json(responseJson);
     } else {
-      res.status(200).json({
-        message: 'Not logged in'
-      });
+      res.status(200).json(UnauthorizedRsp);
     }
   }
 });
@@ -114,9 +117,7 @@ router.use('/token', auth.refreshJWT, (req, res) => {
     };
     res.status(200).json(responseJson);
   } else {
-    res.status(200).json({
-      message: 'Not logged in'
-    });
+    res.status(200).json(UnauthorizedRsp);
   }
 });
 
