@@ -181,7 +181,7 @@ export default {
 }
 
 .background{
-  background-image: url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80");
+  background-color: aliceblue;
   min-height: 500px;
   background-size: cover;
   display: flex;
