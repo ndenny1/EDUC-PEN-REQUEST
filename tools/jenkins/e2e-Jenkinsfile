@@ -5,17 +5,28 @@ pipeline{
         nodejs "nodejs"
     }
 
+    environment{
+        REPO_NAME = 'educ-pen-request'
+        JOB_NAME = 'master'
+        OWNER = 'bcgov'
+
+        SOURCE_REPO_REF = 'master'
+        SOURCE_REPO_URL = 'https://github.com/${OWNER}/${REPO_NAME}.git'
+    }
+
     stages{
         stage('e2e tests'){
             steps{
                 script{
-                    timeout(10){
-                        dir('frontend'){
-                            checkout scm
-                            echo 'Running e2e tests'
-                            sh 'npm install'
-                            sh 'npm install -g testcafe'
-                            sh 'testcafe \'path:./node_modules/.bin/chromedriver\' ./tests/e2e/test.js'
+                    openshift.withCluster(){
+                        openshift.withProject('c2mvws-tools'){
+                            try {
+                                def bcE2E = openshift.process('-f', 'tools/openshift/e2e.bc.yaml', "REPO_NAME=${REPO_NAME}", "JOB_NAME=${JOB_NAME}", "SOURCE_REPO_URL=${SOURCE_REPO_URL}", "SOURCE_REPO_REF=${SOURCE_REPO_REF}")
+                                openshift.apply(bcE2E).narrow('bc').startBuild('-w').logs('-f')
+                            } catch(e) {
+                                echo "e2e testing failed"
+                                throw e
+                            }
                         }
                     }
                 }

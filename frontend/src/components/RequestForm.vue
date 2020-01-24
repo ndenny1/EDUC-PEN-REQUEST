@@ -10,36 +10,36 @@
           <v-card-text class="noPadding">
               <v-row>
                   <v-col>
-                      <v-text-field v-model="userPost.legalLastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
+                      <v-text-field id='legalLastName' v-model="userPost.legalLastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field  v-model="userPost.legalFirstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
+                      <v-text-field id='legalFirstName'  v-model="userPost.legalFirstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field v-model="userPost.legalMiddleNames" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
+                      <v-text-field id='legalMiddleNames' v-model="userPost.legalMiddleNames" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
                   <v-col>
-                      <v-text-field v-model="userPost.usualLastName" color="#003366" outlined  hint="If different from legal last name" label="Usual Last Name"></v-text-field>
+                      <v-text-field id='usualLastName' v-model="userPost.usualLastName" color="#003366" outlined  hint="If different from legal last name" label="Usual Last Name"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field v-model="userPost.usualFirstName" color="#003366" outlined  hint="If different from legal first name(s)" label="Usual First Name(s)"></v-text-field>
+                      <v-text-field id='usualFirstName' v-model="userPost.usualFirstName" color="#003366" outlined  hint="If different from legal first name(s)" label="Usual First Name(s)"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field v-model="userPost.usualMiddleName" color="#003366" outlined  hint="If different from legal middle name(s)" label="Usual Middle Name(s)"></v-text-field>
+                      <v-text-field id='usualMiddleNames' v-model="userPost.usualMiddleName" color="#003366" outlined  hint="If different from legal middle name(s)" label="Usual Middle Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
                   <v-col>
-                      <v-text-field v-model="userPost.maidenName" color="#003366"  hint="Optional" outlined label="Maiden Name"></v-text-field>
+                      <v-text-field id='maidenName' v-model="userPost.maidenName" color="#003366"  hint="Optional" outlined label="Maiden Name"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field v-model="userPost.pastNames" color="#003366" hint="Optional"  outlined label="Past Name(s)"></v-text-field>
+                      <v-text-field id='pastNames' v-model="userPost.pastNames" color="#003366" hint="Optional"  outlined label="Past Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row>
@@ -67,6 +67,7 @@
                             ></v-text-field>
                         </template>
                         <v-date-picker
+                          id='dob'
                           color="#003366"
                           ref="picker"
                           v-model="userPost.dob"
@@ -78,27 +79,27 @@
                     </v-menu>
                   </v-col>
                 <v-col>
-                  <v-select color="#003366" v-model="genderLabel" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
+                  <v-select id='gender' color="#003366" v-model="genderLabel" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
                 </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field v-model="userPost.email" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
+                      <v-text-field id='email' v-model="userPost.email" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
                 <v-col>
-                  <v-text-field v-model="userPost.lastBCSchool" color="#003366" hint="Optional" outlined label="Last B.C. School Attended"></v-text-field>
+                  <v-text-field id='lastBCSchool' v-model="userPost.lastBCSchool" color="#003366" hint="Optional" outlined label="Last B.C. School Attended"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <v-text-field v-model="userPost.lastBCSchoolStudentNumber" color="#003366" hint="Optional"  outlined label="School Student ID Number"></v-text-field>
+                  <v-text-field id='lastBCStudentNumber' v-model="userPost.lastBCSchoolStudentNumber" color="#003366" hint="Optional"  outlined label="School Student ID Number"></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
-                  <v-text-field v-model="userPost.currentSchool" color="#003366" hint="Optional" outlined label="Current B.C. School Attending"></v-text-field>
+                  <v-text-field id='currentSchool' v-model="userPost.currentSchool" color="#003366" hint="Optional" outlined label="Current B.C. School Attending"></v-text-field>
                 </v-col>
               </v-row>
           </v-card-text>
