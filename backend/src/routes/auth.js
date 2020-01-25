@@ -93,7 +93,7 @@ router.post('/refresh', [
     });
   }
   if(!req.user || !req.user.refreshToken){
-    res.status(200).json(UnauthorizedRsp);
+    res.status(401).json(UnauthorizedRsp);
   } else{
     await auth.renew(req.user.refreshToken);  //need to update req.user?
     if(req.user){
@@ -103,7 +103,7 @@ router.post('/refresh', [
       };
       res.status(200).json(responseJson);
     } else {
-      res.status(200).json(UnauthorizedRsp);
+      res.status(401).json(UnauthorizedRsp);
     }
   }
 });
@@ -117,7 +117,7 @@ router.use('/token', auth.refreshJWT, (req, res) => {
     };
     res.status(200).json(responseJson);
   } else {
-    res.status(200).json(UnauthorizedRsp);
+    res.status(401).json(UnauthorizedRsp);
   }
 });
 

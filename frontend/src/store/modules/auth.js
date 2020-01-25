@@ -43,7 +43,10 @@ export default {
     }
   },
   actions: {
-
+    logout(context) {
+      context.commit('logoutState');
+      router.push(AuthRoutes.LOGOUT);
+    },
     async getUserInfo(context){
       try{
         if(process.env.NODE_ENV === 'development'){
@@ -56,53 +59,56 @@ export default {
             pen: null
           });
         } else {
-          var token = await AuthService.getAuthToken();
-          var tokenJson = token._json;
-          context.commit('setUserInfo', tokenJson);
+          if(context.getters.isAuthenticated) {
+            var token = await AuthService.getAuthToken();
+            var tokenJson = token._json;
+            context.commit('setUserInfo', tokenJson);
+          }
         }
       } catch(e) {
-        throw e;
+        context.dispatch('logout');
       }
     },
 
     //retrieves the json web token from local storage. If not in local storage, retrieves it from API
     async getJwtToken(context) {
-      try {
-        if (context.getters.isAuthenticated && !!context.getters.jwtToken) {
-          if(process.env.NODE_ENV === 'development'){
-            context.commit('setJwtToken', 'testToken');
-          } else{
-            const now = Date.now().valueOf() / 1000;
-            const jwtPayload = context.getters.jwtToken.split('.')[1];
-            const payload = JSON.parse(window.atob(jwtPayload));
-
-            if (payload.exp > now) {
+      if (context.getters.isAuthenticated && !!context.getters.jwtToken) { //follow up visit
+        if(process.env.NODE_ENV === 'development'){
+          context.commit('setJwtToken', 'testToken');
+        } else{
+          const now = Date.now().valueOf() / 1000;
+          const jwtPayload = context.getters.jwtToken.split('.')[1];
+          const payload = JSON.parse(window.atob(jwtPayload));
+          try {
+            if (payload.exp > now) {  //token not expired
               const response = await AuthService.refreshAuthToken(context.getters.jwtToken);
-
               if (!response.error && response.jwtFrontend) {
                 context.commit('setJwtToken', response.jwtFrontend);
                 ApiService.setAuthHeader(response.jwtFrontend);
               } else {
-                context.commit('logoutState');
-                router.push(AuthRoutes.LOGOUT);
+                context.dispatch('logout');
               }
+            } else {
+              context.dispatch('logout');
             }
-          }
-        } else {
-          if(process.env.NODE_ENV === 'development'){
-            context.commit('setJwtToken', 'testToken');
-          } else {
-            const response = await AuthService.getAuthToken();
-
-            if (response.jwtFrontend) {
-              context.commit('setJwtToken', response.jwtFrontend);
-            }
-            ApiService.setAuthHeader(response.jwtFrontend);
+          } catch (e) {
+            context.dispatch('logout');
           }
         }
-      } catch (e) {
-        // Remove tokens from localStorage and update state
-        context.commit('setJwtToken');
+      } else {  // first login and redirect
+        if(process.env.NODE_ENV === 'development'){
+          context.commit('setJwtToken', 'testToken');
+        } else {
+          try {
+            const response = await AuthService.getAuthToken();
+            if (response.jwtFrontend) {
+              context.commit('setJwtToken', response.jwtFrontend);
+              ApiService.setAuthHeader(response.jwtFrontend);
+            }
+          } catch(e) {
+            // expected exception
+          }
+        }
       }
     },
   }
