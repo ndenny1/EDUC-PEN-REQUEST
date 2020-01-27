@@ -75,12 +75,12 @@ async function postData(req, res, url, data) {
 
     axios.defaults.headers.common['Authorization'] = `Bearer ${userToken}`;
     const response = await axios.post(url, data);
+    log.verbose('post Data', response);
     if(response.status !== 200){
       return res.status(response.status).json({
         message: 'API Post error'
       });
     }
-    log.verbose('post Data', response.data);
     return res.status(200).json(response.data);
   } catch(e) {
     return res.status(500).json(e);
