@@ -7,4 +7,4 @@ COPY package*.json ./
 COPY . /opt/app-root/src
 
 RUN testcafe -b
-RUN testcafe firefox:headless,chromium:headless /opt/app-root/src/tests/e2e/*
+RUN testcafe firefox:headless,chromium:headless /opt/app-root/src/tests/e2e
