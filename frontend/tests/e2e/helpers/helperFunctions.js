@@ -1,4 +1,3 @@
-import faker from 'faker';
 import { Selector } from 'testcafe';
 
 export async function bceidLogin(t, credentials){
