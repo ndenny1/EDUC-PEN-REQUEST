@@ -5,6 +5,6 @@ WORKDIR /home/node
 COPY package*.json ./
 
 COPY . /home/node
-RUN npm ci
+RUN npm install nconf && npm install dotenv && npm install faker
 
 RUN testcafe firefox:headless,chromium:headless /home/node/tests/e2e
