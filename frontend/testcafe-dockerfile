@@ -5,7 +5,6 @@ WORKDIR /opt/app-root/src
 COPY package*.json ./
 
 COPY . /opt/app-root/src
-RUN npm install -g nconf
-RUN npm install -g dotenv
+RUN cd /opt/testcafe && npm run ci
 
 RUN testcafe firefox:headless,chromium:headless /opt/app-root/src/tests/e2e
