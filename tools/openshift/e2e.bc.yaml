@@ -72,6 +72,16 @@
               value: '2'
             - name: NPM_CONFIG_LOGLEVEL
               value: notice
+            - name: BCEID_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: bceid-credentials
+                  key: BCEID_USER
+            - name: BCEID_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: bceid-credentials
+                  key: BCEID_PASS
           type: Docker
     parameters:
     - name: REPO_NAME
