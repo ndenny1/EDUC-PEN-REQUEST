@@ -1,6 +1,5 @@
 FROM testcafe/testcafe:latest
-
-USER node
+USER root
 WORKDIR /home/node
 
 COPY package*.json ./
