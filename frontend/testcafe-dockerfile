@@ -5,6 +5,6 @@ WORKDIR /opt/testcafe/src
 COPY package*.json ./
 
 COPY . /opt/testcafe/src
-RUN cd /opt/testcafe/src && npm run ci
+RUN cd /opt/testcafe/src && npm ci
 
 RUN testcafe firefox:headless,chromium:headless /opt/testcafe/src/tests/e2e
