@@ -1,10 +1,10 @@
 FROM testcafe/testcafe:latest
 
-WORKDIR /opt/testcafe/src
+WORKDIR /home/node
 
-COPY package*.json ./
+COPY package*.json .
 
-COPY . /opt/testcafe/src
-RUN cd /opt/testcafe/src && npm ci
+COPY . /home/node
+RUN npm ci
 
-RUN testcafe firefox:headless,chromium:headless /opt/testcafe/src/tests/e2e
+RUN testcafe firefox:headless,chromium:headless /home/node/tests/e2e
