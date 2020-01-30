@@ -2,7 +2,7 @@ FROM testcafe/testcafe:latest
 
 WORKDIR /home/node
 
-COPY package*.json .
+COPY package*.json ./
 
 COPY . /home/node
 RUN npm ci
