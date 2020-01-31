@@ -219,16 +219,9 @@ export default {
       console.log(this.userInfo);
       if(this.validForm){
         try{
-          this.userPost.digitalID = this.userInfo.digitalIdentityID;
-          this.userPost.dataSourceCode = this.userInfo.accountType;
           const code = this.apiGenderCodes.filter(it => (it.label === this.genderLabel));
           this.userPost.genderCode = code[0].genderCode;
-          console.log(this.userPost.genderCode);
 
-          if(this.userPost.dataSourceCode === 'BCEID'){
-            this.userPost.dataSourceCode = 'DIRECT';
-          }
-          console.log(this.userPost);
           const resStatus = await this.$store.dispatch('penRequest/postRequest', this.userPost);
           if(resStatus){
             this.$refs.form.reset();

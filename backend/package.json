@@ -40,7 +40,8 @@
     "passport-jwt": "^4.0.0",
     "passport-openidconnect-kc-idp": "^0.0.7",
     "path": "0.12.7",
-    "querystring": "0.2.0"
+    "querystring": "0.2.0",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@babel/cli": "7.1.5",
