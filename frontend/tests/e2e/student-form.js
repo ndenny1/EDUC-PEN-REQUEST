@@ -2,11 +2,20 @@
 //this script starts at OSPR splash page, navigates to CLP and allows user to log in with Basic BCeID, and takes a screenshot of completed forms
 //Screenshots saved to C:\temp\artifacts\screenshots\  with -s path=artifacts/screenshots,fullPage=true,pathPattern=${TEST_INDEX}/${USERAGENT}/${FILE_INDEX}.png NOTE: (that string not required in script if screenshots not taken)
 
+/*
+BEFORE RUNNING TESTCAFE COMMAND
+
+Setting Local Env on Powershell:
+$env:NODE_ENV="production"
+
+Setting local Env on CMD:
+set NODE_ENV=production
+*/
+
 
 //To Run:
 //open CMD
 //navigate to folder where .js files are stored (EG C:temp with cd .\..\, then cd temp)
-//first type: set NODE_ENV=local
 //to run type: testcafe chrome sharene_basic_login_test.js --hostname 127.0.0.1 -s path=artifacts/screenshots,fullPage=true,pathPattern=${TEST_INDEX}/${USERAGENT}/${FILE_INDEX}.png
 
 import { Selector } from 'testcafe';

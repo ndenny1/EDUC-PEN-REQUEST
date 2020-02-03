@@ -28,7 +28,7 @@ describe('Footer.vue', () => {
     });
   });
 
-  test('Login form exists', () => {
+  test('Check login form exists', () => {
     expect(wrapper.html()).toContain('<div class="login-card v-card v-sheet theme--light">');
   });
 
