@@ -33,7 +33,7 @@ test(`basic bceid login`, async t => {
 		.expect(Selector('#password').count).eql(1); //login type displayed
     
     await bceidLogin(t, credentials);
-    await fillRequestForm(t, fullStudent);
+    await fillRequestForm(t, fullStudent, false);
     
     await t.takeScreenshot();		
 });
