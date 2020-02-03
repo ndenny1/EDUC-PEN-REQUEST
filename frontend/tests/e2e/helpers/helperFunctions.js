@@ -38,9 +38,10 @@ export async function fillRequestForm(t, studentData, submitBool){
     if(studentData.birthdate){
         const month = studentData.birthdate.getMonth();
         const day = studentData.birthdate.getUTCDate();
+        const year = studentData.birthdate.getYear();
         await t
             .click(Selector('#birthdate'))
-            .click(Selector('ul').filter('.v-date-picker-years').nth(-1))
+            .click(Selector('ul').filter('.v-date-picker-years').withText(String(year)))
             .click(Selector('div.v-date-picker-table').find('.v-btn__content').nth(month))
             .click(Selector('div.v-date-picker-table').find('.v-btn__content').nth(day));
             //.click(Selector('div.v-select__selections'));
