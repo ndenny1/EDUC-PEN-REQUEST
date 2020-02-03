@@ -150,7 +150,7 @@ export default {
       genders: [],
       requiredRules: [v => !!v || 'Required'],
       emailRules: [
-        v => !!v || 'E-mail is required',
+        v => !!v || 'Required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
       ],
       menu: false,

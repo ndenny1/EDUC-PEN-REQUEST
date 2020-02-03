@@ -9,7 +9,7 @@ export async function bceidLogin(t, credentials){
         .click(Selector("input[name='btnSubmit']")); //completes login
 }
 
-export async function fillRequestForm(t, studentData){
+export async function fillRequestForm(t, studentData, submitBool){
     await t.expect(Selector('#legalLastName').count).eql(1);
     if(studentData.legalLastName){
         await t.typeText(Selector('#legalLastName'),studentData.legalLastName);
@@ -63,5 +63,9 @@ export async function fillRequestForm(t, studentData){
     if(studentData.currentSchool){
         await t.typeText(Selector('#currentSchool'),studentData.currentSchool) //enter enter current school, omitted for this test case
     }
-    await t.click(Selector('#submit_form'));
+    if(submitBool === true){
+        await t.click(Selector('#submit_form'));
+    } else {
+        await t.eval(() => location.reload(true));
+    }
 }
