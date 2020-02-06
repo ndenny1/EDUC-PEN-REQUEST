@@ -11,10 +11,10 @@ nconf.argv()
   .file({ file: path.join(__dirname, `${env}.json`) });
 
 nconf.defaults({
-    bceid: {
-        user: process.env.BCEID_USER,
-        pass: process.env.BCEID_PASS
-    }
+  bceid: {
+    user: process.env.BCEID_USER,
+    pass: process.env.BCEID_PASS
+  }
 });
 
 module.exports = nconf;

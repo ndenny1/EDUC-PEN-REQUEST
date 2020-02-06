@@ -110,10 +110,6 @@
         "error",
         2
       ],
-      "linebreak-style": [
-        "error",
-        "windows"
-      ],
       "quotes": [
         "error",
         "single"
@@ -165,7 +161,7 @@
       "!src/main.js",
       "!src/plugins/*.*",
       "!src/router.js",
-      "!tests/e2e/test.js"
+      "!tests/e2e/student-form.js"
     ],
     "testResultsProcessor": "jest-sonar-reporter"
   },

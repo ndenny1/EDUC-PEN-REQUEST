@@ -1,3 +1,4 @@
+/* eslint-disable */
 //Purpose:
 //this script starts at OSPR splash page, navigates to CLP and allows user to log in with Basic BCeID, and takes a screenshot of completed forms
 //Screenshots saved to C:\temp\artifacts\screenshots\  with -s path=artifacts/screenshots,fullPage=true,pathPattern=${TEST_INDEX}/${USERAGENT}/${FILE_INDEX}.png NOTE: (that string not required in script if screenshots not taken)
@@ -6,10 +7,10 @@
 BEFORE RUNNING TESTCAFE COMMAND
 
 Setting Local Env on Powershell:
-$env:NODE_ENV="production"
+$env:NODE_ENV="local"
 
 Setting local Env on CMD:
-set NODE_ENV=production
+set NODE_ENV=local
 */
 
 
@@ -24,16 +25,16 @@ import { credentials, fullStudent } from './helpers/constants';
 //import { enterLoginWithBasicBCeID } from './helper.js';
 
 fixture `Basic BCeID SDF Test`
-	.page `https://pen-request-c2mvws-test.pathfinder.gov.bc.ca/`;
+  .page `https://pen-request-c2mvws-test.pathfinder.gov.bc.ca/`;
 
 
-test(`basic bceid login`, async t => {
-    await t
-        .click(Selector('#login-button'))
-		.expect(Selector('#password').count).eql(1); //login type displayed
+test('basic bceid login', async t => {
+  await t
+    .click(Selector('#login-button'))
+    .expect(Selector('#password').count).eql(1); //login type displayed
     
-    await bceidLogin(t, credentials);
-    await fillRequestForm(t, fullStudent, false);
-    
-    await t.takeScreenshot();		
+  await bceidLogin(t, credentials);
+  await fillRequestForm(t, fullStudent, false);
+
+  await t.takeScreenshot();		
 });
