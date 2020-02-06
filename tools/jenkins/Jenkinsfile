@@ -143,8 +143,8 @@ pipeline{
         //             echo 'Some Lint Checks and Tests failed'
         //         }
         //     }
-        // }/*
-        stage('SonarQube Analysis'){
+        // }
+        /*stage('SonarQube Analysis'){
             agent any
 
             environment {
