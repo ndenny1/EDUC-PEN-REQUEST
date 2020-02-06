@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -17,14 +17,17 @@ export default {
     Header,
     Footer
   },
-  computed: {
-    ...mapGetters('auth', ['getJwtToken']),
-    ...mapGetters('auth', ['userInfo'])
+  methods: {
+    ...mapMutations('auth', ['setLoading']),
+    ...mapActions('auth', ['getJwtToken', 'getUserInfo'])
   },
   async created() {
-    this.$store.dispatch('auth/getJwtToken').then(() => {
-      this.$store.dispatch('auth/getUserInfo');
-    });
+    this.setLoading(true);
+    this.getJwtToken().then(() => 
+      this.getUserInfo()
+    ).finally(() => 
+      this.setLoading(false)
+    );
   }
 };
 </script>

@@ -26,5 +26,17 @@ export const ApiRoutes = Object.freeze({
   GENDER_CODES: apiRoot + '/gender_codes',
   DOCUMENT_TYPE_CODES: apiRoot + '/document_type_codes',
   FILE_REQUIREMENTS: apiRoot + '/file_requirements',
-  FILE_UPLOAD: apiRoot + '/document',
+  // FILE_UPLOAD: apiRoot + '/document',
+  USER: apiRoot + '/user',
+});
+
+export const PenRequestStatuses = Object.freeze({
+  DRAFT: 'DRAFT',
+  INITREV: 'INITREV',
+  RETURNED: 'RETURNED',
+  SUBSREV: 'SUBSREV',
+  AUTO: 'AUTO',
+  MANUAL: 'MANUAL',
+  REJECTED: 'REJECTED',
+  UNMATCHED: 'UNMATCHED'
 });

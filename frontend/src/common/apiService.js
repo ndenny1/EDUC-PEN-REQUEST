@@ -117,9 +117,9 @@ export default {
     }
   },
 
-  async uploadFile(fileData){
+  async uploadFile(penRequestId, fileData){
     try{
-      const response = await apiAxios.post(ApiRoutes.FILE_UPLOAD, fileData);
+      const response = await apiAxios.post(`${ApiRoutes.PEN_REQUEST}/${penRequestId}/documents`, fileData);
       return response;
     } catch(e) {
       console.log(`Failed to post to Nodejs uploadFile API - ${e}`);
@@ -133,6 +133,56 @@ export default {
       return response;
     } catch(e) {
       console.log(`Failed to get from Nodejs getPenRequest API - ${e}`);
+      throw e;
+    }
+  },
+
+  async getDocumentList(penRequestId) {
+    try{
+      const response = await apiAxios.get(ApiRoutes.PEN_REQUEST + `/${penRequestId}` + '/documents');
+      return response;
+    } catch(e) {
+      console.log(`Failed to get from Nodejs getDocumentList API - ${e}`);
+      throw e;
+    }
+  },
+
+  async getDocument(penRequestId, documentId) {
+    try{
+      const response = await apiAxios.get(ApiRoutes.PEN_REQUEST + `/${penRequestId}` + '/documents' + `/${documentId}`);
+      return response;
+    } catch(e) {
+      console.log(`Failed to get from Nodejs getDocument API - ${e}`);
+      throw e;
+    }
+  },
+
+  async getCommentList(penRequestId) {
+    try{
+      const response = await apiAxios.get(ApiRoutes.PEN_REQUEST + `/${penRequestId}` + '/comments');
+      return response;
+    } catch(e) {
+      console.log(`Failed to get from Nodejs getCommentList API - ${e}`);
+      throw e;
+    }
+  },
+
+  async postComment(penRequestId, message){
+    try{
+      const response = await apiAxios.post(ApiRoutes.PEN_REQUEST + `/${penRequestId}` + '/comments', message);
+      return response;
+    } catch(e) {
+      console.log(`Failed to post to Nodejs postComment API - ${e}`);
+      throw e;
+    }
+  },
+
+  async getUserInfo() {
+    try{
+      const response = await apiAxios.get(ApiRoutes.USER);
+      return response;
+    } catch(e) {
+      console.log(`Failed to get from Nodejs getUserInfo API - ${e}`);
       throw e;
     }
   },

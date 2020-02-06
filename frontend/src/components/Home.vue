@@ -1,7 +1,7 @@
 <template>
 
 
-  <v-container fluid v-if="!isAuthenticated">
+  <v-container fluid v-if="!isAuthenticated && !isLoading">
     <!-- login article -->
     <article name="login-banner" class="top-banner">
       <v-row align="center" justify="center">
@@ -20,7 +20,20 @@
     </article>
   </v-container>
 
-  <v-container fluid class="full-height" v-else-if="isAuthenticated && dataReady && userInfo.pen">
+  <v-container fluid class="full-height" v-else-if="isLoading">
+    <article id="pen-display-container" class="top-banner full-height">
+      <v-row align="center" justify="center">
+        <v-progress-circular
+          :size="70"
+          :width="7"
+          color="primary"
+          indeterminate
+        ></v-progress-circular>
+      </v-row>
+    </article>
+  </v-container>
+
+  <v-container fluid class="full-height" v-else-if="isAuthenticated && hasPen">
     <article id="pen-display-container" class="top-banner full-height">
       <v-row align="center" justify="center">
         <PenDisplay></PenDisplay>
@@ -28,7 +41,16 @@
     </article>
   </v-container>
 
-  <v-container fluid class="full-height" v-else-if="isAuthenticated && dataReady">
+  <v-container fluid class="full-height" v-else-if="isAuthenticated && hasPenRequest">
+    <article id="request-display-container" class="top-banner full-height">
+      <v-row align="center" justify="center"> 
+        <MoreInfoForm v-if="requireMoreInfo"></MoreInfoForm>
+        <RequestDisplay v-else></RequestDisplay>
+     </v-row>
+    </article>
+  </v-container>
+
+  <v-container fluid class="full-height" v-else-if="isAuthenticated && !hasPen && !hasPenRequest">
     <!-- pen request form -->
     <article id="request-form-container" class="top-banner full-height">
       <v-row align="center" justify="center">
@@ -53,6 +75,9 @@ import Info from './Info';
 import RequestForm from './RequestForm';
 import LoginCards from './LoginCards';
 import PenDisplay from './PenDisplay';
+import RequestDisplay from './RequestDisplay';
+import MoreInfoForm from './MoreInfoForm';
+import { PenRequestStatuses } from '../utils/constants';
 import { mapGetters } from 'vuex';
 export default {
   name: 'home',
@@ -61,17 +86,21 @@ export default {
     Info,
     LoginCards,
     RequestForm,
-    PenDisplay
+    PenDisplay,
+    RequestDisplay,
+    MoreInfoForm
   },
   computed: {
-    ...mapGetters('auth', ['isAuthenticated']),
-    ...mapGetters('auth', ['userInfo']),
-    dataReady: function() {
-      if(!(this.userInfo)){
-        return false;
-      } else {
-        return true;
-      }
+    ...mapGetters('auth', ['isAuthenticated', 'userInfo', 'isLoading']),
+    hasPen() {
+      return !!this.userInfo && !!this.userInfo.pen;
+    },
+    hasPenRequest() {
+      return !!this.userInfo && !!this.userInfo.penRequest;
+    },
+    requireMoreInfo() {
+      return this.hasPenRequest && 
+        this.userInfo.penRequest.penRequestStatusCode == PenRequestStatuses.RETURNED;
     }
   },
 };
