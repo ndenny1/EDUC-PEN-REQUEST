@@ -2,33 +2,7 @@
     <v-card class="request-display">  
         <!-- <v-col class="fill-height pb-5" > -->
         <v-row class="pb-5">
-            <v-card height="100%" width="100%" outlined color="#00e6ac" class="pa-3" v-if="this.status === this.requestStatuses.INITREV || this.status === this.requestStatuses.SUBSREV">
-                <p class="mb-2"><b>Your email has been verified and your PEN request has now been submitted for processing.</b></p>
-                <ul>
-                    <li>You will receive an email when your request has been processed.</li>
-                    <li>Requests are processed during normal business hours.</li>
-                    <li>In most cases you'll get a response within one business day.</li>
-                    <li>Your request details are shown below.</li>
-                    <li><b>We recommend that you also check back here after one business day, because email is sometimes delayed.</b></li>
-                </ul>
-            </v-card>
-            <v-card height="100%" width="100%" outlined color="#e6e600" class="pa-3" v-else-if="this.status === this.requestStatuses.DRAFT && this.timedout">
-                <p class="mb-2"><b>Your email verification was not completed within the time limited. Repeat the email verification process.</b></p>
-                <ol>
-                    <li>Click the "Resend Verification Email" button below.</li>
-                    <li>Go to your email inbox for {{ this.request.email }} and check for an email from {{ this.ministry }}. Check your spam folder too.</li>
-                    <li>Open the email and click on the link within 24 hours to complete the verification process.</li>
-                </ol>
-            </v-card>
-            <v-card height="100%" width="100%" outlined color="#e6e600" class="pa-3" v-else-if="this.status === this.requestStatuses.DRAFT && ! this.timedout">
-                <p class="mb-2"><b>Your email is not yet verified. Complete the email verification process.</b></p>
-                <ol>
-                    <li>Go to your email inbox for {{ this.request.email }} and check for an email from {{ this.ministry }}. Check your spam folder too.</li>
-                    <li>Open the email and click on the link in the email within 24 hours of starting the email verification process.</li>
-                </ol>
-                <p>If needed click the "Resend Verification Email" button below to have the system send a new email and then follow the instructions above.</p>
-            </v-card>
-            <v-card height="100%" width="100%" outlined color="#e6e600" class="pa-3" v-else-if="this.status === this.requestStatuses.RETURNED">
+            <v-card height="100%" width="100%" outlined color="#e6e600" class="pa-3" v-if="this.status === this.requestStatuses.RETURNED">
                 <p class="mb-2"><b>Additional information is required to complete your request. Follow these steps:</b></p>
                 <ol>
                     <li>Read the comments from the PEN Administrator in the "Discussion with PEN Administrator" panel.</li>
@@ -37,13 +11,6 @@
                     <li>When finished, click the "Submit" button to send your request back. Complete steps 2 and 3 fully before you Submit.</li>
                 </ol>
                 <p>No further work can be done on your request until you complete all these steps.</p>
-            </v-card>
-            <v-card height="100%" width="100%" outlined color="#e6e600" class="pa-3" v-else-if="this.status === this.requestStatuses.REJECTED || this.status === this.requestStatuses.UNMATCHED">
-                <p class="mb-2"><b>Your request to get your PEN could not be completed, for the following reason:</b></p>
-                <ul>
-                    <li>{{ request.failureReason }}</li>
-                </ul>
-                <p>If needed, you can submit another request using the button below.</p>
             </v-card>
         </v-row>
         <v-row class="flex-grow-0 pb-5">
@@ -80,20 +47,6 @@
                         </v-col>
                     </v-row>
                 </v-card>
-            </v-col>
-            <v-col xl="4" lg="4" md="4" sm="4" class="pa-0 align-self-start" v-if="this.status === this.requestStatuses.REJECTED || this.status === this.requestStatuses.UNMATCHED">
-              <v-card height="100%" width="100%" elevation=0>
-                <v-row no-gutters justify="end" class="pb-5">
-                  <v-btn color="#38598a" dark class="ml-2 text-none" @click="$router.push('pen-request')">Create a new PEN Request</v-btn>
-                </v-row>
-              </v-card>
-            </v-col>
-            <v-col xl="4" lg="4" md="4" sm="4" class="pa-0 align-self-start" v-else-if="this.status === this.requestStatuses.DRAFT">
-              <v-card height="100%" width="100%" elevation=0>
-                <v-row no-gutters justify="end" class="pb-5">
-                  <v-btn color="#38598a" dark class="ml-2 text-none" >Resend Verification Email</v-btn>
-                </v-row>
-              </v-card>
             </v-col>
         </v-row>
         <v-row>
@@ -229,7 +182,7 @@
                     <v-toolbar flat color="#036" class="white--text">
                         <v-toolbar-title>Discussion with PEN Administrator</v-toolbar-title>
                     </v-toolbar>
-                    <Chat id="chat-box" :myself="myself" :participants="participants" :messages="messages" :penRequestID="request.penRequestID" :hideInput="this.status !== this.requestStatuses.RETURNED"></Chat>
+                    <Chat id="chat-box" :myself="myself" :participants="participants" :messages="messages" :penRequestID="this.request.penRequestID"></Chat>
                 </v-card>
             </v-col>
         </v-row>
@@ -239,9 +192,7 @@
                     <v-toolbar flat color="#036" class="white--text">
                         <v-toolbar-title>Documents</v-toolbar-title>
                         <v-spacer></v-spacer>
-                        <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="this.dialog = true" v-if="this.status === this.requestStatuses.RETURNED">
-                            Upload Document
-                        </v-btn>
+                        <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="dialog = true">Upload Document</v-btn>
                     </v-toolbar>
                     <v-data-table
                         :headers="headers"
@@ -254,7 +205,7 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-card height="100%" width="100%" elevation=0 v-if="this.status === this.requestStatuses.RETURNED">
+        <v-card height="100%" width="100%" elevation=0>
           <v-row no-gutters justify="end" class="py-3">
             <v-btn color="#38598a" dark class="ml-2 text-none" to="/">Submit</v-btn>
           </v-row>
@@ -284,7 +235,7 @@ import Chat from './Chat';
 import DocumentUpload from './DocumentUpload';
 
 export default {
-  name: 'requestDisplay',
+  name: 'moreInfoForm',
   components: {
     Chat,
     DocumentUpload

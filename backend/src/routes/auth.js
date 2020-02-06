@@ -112,7 +112,6 @@ router.post('/refresh', [
 router.use('/token', auth.refreshJWT, (req, res) => {
   if (req.user && req.user.jwtFrontend && req.user.refreshToken) {
     const responseJson = {
-      _json: { displayName: req.user._json.displayName, accountType: req.user._json.accountType },
       jwtFrontend: req.user.jwtFrontend
     };
     res.status(200).json(responseJson);

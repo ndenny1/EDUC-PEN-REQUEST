@@ -69,16 +69,12 @@
 </template>
 
 <script>
-//import { mapGetters } from 'vuex';
 import { humanFileSize } from '@/utils/file';
+import ApiService from '@/common/apiService';
 
 export default {
   props: {
-    documentOwnerTypeCode: {
-      type: String,
-      required: true
-    },
-    documentOwnerId: {
+    penRequestID: {
       type: String,
       required: true
     },
@@ -164,31 +160,22 @@ export default {
       this.active = false;
       this.setErrorAlert();
     },
-    async uploadFile(env) {
+    uploadFile(env) {
       let document = {
         documentTypeCode: this.documentTypeCode,
         fileName: this.file.name,
         fileExtension: this.file.type,
         fileSize: this.file.size,
-        documentData: btoa(env.target.result),
-        documentOwners: [{
-          documentOwnerTypeCode: this.documentOwnerTypeCode,
-          documentOwnerID: this.documentOwnerId
-        }]
+        documentData: btoa(env.target.result)
       };
 
-      try {
-        const resStatus = await this.$store.dispatch('document/uploadFile', document);
-        if(resStatus){
-          this.resetForm();
-          this.setSuccessAlert();
-        } else {
-          this.handleFileReadErr();
-        }
-      } catch (e) {
+      return ApiService.uploadFile(this.penRequestID, document).then(response => {
+        this.$emit('uploaded', response.data);
+        this.resetForm();
+        this.setSuccessAlert();
+      }).catch(() => {
         this.handleFileReadErr();
-        throw e;
-      }
+      });
     },
     async getDocumentTypeCodes() {
       const documentTypeCodes = await this.$store.dispatch('document/getDocumentTypeCodes');
