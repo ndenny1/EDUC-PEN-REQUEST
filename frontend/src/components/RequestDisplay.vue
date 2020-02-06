@@ -358,6 +358,9 @@ export default {
 </script>
 
 <style scoped>
+#chat-box {
+  height: 425px;
+}
 
 .full-height{
   height: 100%;

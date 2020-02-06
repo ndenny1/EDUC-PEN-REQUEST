@@ -51,7 +51,13 @@ nconf.defaults({
     publicKey: process.env.UI_PUBLIC_KEY,
     audience: process.env.SERVER_FRONTEND,
     issuer: process.env.ISSUER
-  }
+  },
+  digitalID: {
+    apiEndpoint: process.env.DIGITALID_API_ENDPOINT,
+  },
+  student: {
+    apiEndpoint: process.env.STUDENT_API_ENDPOINT,
+  },
 });
 
 module.exports = nconf;
