@@ -310,7 +310,9 @@ export default {
 
 <style scoped>
 #chat-box {
-  height: 425px;
+  height: 90%;
+  min-height: 425px;
+  padding-bottom: 8px;
 }
 
 .full-height{

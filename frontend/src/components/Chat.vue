@@ -124,7 +124,7 @@ export default {
 </script>
 
 <style scoped>
-  .quick-chat-container .container-message-manager .message-text-box {
+  .hide /deep/ .container-message-manager {
     display: none;
   }
 </style>

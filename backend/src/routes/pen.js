@@ -21,9 +21,7 @@ router.get('/', (_req, res) => {
 
 router.get('/user', passport.authenticate('jwt', { session: false }), getUserInfo);
 
-router.post('/request', passport.authenticate('jwt', { session: false }),
-  (req, res) => forwardPostReq(req, res, config.get('penRequest:apiEndpoint') + '/', beforePenRequestPost, penRequestPostPosted)
-);
+router.post('/request', passport.authenticate('jwt', { session: false }), postPenRequest);
 
 router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
   (req, res) => forwardGetReq(req, res, config.get('codeTable:apiEndpoint') + '/gender-codes')
@@ -89,7 +87,9 @@ async function getLatestPenRequest(token, digitalID) {
     return [status, data];
   } else {
     const penRequest = (status == HttpStatus.NOT_FOUND || data.length == 0) ? null : lodash.maxBy(data, 'statusUpdateDate');
-    penRequest.digitalID = null;
+    if(penRequest) {
+      penRequest.digitalID = null;
+    }
 
     return [HttpStatus.OK, {penRequest}];
   }
@@ -131,21 +131,41 @@ async function getUserInfo(req, res) {
   return res.status(status).json(resData);
 }
 
-function beforePenRequestPost(data, userInfo) {
-  let reqData = lodash.cloneDeep(data);
-  reqData.digitalID = userInfo._json.digitalIdentityID;
-  if(userInfo._json.accountType === 'BCEID'){
-    reqData.dataSourceCode = 'DIRECT';
-  } else {
-    reqData.dataSourceCode = userInfo._json.accountType;
-  }
-  return reqData;
-}
+async function postPenRequest(req, res) {
+  try{
+    const userInfo = getSessionUser(req);
+    if(!userInfo) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        message: 'No session data'
+      }); 
+    }
 
-function penRequestPostPosted(data) {
-  let resData = lodash.cloneDeep(data);
-  resData.digitalID = null;
-  return resData;
+    const accessToken = userInfo.jwt;
+    const url = config.get('penRequest:apiEndpoint') + '/';
+
+    let reqData = lodash.cloneDeep(req.body);
+    reqData.digitalID = userInfo._json.digitalIdentityID;
+    if(userInfo._json.accountType === 'BCEID'){
+      reqData.dataSourceCode = 'DIRECT';
+    } else {
+      reqData.dataSourceCode = userInfo._json.accountType;
+    }
+
+    const [status, data] = await postData(accessToken, reqData, url);
+    if(status !== HttpStatus.OK) {
+      return res.status(status).json(data);
+    }
+
+    let resData = lodash.cloneDeep(data);
+    resData.digitalID = null;
+    
+    return res.status(status).json(resData);
+  } catch(e) {
+    log.error('forwardPostReq Error', e);
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Forward Post error'
+    });
+  }
 }
 
 async function postComment(req, res) {
@@ -190,7 +210,9 @@ async function getComments(req, res) {
     }
 
     const accessToken = userInfo.jwt;
-    const [status, apiResData] = await getData(accessToken, `${config.get('penRequest:apiEndpoint')}/${req.params.id}/comments`);
+    const url = `${config.get('penRequest:apiEndpoint')}/${req.params.id}/comments`;
+
+    const [status, apiResData] = await getData(accessToken, url);
     if(status !== HttpStatus.OK) {
       return res.status(status).json(apiResData);
     }
