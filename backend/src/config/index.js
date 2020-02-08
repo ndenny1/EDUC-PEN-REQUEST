@@ -58,6 +58,9 @@ nconf.defaults({
   student: {
     apiEndpoint: process.env.STUDENT_API_ENDPOINT,
   },
+  email: {
+    apiEndpoint: process.env.PEN_REQUEST_EMAIL_API,
+  },
 });
 
 module.exports = nconf;
