@@ -10,20 +10,20 @@
           <v-card-text class="noPadding">
               <v-row>
                   <v-col>
-                      <v-text-field id='legalLastName' v-model="userPost.legalLastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
+                    <v-text-field id='legalLastName' v-model="userPost.legalLastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="bottom_group">
                   <v-col>
-                      <v-text-field id='legalFirstName'  v-model="userPost.legalFirstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
+                    <v-text-field id='legalFirstName'  v-model="userPost.legalFirstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
                   </v-col>
                   <v-col>
-                      <v-text-field id='legalMiddleNames' v-model="userPost.legalMiddleNames" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
+                    <v-text-field id='legalMiddleNames' v-model="userPost.legalMiddleNames" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="top_group">
                   <v-col>
-                      <v-text-field id='usualLastName' v-model="userPost.usualLastName" color="#003366" outlined  hint="If different from legal last name" label="Usual Last Name"></v-text-field>
+                    <v-text-field id='usualLastName' v-model="userPost.usualLastName" color="#003366" outlined  hint="If different from legal last name" label="Usual Last Name"></v-text-field>
                   </v-col>
               </v-row>
               <v-row class="bottom_group">
@@ -202,10 +202,18 @@ export default {
   async mounted() {
     this.apiGenderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
     this.genders = this.apiGenderCodes.map(a => a.label);
-    //this.userPost.legalLastName = this.userInfo.lastName;
-    this.userPost.legalFirstName = this.userInfo.firstName;
-    //this.userPost.email = this.userInfo.emailAddress;
-    this.userPost.legalMiddleNames = this.userInfo.middleNames;
+
+    //populate form if user is logged in with BCSC
+    if(this.userInfo.dataSourceCode === 'bcsc'){
+      this.userPost.legalLastName = this.userInfo.legalLastName;
+      this.userPost.legalFirstName = this.userInfo.legalFirstName;
+      this.userPost.legalMiddleNames = this.userInfo.legalMiddleNames;
+      this.userPost.email = this.userInfo.email;
+      this.userPost.usualMiddleName = this.userInfo.usualMiddleNames;
+      this.userPost.usualLastName = this.userInfo.usualLastName;
+      this.userPost.usualFirstName = this.userInfo.usualFirstName;
+      this.userPost.dob = this.userInfo.dob;
+    }
   },
   methods: {
     save (date) {

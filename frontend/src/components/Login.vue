@@ -21,7 +21,6 @@ export default {
   name: 'Login',
   data() {
     return {
-      
       appTitle: process.env.VUE_APP_TITLE,
       authRoutes: AuthRoutes
     };
