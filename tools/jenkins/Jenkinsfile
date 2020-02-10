@@ -258,7 +258,7 @@ pipeline{
                 }
             }
         }
-        stage('e2e tests'){
+        /*stage('e2e tests'){
             agent any
             steps{
                 script{
@@ -270,7 +270,7 @@ pipeline{
                     }
                 }
             }
-        }
+        }*/
         stage('Deploy to Test'){
             agent any
             steps{
