@@ -11,7 +11,8 @@ module.exports = {
     }
   },
   devServer: {
-    proxy: {
+    proxy: 
+    {
       ...['/api'].reduce(
         (acc, ctx) => ({
           ...acc,

@@ -93,6 +93,7 @@ objects:
   kind: Route
   metadata:
     annotations:
+      kubernetes.io/tls-acme: "true"
       openshift.io/host.generated: 'true'
     labels:
       app: "${APP_NAME}-${JOB_NAME}"
