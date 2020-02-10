@@ -102,6 +102,43 @@ async function postData(token, data, url) {
   }
 }
 
+async function putData(token, data, url) {
+  try{
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    };
+
+    log.info('put Data Url', url);
+    log.verbose('put Data Req', data);
+
+    const response = await axios.put(url, data, config);
+
+    log.info('put Data Status', response.status);
+    log.info('put Data StatusText', response.statusText);
+
+    log.verbose('put Data Res', response.data);
+
+    return [HttpStatus.OK, response.data];
+  } catch(e) {
+    log.error('putData Error', e.Error);
+    const status = e.response ? e.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
+    return [status,{ message: 'API Put error'}];
+  }
+}
+
+const PenRequestStatuses = Object.freeze({
+  DRAFT: 'DRAFT',
+  INITREV: 'INITREV',
+  RETURNED: 'RETURNED',
+  SUBSREV: 'SUBSREV',
+  AUTO: 'AUTO',
+  MANUAL: 'MANUAL',
+  REJECTED: 'REJECTED',
+  UNMATCHED: 'UNMATCHED'
+});
+
 const utils = {
   // Returns OIDC Discovery values
   async getOidcDiscovery() {
@@ -121,7 +158,9 @@ const utils = {
   forwardGetReq,
   getData,
   forwardPostReq,
-  postData
+  postData,
+  putData,
+  PenRequestStatuses
 };
 
 module.exports = utils;

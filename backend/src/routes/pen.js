@@ -2,7 +2,7 @@
 
 const passport = require('passport');
 const express = require('express');
-const { getUserInfo, submitPenRequest, getComments, postComment } = require('../components/pen');
+const { getUserInfo, submitPenRequest, getComments, postComment, verifyEmail } = require('../components/pen');
 const { forwardGetReq, forwardPostReq } = require('../components/utils');
 const config = require('../config/index');
 
@@ -52,5 +52,6 @@ router.get('/request/:id/comments', passport.authenticate('jwt', { session: fals
 
 router.post('/request/:id/comments', passport.authenticate('jwt', { session: false }), postComment); //todo: check the pen request id
 
+router.get('/verification', verifyEmail);
 
 module.exports = router;

@@ -61,7 +61,7 @@ describe('renew', () => {
   afterEach(() => {
     spy.mockClear();
   });
-  
+
   it('should return new access and refresh tokens', async () => {
     utils.getOidcDiscovery.mockResolvedValue(discovery);
     mockAxios.onPost(url).reply(200, {

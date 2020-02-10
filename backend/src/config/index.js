@@ -60,6 +60,7 @@ nconf.defaults({
   },
   email: {
     apiEndpoint: process.env.PEN_REQUEST_EMAIL_API,
+    publicKey: process.env.PEN_REQUEST_EMAIL_PUBLIC_KEY,
   },
 });
 

@@ -4,7 +4,7 @@ const config = require('./config/index');
 const http = require('http');
 const log = require('npmlog');
 //Add timestamp to log
-Object.defineProperty(log, 'heading', { get: () => { return new Date().toUTCString() } })
+Object.defineProperty(log, 'heading', { get: () => { return new Date().toUTCString(); } });
 
 const dotenv = require('dotenv');
 dotenv.config();

@@ -1,10 +1,11 @@
 'use strict';
 
-const { getSessionUser, getData, postData }= require('../components/utils');
+const { getSessionUser, getData, postData, putData, PenRequestStatuses }= require('../components/utils');
 const config = require('../config/index');
 const log = require('npmlog');
 const lodash = require('lodash');
 const HttpStatus = require('http-status-codes');
+const jsonwebtoken = require('jsonwebtoken');
 
 let identityTypes = null;
 
@@ -33,7 +34,7 @@ async function getLatestPenRequest(token, digitalID) {
     data.errorSource = 'getLatestPenRequest';
     return [status, data];
   } else {
-    const penRequest = (status == HttpStatus.NOT_FOUND || data.length == 0) ? null : lodash.maxBy(data, 'statusUpdateDate');
+    let penRequest = (status == HttpStatus.NOT_FOUND || data.length == 0) ? null : lodash.maxBy(data, 'statusUpdateDate');
     if(penRequest) {
       penRequest.digitalID = null;
     }
@@ -263,9 +264,82 @@ async function getComments(req, res) {
   }
 }
 
+async function setPenRequestAsInitrev(penRequestID) {
+  let accessToken = '';
+  let [status, data] = await getData(accessToken, `${config.get('penRequest:apiEndpoint')}/${penRequestID}`);
+  if(status !== HttpStatus.OK) {
+    data.errorSource = 'getPenRequest';
+    return [status, data];
+  }
+  let penRequest = data;
+
+  if(penRequest.penRequestStatusCode === PenRequestStatuses.INITREV) {
+    return [HttpStatus.OK, { message: 'Already updated'}];
+  }
+
+  const currentDate = new Date().toISOString();
+  penRequest.penRequestStatusCode = PenRequestStatuses.INITREV;
+  penRequest.initialSubmitDate = currentDate;
+  penRequest.statusUpdateDate = currentDate;
+
+  [status, data] = await putData(accessToken, penRequest, config.get('penRequest:apiEndpoint'));
+  if(status !== HttpStatus.OK) {
+    data.errorSource = 'updatePenRequest';
+    return [status, data];
+  }
+
+  return [HttpStatus.OK, { message: 'OK'}];
+}
+
+function verifyEmailToken(token) {
+  try{
+    const tokenPayload = jsonwebtoken.verify(token, config.get('email:publicKey'));
+    if(tokenPayload.SCOPE !== 'VERIFY_EMAIL') {
+      log.error('verifyEmailToken Error', `Invalid SCOPE: ${tokenPayload.SCOPE}`);
+      return [{name: 'JsonWebTokenError'}, null];
+    }
+
+    if(! tokenPayload.jti) {
+      log.error('verifyEmailToken Error', 'Invalid PEN Request ID');
+      return [{name: 'JsonWebTokenError'}, null];
+    }
+
+    return [null, tokenPayload.jti];
+  }catch(e){
+    log.error('verifyEmailToken Err', e);
+    return [e, null];
+  }
+}
+
+function verifyEmail(req, res) {
+  if(! req.query.verificationToken) {
+    return res.redirect(req.baseUrl + '/verification-error');
+  }
+
+  try{
+    const [error, penRequestID] = verifyEmailToken(req.query.verificationToken);
+    if(error && error.name === 'TokenExpiredError') {
+      return res.redirect(req.baseUrl + '/verification-timeout');
+    } else if (error) {
+      return res.redirect(req.baseUrl + '/verification-error');
+    }
+
+    const[status] = setPenRequestAsInitrev(penRequestID);
+    if(status !== HttpStatus.OK) {
+      return res.redirect(req.baseUrl + '/verification-error');
+    }
+
+    return res.redirect(req.baseUrl + '/verification-ok');
+  }catch(e){
+    log.error('verifyEmail Error', e);
+    return res.redirect(req.baseUrl + '/verification-error/');
+  }
+}
+
 module.exports = {
   getUserInfo,
   submitPenRequest,
   postComment,
-  getComments
+  getComments,
+  verifyEmail
 };
