@@ -203,7 +203,7 @@ export default {
   async mounted() {
     this.apiGenderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
     this.genders = this.apiGenderCodes.map(a => a.label);
-
+    console.log(this.userInfo.dataSourceCode);
     //populate form if user is logged in with BCSC
     if(this.userInfo.dataSourceCode === 'bcsc'){
       this.userPost.legalLastName = this.userInfo.legalLastName;
