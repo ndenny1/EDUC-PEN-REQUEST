@@ -132,7 +132,7 @@
             <v-btn
               color="primary"
               text
-              @click="dialog = false"
+              @click="closeDialog"
             >
               Close
             </v-btn>
@@ -143,7 +143,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 export default {
   data() {
     return {
@@ -162,6 +162,7 @@ export default {
       nameLimit: 80,
       validForm: true,
       dialog: false,
+      isSubmitted: false,
       dialogMessage: null,
       apiGenderCodes: [],
       genderLabel: null,
@@ -216,6 +217,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('auth', ['setPenRequest']),
     save (date) {
       this.$refs.menu.save(date);
     },
@@ -224,25 +226,37 @@ export default {
     },
     async submitRequestForm() {
       this.validate();
-      console.log(this.userInfo);
       if(this.validForm){
         try{
           const code = this.apiGenderCodes.filter(it => (it.label === this.genderLabel));
           this.userPost.genderCode = code[0].genderCode;
 
-          const resStatus = await this.$store.dispatch('penRequest/postRequest', this.userPost);
-          if(resStatus){
+          const resData = await this.$store.dispatch('penRequest/postRequest', this.userPost);
+          if(resData){
             this.$refs.form.reset();
             this.dialogMessage = 'Form submit success!';
             this.dialog = true;
+            this.isSubmitted = true;
+            this.setPenRequest(resData);
+            
           } else {
-            this.$refs.form.reset();
+            //this.$refs.form.reset();
             this.dialogMessage = 'Form submit failure.';
             this.dialog = true;
+            this.isSubmitted = false;
           }
         } catch (e) {
-          throw e;
+          this.dialogMessage = 'Form submit failure.';
+          this.dialog = true;
+          this.isSubmitted = false;
+          throw e;   
         }
+      }
+    },
+    closeDialog() {
+      this.dialog = false;
+      if(this.isSubmitted) {
+        this.$router.replace('home');
       }
     }
   },

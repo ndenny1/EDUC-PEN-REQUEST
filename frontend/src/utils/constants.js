@@ -31,3 +31,10 @@ export const PenRequestStatuses = Object.freeze({
   REJECTED: 'REJECTED',
   UNMATCHED: 'UNMATCHED'
 });
+
+export const VerificationResults = Object.freeze({
+  TOKEN_ERROR: 'token-error',
+  SERVER_ERROR: 'server-error',
+  EXPIRED: 'expired',
+  OK: 'ok'
+});

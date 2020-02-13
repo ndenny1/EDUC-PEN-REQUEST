@@ -6,6 +6,7 @@ const log = require('npmlog');
 const jsonwebtoken = require('jsonwebtoken');
 const qs = require('querystring');
 const utils = require('./utils');
+const HttpStatus = require('http-status-codes');
 
 const auth = {
   // Check if JWT Access Token has expired
@@ -140,6 +141,37 @@ const auth = {
     log.verbose('Generated JWT', uiToken);
     return uiToken;
   },
+
+  async getPenRequestApiCredentials() {
+    try {
+      const discovery = await utils.getOidcDiscovery();
+      const response = await axios.post(discovery.token_endpoint,
+        qs.stringify({
+          client_id: config.get('penRequest:clientId'),
+          client_secret: config.get('penRequest:clientSecret'),
+          grant_type: 'client_credentials',
+          scope: discovery.scopes_supported
+        }), {
+          headers: {
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          }
+        }
+      );
+
+      log.verbose('getPenRequestApiCredentials Res', utils.prettyStringify(response.data));
+
+      let result = {};
+      result.accessToken = response.data.access_token;
+      result.refreshToken = response.data.refresh_token;
+      return [HttpStatus.OK, result];
+    } catch (error) {
+      log.error('getPenRequestApiCredentials Error', error.response || error.message);
+      const status = error.response ? error.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
+      return [status, { message: 'Get PenRequestApiCredentials error'}];
+    }
+  } 
 };
 
 module.exports = auth;

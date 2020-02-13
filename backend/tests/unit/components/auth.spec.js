@@ -6,6 +6,7 @@ const MockAdapter = require('axios-mock-adapter');
 
 const auth = require('../../../src/components/auth');
 const utils = require('../../../src/components/utils');
+const {verifyEmailToken} = require('../../../src/components/pen');
 
 log.level = config.get('server:logLevel');
 const mockAxios = new MockAdapter(axios);
@@ -13,6 +14,14 @@ const mockAxios = new MockAdapter(axios);
 const expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjF9.2H0EJnt58ApysedXcvNUAy6FhgBIbDmPfq9d79qF4yQ';
 const endlessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjB9.JWKPB-5Q8rTYzl-MfhRGpP9WpDpQxC7JkIAGFMDZnpg';
 const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjk5OTk5OTk5OTl9.Vg30C57s3l90JNap_VgMhKZjfc-p7SoBXaSAy8c28HA';
+
+describe('verifyEmailToken', () => {
+  it('should return penRequestId', () => {
+    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMjMiLCJpYXQiOjE1ODE0NTUwMzAsInN1YiI6InRlc3RAZ21haWwuY29tIiwiU0NPUEUiOiJWRVJJRllfRU1BSUwiLCJpc3MiOiJWZXJpZnlFbWFpbEFQSSIsImV4cCI6MTU4MTQ1NTg4MH0.FWWSDecNi4TES0PiM0VFPZUyZ0IAqzPVB8mnzGFakFg';
+    const [penRequestId] = verifyEmailToken(token);
+    expect(penRequestId).toBeTruthy;
+  });
+});
 
 describe('isTokenExpired', () => {
   it('should return true if expired', async () => {

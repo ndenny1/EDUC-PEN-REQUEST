@@ -39,6 +39,8 @@ nconf.defaults({
   },
   penRequest: {
     apiEndpoint: process.env.PEN_REQUEST_API_ENDPOINT,
+    clientId: process.env.PEN_REQUEST_CLIENT_ID,
+    clientSecret: process.env.PEN_REQUEST_CLIENT_SECRET,
   },
   codeTable: {
     apiEndpoint: process.env.CODE_TABLE_ENDPOINT,
@@ -60,7 +62,7 @@ nconf.defaults({
   },
   email: {
     apiEndpoint: process.env.PEN_REQUEST_EMAIL_API,
-    publicKey: process.env.PEN_REQUEST_EMAIL_PUBLIC_KEY,
+    secretKey: process.env.PEN_REQUEST_EMAIL_SECRET_KEY,
   },
 });
 

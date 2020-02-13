@@ -87,6 +87,16 @@ export default {
     }
   },
 
+  async updatePenRequestStatus(penRequestId, status){
+    try{
+      const response = await apiAxios.patch(`${ApiRoutes.PEN_REQUEST}/${penRequestId}`, {penRequestStatusCode: status});
+      return response;
+    } catch(e) {
+      console.log(`Failed to post to Nodejs API - ${e}`);
+      throw e;
+    }
+  },
+
   async getGenderCodes() {
     try{
       const response = await apiAxios.get(ApiRoutes.GENDER_CODES);

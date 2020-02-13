@@ -91,7 +91,7 @@ export default {
 
         // userInf.penRequest.penRequestStatusCode = 'INITREV';
 
-        //userInf.penRequest.penRequestStatusCode = 'RETURNED';
+        // userInf.penRequest.penRequestStatusCode = 'RETURNED';
 
         //userInf.pen = '1234567890';
 
@@ -101,6 +101,9 @@ export default {
       } else {
         state.userInfo = null;
       }
+    },
+    setPenRequest: (state, penRequest) => {
+      state.userInfo.penRequest = penRequest;
     },
 
     //sets the token required for refresing expired json web tokens

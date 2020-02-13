@@ -8,9 +8,10 @@ const HttpStatus = require('http-status-codes');
 let discovery = null;
 
 function getSessionUser(req) {
-  const sessID = req.sessionID;
-  const thisSession = sessID && JSON.parse(req.sessionStore.sessions[sessID]);
-  return thisSession && thisSession.passport.user;
+  log.verbose('getSessionUser................', req.sessionStore.sessions[req.sessionID]);
+  const session = req.sessionID && req.sessionStore.sessions[req.sessionID];
+  const sessionObject = session && JSON.parse(session);
+  return sessionObject && sessionObject.passport && sessionObject.passport.user;
 }
 
 async function forwardGetReq(req, res, url) {
@@ -139,6 +140,18 @@ const PenRequestStatuses = Object.freeze({
   UNMATCHED: 'UNMATCHED'
 });
 
+const EmailVerificationStatuses = Object.freeze({
+  VERIFIED: 'Y',
+  NOT_VERIFIED: 'N'
+});
+
+const VerificationResults = Object.freeze({
+  TOKEN_ERROR: 'token-error',
+  SERVER_ERROR: 'server-error',
+  EXPIRED: 'expired',
+  OK: 'ok'
+});
+
 const utils = {
   // Returns OIDC Discovery values
   async getOidcDiscovery() {
@@ -160,7 +173,9 @@ const utils = {
   forwardPostReq,
   postData,
   putData,
-  PenRequestStatuses
+  PenRequestStatuses,
+  VerificationResults,
+  EmailVerificationStatuses
 };
 
 module.exports = utils;

@@ -1,6 +1,7 @@
 'use strict';
 
-const { getSessionUser, getData, postData, putData, PenRequestStatuses }= require('../components/utils');
+const { getSessionUser, getData, postData, putData, PenRequestStatuses, VerificationResults, EmailVerificationStatuses } = require('./utils');
+const { getPenRequestApiCredentials } = require('./auth');
 const config = require('../config/index');
 const log = require('npmlog');
 const lodash = require('lodash');
@@ -69,6 +70,8 @@ async function getUserInfo(req, res) {
     return res.status(status).json(data);
   }
 
+  req.session.digitalIdentityData = data;
+
   if(data.studentID) {
     [status, data] = await getStudentPen(accessToken, data.studentID);
   } else {
@@ -82,7 +85,7 @@ async function getUserInfo(req, res) {
 async function getIdentityType(accessToken, identityTypeCode) {
   if(!identityTypes) {
     const url = `${config.get('digitalID:apiEndpoint')}/identityTypeCodes`;
-    const [status, resData] = getData(accessToken, url);
+    const [status, resData] = await getData(accessToken, url);
     if(status !== HttpStatus.OK) {
       log.error('getIdentityTypeLabel Error Status', status);
       return null;
@@ -93,7 +96,7 @@ async function getIdentityType(accessToken, identityTypeCode) {
 }
 
 async function sendVerificationEmail(accessToken, emailAddress, penRequestId, identityTypeCode) {
-  const identityType = getIdentityType(identityTypeCode);
+  const identityType = await getIdentityType(accessToken, identityTypeCode);
   if(! identityType) {
     log.error('getIdentityTypeLabel Error identityTypeCode', identityTypeCode);
     return;
@@ -117,6 +120,7 @@ async function postPenRequest(accessToken, req, userInfo) {
     const url = config.get('penRequest:apiEndpoint') + '/';
 
     let reqData = lodash.cloneDeep(req);
+    reqData.emailVerified = EmailVerificationStatuses.NOT_VERIFIED;
     reqData.digitalID = userInfo._json.digitalIdentityID;
     if(userInfo._json.accountType === 'BCEID'){
       reqData.dataSourceCode = 'DIRECT';
@@ -154,7 +158,7 @@ async function submitPenRequest(req, res) {
       return res.status(status).json(resData);
     }
 
-    sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, userInfo._json.accountType);
+    sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeCode);
 
     return res.status(status).json(resData);
   } catch(e) {
@@ -264,36 +268,42 @@ async function getComments(req, res) {
   }
 }
 
+function beforeUpdatePenRequestAsInitrev(penRequest) {
+  if(penRequest.penRequestStatusCode !== PenRequestStatuses.DRAFT) {
+    return [HttpStatus.CONFLICT, { message: 'Current PEN Request Status: ' + penRequest.penRequestStatusCode}];
+  }
+
+  if(penRequest.emailVerified !== EmailVerificationStatuses.NOT_VERIFIED) {
+    return [HttpStatus.CONFLICT, { message: 'Current Email Verification Status: ' + penRequest.emailVerified}];
+  }
+  
+  penRequest.initialSubmitDate = new Date().toISOString();
+  penRequest.emailVerified = EmailVerificationStatuses.VERIFIED;
+
+  return [HttpStatus.OK, penRequest];
+}
+
 async function setPenRequestAsInitrev(penRequestID) {
-  let accessToken = '';
-  let [status, data] = await getData(accessToken, `${config.get('penRequest:apiEndpoint')}/${penRequestID}`);
+  let [status, data] = await getPenRequestApiCredentials();
   if(status !== HttpStatus.OK) {
-    data.errorSource = 'getPenRequest';
+    data.errorSource = 'getPenRequestApiCredentials';
+    log.error('setPenRequestAsInitrev Error', data);
     return [status, data];
   }
-  let penRequest = data;
+  const accessToken = data.accessToken;
 
-  if(penRequest.penRequestStatusCode === PenRequestStatuses.INITREV) {
-    return [HttpStatus.OK, { message: 'Already updated'}];
-  }
-
-  const currentDate = new Date().toISOString();
-  penRequest.penRequestStatusCode = PenRequestStatuses.INITREV;
-  penRequest.initialSubmitDate = currentDate;
-  penRequest.statusUpdateDate = currentDate;
-
-  [status, data] = await putData(accessToken, penRequest, config.get('penRequest:apiEndpoint'));
+  [status, data] = await updatePenRequestStatus(accessToken, penRequestID, PenRequestStatuses.INITREV, beforeUpdatePenRequestAsInitrev);
   if(status !== HttpStatus.OK) {
-    data.errorSource = 'updatePenRequest';
+    log.error('setPenRequestAsInitrev Error', data);
     return [status, data];
   }
 
-  return [HttpStatus.OK, { message: 'OK'}];
+  return [HttpStatus.OK, data];
 }
 
 function verifyEmailToken(token) {
   try{
-    const tokenPayload = jsonwebtoken.verify(token, config.get('email:publicKey'));
+    const tokenPayload = jsonwebtoken.verify(token, config.get('email:secretKey'));
     if(tokenPayload.SCOPE !== 'VERIFY_EMAIL') {
       log.error('verifyEmailToken Error', `Invalid SCOPE: ${tokenPayload.SCOPE}`);
       return [{name: 'JsonWebTokenError'}, null];
@@ -311,28 +321,110 @@ function verifyEmailToken(token) {
   }
 }
 
-function verifyEmail(req, res) {
+async function verifyEmail(req, res) {
+  const loggedin = getSessionUser(req);
+  const baseUrl = config.get('server:frontend');
+  const verificationUrl = baseUrl + '/verification/';
+
   if(! req.query.verificationToken) {
-    return res.redirect(req.baseUrl + '/verification-error');
+    return res.redirect(verificationUrl + VerificationResults.TOKEN_ERROR);
   }
 
   try{
     const [error, penRequestID] = verifyEmailToken(req.query.verificationToken);
     if(error && error.name === 'TokenExpiredError') {
-      return res.redirect(req.baseUrl + '/verification-timeout');
+      return res.redirect(loggedin ? baseUrl : (verificationUrl + VerificationResults.EXPIRED));
     } else if (error) {
-      return res.redirect(req.baseUrl + '/verification-error');
+      return res.redirect(verificationUrl + VerificationResults.TOKEN_ERROR);
     }
 
-    const[status] = setPenRequestAsInitrev(penRequestID);
-    if(status !== HttpStatus.OK) {
-      return res.redirect(req.baseUrl + '/verification-error');
+    const [status] = await setPenRequestAsInitrev(penRequestID);
+    if(status === HttpStatus.CONFLICT) {
+      return res.redirect(loggedin ? baseUrl : (verificationUrl + VerificationResults.OK));
+    } else if(status !== HttpStatus.OK) {
+      return res.redirect(verificationUrl + VerificationResults.SERVER_ERROR);
     }
 
-    return res.redirect(req.baseUrl + '/verification-ok');
+    return res.redirect(loggedin ? baseUrl : (verificationUrl + VerificationResults.OK));
   }catch(e){
     log.error('verifyEmail Error', e);
-    return res.redirect(req.baseUrl + '/verification-error/');
+    return res.redirect(verificationUrl + VerificationResults.SERVER_ERROR);
+  }
+}
+
+async function updatePenRequestStatus(accessToken, penRequestID, penRequestStatus, beforeUpdate) {
+  let [status, data] = await getData(accessToken, `${config.get('penRequest:apiEndpoint')}/${penRequestID}`);
+  if(status !== HttpStatus.OK) {
+    data.errorSource = 'getPenRequest';
+    log.error('updatePenRequestStatus Error', data);
+    return [status, data];
+  }
+
+  [status, data] = beforeUpdate(data);
+  if(status !== HttpStatus.OK) {
+    data.errorSource = 'beforeUpdate';
+    log.error('updatePenRequestStatus Error', data);
+    return [status, data];
+  }
+
+  let penRequest = data;
+  penRequest.penRequestStatusCode = penRequestStatus;
+  penRequest.statusUpdateDate = new Date().toISOString();
+
+  [status, data] = await putData(accessToken, penRequest, config.get('penRequest:apiEndpoint'));
+  if(status !== HttpStatus.OK) {
+    data.errorSource = 'updatePenRequest';
+    log.error('updatePenRequestStatus Error', data);
+    return [status, data];
+  }
+
+  return [HttpStatus.OK, data];
+}
+
+function beforeUpdatePenRequestAsSubsrev(penRequest) {
+  if(penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
+    return [HttpStatus.CONFLICT, { message: 'Current PEN Request Status: ' + penRequest.penRequestStatusCode}];
+  }
+
+  return [HttpStatus.OK, penRequest];
+}
+
+async function setPenRequestAsSubsrev(req, res) {
+  try{
+    const userInfo = getSessionUser(req);
+    if(!userInfo) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        message: 'No session data'
+      });
+    }
+
+    const accessToken = userInfo.jwt;
+    const penRequestID = req.params.id;
+    const penRequestStatus = req.body.penRequestStatusCode;
+
+    if(! penRequestStatus) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'No penRequestStatus data'
+      });
+    }
+
+    if(penRequestStatus !== PenRequestStatuses.SUBSREV) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: 'Wrong penRequestStatus'
+      });
+    }
+
+    let [status, data] = await updatePenRequestStatus(accessToken, penRequestID, penRequestStatus, beforeUpdatePenRequestAsSubsrev);
+    if(status !== HttpStatus.OK) {
+      log.error('setPenRequestAsSubsrev Error', data);
+    }
+    
+    return res.status(status).json(data);
+  } catch(e) {
+    log.error('setPenRequestAsSubsrev Error', e);
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Set pen request as subsrev error'
+    });
   }
 }
 
@@ -341,5 +433,7 @@ module.exports = {
   submitPenRequest,
   postComment,
   getComments,
-  verifyEmail
+  verifyEmail,
+  verifyEmailToken,
+  setPenRequestAsSubsrev
 };

@@ -10,12 +10,13 @@ export default {
     async postRequest(_context, info){
       try {
         const response = await ApiService.postPenRequest(info);
-        if(response.status !== 200){
+        if(response.status !== 200){    //todo: need to fix
           return false;
         }
-        return true;
+        return response.data;
       } catch(e) {
         console.log('Error while accessing API - ' + e);
+        return false;
       }
     },
     getGenderCodes: () => getData(ApiService.getGenderCodes),

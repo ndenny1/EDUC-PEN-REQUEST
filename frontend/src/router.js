@@ -5,6 +5,7 @@ import Home from '@/components/Home.vue';
 //import User from '@/components/UserInfo.vue';
 //import store from '@/store/index.js';
 import RequestPage from '@/components/RequestPage.vue';
+import Verification from '@/components/Verification.vue';
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const router = new VueRouter({
       path: '/pen-request',
       name: 'pen-request',
       component: RequestPage
+    },
+    {
+      path: '/verification/:status',
+      name: 'verification',
+      component: Verification
     },
     /*
     {

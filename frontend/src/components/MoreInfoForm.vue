@@ -1,6 +1,18 @@
 <template>
     <v-card class="request-display">  
         <!-- <v-col class="fill-height pb-5" > -->
+        <v-row v-if="alertType === 'success'">
+            <v-alert
+                dense
+                text
+                dismissible
+                v-model="alert"
+                :type="alertType"
+                class="mb-5"
+            >
+                {{ alertMessage }}
+            </v-alert>
+        </v-row>
         <v-row class="pb-5">
             <v-card height="100%" width="100%" outlined color="#e6e600" class="pa-3" v-if="this.status === this.requestStatuses.RETURNED">
                 <p class="mb-2"><b>Additional information is required to complete your request. Follow these steps:</b></p>
@@ -205,9 +217,20 @@
                 </v-card>
             </v-col>
         </v-row>
+        <v-row v-if="alertType === 'error'">
+            <v-alert
+                dense
+                text
+                dismissible
+                v-model="alert"
+                :type="alertType"
+            >
+                {{ alertMessage }}
+            </v-alert>
+        </v-row>
         <v-card height="100%" width="100%" elevation=0>
           <v-row no-gutters justify="end" class="py-3">
-            <v-btn color="#38598a" dark class="ml-2 text-none" to="/">Submit</v-btn>
+            <v-btn color="#38598a" dark class="ml-2 text-none" :loading="submitting" @click.stop="submitMoreInfo">Submit</v-btn>
           </v-row>
         </v-card>
 
@@ -226,7 +249,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import { PenRequestStatuses } from '@/utils/constants';
 import moment from 'moment';
 import ApiService from '@/common/apiService';
@@ -254,6 +277,11 @@ export default {
       loadingDocuments: true,
       participants: [],
       messages: [],
+      submitting: false,
+
+      alert: false,
+      alertMessage: null,
+      alertType: null
     };
   },
   computed: {
@@ -295,6 +323,7 @@ export default {
     });
   },
   methods: {
+    ...mapMutations('auth', ['setPenRequest']),
     moment,
     humanDocument(document) {
       document.fileSize = humanFileSize(document.fileSize);
@@ -303,6 +332,30 @@ export default {
     },
     addDocument(document) {
       this.documents.push(this.humanDocument(document));
+    },
+    setSuccessAlert() {
+      this.alertMessage = 'Your PEN request has been submitted successfully.';
+      this.alertType = 'success';
+      this.alert = true;
+    },
+    setErrorAlert() {
+      this.alertMessage = 'Sorry, an unexpected error seems to have occured. You can click on the submmit button again later.';
+      this.alertType = 'error';
+      this.alert = true;
+    },
+    submitMoreInfo() {
+      this.submitting = true;
+      ApiService.updatePenRequestStatus(this.request.penRequestID, PenRequestStatuses.SUBSREV).then(response => {
+        if(response.data) {
+          this.setPenRequest(response.data);
+        }
+        this.setSuccessAlert();
+        window.scrollTo(0,0);
+      }).catch(() => {
+        this.setErrorAlert();
+      }).finally(() => {
+        this.submitting = false;
+      });
     }
   }
 };
