@@ -99,7 +99,6 @@ objects:
   kind: Route
   metadata:
     annotations:
-      kubernetes.io/tls-acme: "true"
       openshift.io/host.generated: 'true'
     labels:
       app: "${APP_NAME}-${JOB_NAME}"
@@ -112,6 +111,16 @@ objects:
     tls:
       insecureEdgeTerminationPolicy: Redirect
       termination: edge
+      key:
+        valueFrom:
+          secretKeyRef:
+            name: pen-request-backend-cert
+            key: tls.key
+      certificate:
+        valueFrom:
+          secretKeyRef:
+            name: pen-request-backend-cert
+            key: tls.crt
     to:
       kind: Service
       name: "${APP_NAME}-backend-${JOB_NAME}"
