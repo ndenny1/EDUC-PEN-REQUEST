@@ -37,9 +37,9 @@ objects:
         - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-frontend-static:${JOB_NAME}
           imagePullPolicy: IfNotPresent
           volumeMounts:
-            - name: tls-certs
-              mountPath: /etc/tls-cert
-              readOnly: true
+          - name: tls-certs
+            mountPath: "/etc/tls-cert"
+            readOnly: true
           livenessProbe:
             failureThreshold: 3
             httpGet:
