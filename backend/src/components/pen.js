@@ -52,6 +52,7 @@ async function getUserInfo(req, res) {
   }
 
   const userInfo = getSessionUser(req);
+  console.log(userInfo);
   if(!userInfo) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
       message: 'No session data'
