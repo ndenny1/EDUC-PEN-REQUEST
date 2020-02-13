@@ -61,7 +61,7 @@ nconf.defaults({
     apiEndpoint: process.env.STUDENT_API_ENDPOINT,
   },
   email: {
-    apiEndpoint: process.env.PEN_REQUEST_EMAIL_API,
+    apiEndpoint: process.env.PEN_REQUEST_EMAIL_API_ENDPOINT,
     secretKey: process.env.PEN_REQUEST_EMAIL_SECRET_KEY,
   },
 });
