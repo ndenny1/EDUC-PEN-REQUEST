@@ -38,7 +38,7 @@ objects:
           imagePullPolicy: IfNotPresent
           volumeMounts:
           - name: tls-certs
-            mountPath: "/etc/tls-cert"
+            mountPath: "/etc/tls-certs"
             readOnly: true
           livenessProbe:
             failureThreshold: 3
