@@ -36,6 +36,10 @@ objects:
         containers:
         - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-frontend-static:${JOB_NAME}
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: tls-certs
+              mountPath: /etc/tls-cert
+              readOnly: true
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -59,6 +63,10 @@ objects:
             successThreshold: 1
             timeoutSeconds: 1
           resources: {}
+        volumes:
+          - name: tls-certs
+            secret:
+              secretName: pen-request-frontend-cert
     test: false
     triggers:
     - type: ConfigChange
@@ -110,6 +118,9 @@ objects:
       name: "${APP_NAME}-frontend-${JOB_NAME}"
       weight: 100
     wildcardPolicy: None
+- apiVersion: v1
+  kind: Pod
+  metadata: 
 parameters:
 - name: REPO_NAME
   description: Application repository name
