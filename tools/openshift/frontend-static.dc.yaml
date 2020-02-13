@@ -105,16 +105,6 @@ objects:
     tls:
       insecureEdgeTerminationPolicy: Redirect
       termination: edge
-      key:
-        valueFrom:
-          secretKeyRef:
-            name: pen-request-frontend-cert
-            key: tls.key
-      certificate:
-        valueFrom:
-          secretKeyRef:
-            name: pen-request-frontend-cert
-            key: tls.crt
     to:
       kind: Service
       name: "${APP_NAME}-frontend-${JOB_NAME}"
