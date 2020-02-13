@@ -64,9 +64,9 @@ objects:
             timeoutSeconds: 1
           resources: {}
         volumes:
-          - name: tls-certs
-            secret:
-              secretName: pen-request-frontend-cert
+        - name: tls-certs
+          secret:
+            secretName: pen-request-frontend-cert
     test: false
     triggers:
     - type: ConfigChange

@@ -151,7 +151,7 @@ export default {
       requiredRules: [v => !!v || 'Required'],
       emailRules: [
         v => !!v || 'Required',
-        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+        v => /^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$/.test(v) || 'E-mail must be valid',
       ],
       menu: false,
       appTitle: process.env.VUE_APP_TITLE,
