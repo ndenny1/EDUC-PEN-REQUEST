@@ -72,17 +72,33 @@ async function getUserInfo(req, res) {
   }
 
   const userInfo = getSessionUser(req);
-  console.log(userInfo);
+  console.log(userInfo._json);
   if(!userInfo) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
       message: 'No session data'
     });
   }
-
-  let resData = {
-    displayName: userInfo._json.displayName,
-    accountType: userInfo._json.accountType,
-  };
+  let givenArray = (userInfo._json.givenNames).split(" ");
+  givenArray.shift();
+  let middleNames = givenArray.join(" ");
+  let resData;
+  if(userInfo._json.accountType === 'BCSC'){
+    resData = {
+      displayName: userInfo._json.displayName,
+      accountType: userInfo._json.accountType,
+      legalLastName: userInfo._json.surname,
+      legalFirstName: userInfo._json.givenName,
+      legalMiddleNames: middleNames,
+      gender: userInfo._json.gender,
+      email: userInfo._json.email,
+      dob: userInfo._json.birthDate
+    };
+  } else{
+    resData = {
+      displayName: userInfo._json.displayName,
+      accountType: userInfo._json.accountType,
+    };
+  }
 
   const accessToken = userInfo.jwt;
   const digitalID = userInfo._json.digitalIdentityID;
