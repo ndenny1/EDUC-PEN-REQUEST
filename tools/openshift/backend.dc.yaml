@@ -35,6 +35,10 @@ objects:
         containers:
         - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-backend:${JOB_NAME}
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: tls-certs
+            mountPath: "/etc/tls-certs"
+            readOnly: true
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -60,6 +64,10 @@ objects:
             successThreshold: 1
             timeoutSeconds: 1
           resources: {}
+        volumes:
+        - name: tls-certs
+          secret:
+            secretName: pen-request-backend-cert
     test: false
     triggers:
     - type: ConfigChange
