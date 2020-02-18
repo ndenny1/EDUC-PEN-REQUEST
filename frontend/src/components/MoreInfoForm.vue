@@ -265,7 +265,6 @@ export default {
   },
   data() {
     return {
-      alert: false,
       dialog: false,
       headers: [
         { text: 'Type', value: 'documentTypeCode',  },
