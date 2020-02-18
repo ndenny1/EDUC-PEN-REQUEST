@@ -1,6 +1,6 @@
 'use strict';
 
-const { getSessionUser, getData, postData, putData, PenRequestStatuses, VerificationResults, EmailVerificationStatuses } = require('./utils');
+const { getSessionUser, getAccessToken, deleteData, getData, postData, putData, PenRequestStatuses, VerificationResults, EmailVerificationStatuses } = require('./utils');
 const { getPenRequestApiCredentials } = require('./auth');
 const config = require('../config/index');
 const log = require('npmlog');
@@ -9,6 +9,25 @@ const HttpStatus = require('http-status-codes');
 const jsonwebtoken = require('jsonwebtoken');
 
 let identityTypes = null;
+
+
+async function getPenRequest(req, res, next) {
+  const userInfo = getSessionUser(req);
+  if(!userInfo) {
+    return res.status(HttpStatus.UNAUTHORIZED).json({
+      message: 'No session data'
+    });
+  }
+
+  const penRequestID = req.params.id;
+  if(!req.session.penRequest || req.session.penRequest.penRequestID !== penRequestID) {
+    return res.status(HttpStatus.BAD_REQUEST).json({
+      message: 'Wrong penRequestID'
+    });
+  }
+
+  next();
+}
 
 async function getDigitalIdData(token, digitalID) {
   let [status, data] = await getData(token, config.get('digitalID:apiEndpoint') + `/${digitalID}`);
@@ -46,6 +65,7 @@ async function getLatestPenRequest(token, digitalID) {
 
 async function getUserInfo(req, res) {
   if (! req.user) {
+    log.verbose('getUserInfo', req.user);
     return res.status(HttpStatus.UNAUTHORIZED).json({
       message: 'No session data'
     });
@@ -77,6 +97,9 @@ async function getUserInfo(req, res) {
     [status, data] = await getStudentPen(accessToken, data.studentID);
   } else {
     [status, data] = await getLatestPenRequest(accessToken, digitalID);
+    if(status === HttpStatus.OK) {
+      req.session.penRequest = data.penRequest;
+    }
   }
 
   resData = Object.assign(resData, data);
@@ -100,7 +123,9 @@ async function sendVerificationEmail(accessToken, emailAddress, penRequestId, id
   const identityType = await getIdentityType(accessToken, identityTypeCode);
   if(! identityType) {
     log.error('getIdentityTypeLabel Error identityTypeCode', identityTypeCode);
-    return;
+    return [HttpStatus.INTERNAL_SERVER_ERROR, {
+      message: 'Wrong identityTypeCode'
+    }];
   }
 
   const reqData = {
@@ -114,6 +139,10 @@ async function sendVerificationEmail(accessToken, emailAddress, penRequestId, id
   if(status !== HttpStatus.OK) {
     log.error('sendVerificationEmail Error Status', status);
   }
+
+  return [status,  {
+    message: 'Ok'
+  }]
 }
 
 async function postPenRequest(accessToken, req, userInfo) {
@@ -159,6 +188,8 @@ async function submitPenRequest(req, res) {
       return res.status(status).json(resData);
     }
 
+    req.session.penRequest = resData.penRequest;
+
     sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeCode);
 
     return res.status(status).json(resData);
@@ -172,14 +203,13 @@ async function submitPenRequest(req, res) {
 
 async function postComment(req, res) {
   try{
-    const userInfo = getSessionUser(req);
-    if(!userInfo) {
+    const accessToken = getAccessToken(req);
+    if(!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
-        message: 'No session data'
+        message: 'No access token'
       });
     }
 
-    const accessToken = userInfo.jwt;
     const url = `${config.get('penRequest:apiEndpoint')}/${req.params.id}/comments`;
     const commment = {
       penRetrievalRequestID: req.params.id,
@@ -379,6 +409,8 @@ async function updatePenRequestStatus(accessToken, penRequestID, penRequestStatu
     return [status, data];
   }
 
+  data.digitalID = null;
+
   return [HttpStatus.OK, data];
 }
 
@@ -392,14 +424,13 @@ function beforeUpdatePenRequestAsSubsrev(penRequest) {
 
 async function setPenRequestAsSubsrev(req, res) {
   try{
-    const userInfo = getSessionUser(req);
-    if(!userInfo) {
+    const accessToken = getAccessToken(req);
+    if(!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
-        message: 'No session data'
+        message: 'No access token'
       });
     }
 
-    const accessToken = userInfo.jwt;
     const penRequestID = req.params.id;
     const penRequestStatus = req.body.penRequestStatusCode;
 
@@ -419,12 +450,102 @@ async function setPenRequestAsSubsrev(req, res) {
     if(status !== HttpStatus.OK) {
       log.error('setPenRequestAsSubsrev Error', data);
     }
-    
+    req.session.penRequest = data.penRequest;
+
     return res.status(status).json(data);
   } catch(e) {
     log.error('setPenRequestAsSubsrev Error', e);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Set pen request as subsrev error'
+    });
+  }
+}
+
+async function resendVerificationEmail(req, res) {
+  try{
+    const accessToken = getAccessToken(req);
+    if(!accessToken) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        message: 'No access token'
+      });
+    }
+
+    const [status, data] = await sendVerificationEmail(accessToken, req.session.penRequest.email, req.session.penRequest.penRequestID, 
+      req.session.digitalIdentityData.identityTypeCode);
+
+    return res.status(status).json(data);
+  } catch(e) {
+    log.error('resendVerificationEmail Error', e);
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Resend verification email error'
+    });
+  }
+}
+
+
+async function getDocument(token, penRequestID, documentID, includeDocData = 'Y') {
+  let [status, data] = await getData(token, `${config.get('penRequest:apiEndpoint')}/${penRequestID}/documents/${documentID}?includeDocData=${includeDocData}`);
+  if(status !== HttpStatus.OK) {
+    data.errorSource = 'getDocument'; 
+  }
+  return [status, data];
+}
+
+async function deleteDocument(req, res) {
+  try{
+    const accessToken = getAccessToken(req);
+    if(!accessToken) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        message: 'No access token'
+      });
+    }
+
+    let [status, resData] = await getDocument(accessToken, req.params.id, req.params.documentId, 'N');
+    if(status !== HttpStatus.OK) {
+      return res.status(status).json(resData);
+    }
+
+    if(resData.createDate <= req.session.penRequest.statusUpdateDate || 
+      req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED ) {
+      return res.status(HttpStatus.CONFLICT).json({
+        message: 'Delete not allowed'
+      });
+    }
+
+    const url = `${config.get('penRequest:apiEndpoint')}/${req.params.id}/documents/${req.params.documentId}`;
+
+    [status] = await deleteData(accessToken, url);
+    return res.status(status).json();
+  } catch (e) {
+    log.error('deleteDocument Error', e);
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Delete document error'
+    });
+  }
+}
+
+async function downloadFile(req, res) {
+  try{
+    const accessToken = getAccessToken(req);
+    if(!accessToken) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        message: 'No access token'
+      });
+    }
+
+    let [status, resData] = await getDocument(accessToken, req.params.id, req.params.documentId, 'Y');
+    if(status !== HttpStatus.OK) {
+      return res.status(status).json(resData);
+    }
+
+    res.setHeader('Content-disposition', 'attachment; filename=' + resData.fileName);
+    res.setHeader('Content-type', resData.fileExtension);
+
+    return res.status(status).send(Buffer.from(resData.documentData, 'base64'));
+  } catch (e) {
+    log.error('deleteDocument Error', e);
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Delete document error'
     });
   }
 }
@@ -436,5 +557,9 @@ module.exports = {
   getComments,
   verifyEmail,
   verifyEmailToken,
-  setPenRequestAsSubsrev
+  setPenRequestAsSubsrev,
+  resendVerificationEmail,
+  getPenRequest,
+  deleteDocument,
+  downloadFile
 };

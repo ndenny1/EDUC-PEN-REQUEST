@@ -4,26 +4,57 @@ const axios = require('axios');
 const config = require('../config/index');
 const log = require('npmlog');
 const HttpStatus = require('http-status-codes');
+const lodash = require('lodash');
 
 let discovery = null;
 
+function minify(obj, keys=['documentData']) {
+  return lodash.transform(obj, (result, value, key) => 
+    result[key] = keys.includes(key) && lodash.isString(value) ? value.substring(0,1) + ' ...' : value );
+}
+
 function getSessionUser(req) {
-  log.verbose('getSessionUser................', req.sessionStore.sessions[req.sessionID]);
-  const session = req.sessionID && req.sessionStore.sessions[req.sessionID];
-  const sessionObject = session && JSON.parse(session);
-  return sessionObject && sessionObject.passport && sessionObject.passport.user;
+  log.verbose('getSessionUser', req.session);
+  const session = req.session;
+  return session && session.passport && session.passport.user;
+}
+
+function getAccessToken(req) {
+  const user = getSessionUser(req);
+  return user && user.jwt;
+}
+
+async function deleteData(token, url) {
+  try{
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    };
+
+    log.info('delete Data Url', url);
+    const response = await axios.delete(url, config);
+    log.info('delete Data Status', response.status);
+    log.info('delete Data StatusText', response.statusText);
+    log.verbose('delete Data Res', response.data);
+
+    return [HttpStatus.OK, response.data];
+  } catch (e) {
+    log.error('deleteData Error', e.response ? e.response.status : e.message);
+    const status = e.response ? e.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
+    return [status, { message: 'API Delete error'}];
+  }
 }
 
 async function forwardGetReq(req, res, url) {
   try{
-    const userInfo = getSessionUser(req);
-    if(!userInfo) {
+    const accessToken = getAccessToken(req);
+    if(!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
-        message: 'No session data'
+        message: 'No access token'
       });
     }
 
-    const accessToken = userInfo.jwt;
     const [status, data] = await getData(accessToken, url);
     return res.status(status).json(data);
   } catch (e) {
@@ -46,11 +77,11 @@ async function getData(token, url) {
     const response = await axios.get(url, config);
     log.info('get Data Status', response.status);
     log.info('get Data StatusText', response.statusText);
-    log.verbose('get Data Res', response.data);
+    log.verbose('get Data Res', minify(response.data));
 
     return [HttpStatus.OK, response.data];
   } catch (e) {
-    log.error('getData Error', e.Error);
+    log.error('getData Error', e.response ? e.response.status : e.message);
     const status = e.response ? e.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
     return [status, { message: 'API Get error'}];
   }
@@ -58,14 +89,12 @@ async function getData(token, url) {
 
 async function forwardPostReq(req, res, url) {
   try{
-    const userInfo = getSessionUser(req);
-    if(!userInfo) {
+    const accessToken = getAccessToken(req);
+    if(!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'No session data'
       });
     }
-
-    const accessToken = userInfo.jwt;
 
     const [status, data] = await postData(accessToken, req.body, url);
     return res.status(status).json(data);
@@ -86,7 +115,7 @@ async function postData(token, data, url) {
     };
 
     log.info('post Data Url', url);
-    log.verbose('post Data Req', data);
+    log.verbose('post Data Req', minify(data));
 
     const response = await axios.post(url, data, config);
 
@@ -97,7 +126,7 @@ async function postData(token, data, url) {
 
     return [HttpStatus.OK, response.data];
   } catch(e) {
-    log.error('postData Error', e.Error);
+    log.error('postData Error', e.response ? e.response.status : e.message);
     const status = e.response ? e.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
     return [status,{ message: 'API Post error'}];
   }
@@ -123,7 +152,7 @@ async function putData(token, data, url) {
 
     return [HttpStatus.OK, response.data];
   } catch(e) {
-    log.error('putData Error', e.Error);
+    log.error('putData Error',  e.response ? e.response.status : e.message);
     const status = e.response ? e.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
     return [status,{ message: 'API Put error'}];
   }
@@ -168,6 +197,8 @@ const utils = {
 
   prettyStringify: (obj, indent = 2) => JSON.stringify(obj, null, indent),
   getSessionUser,
+  getAccessToken,
+  deleteData,
   forwardGetReq,
   getData,
   forwardPostReq,

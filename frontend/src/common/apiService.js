@@ -167,6 +167,16 @@ export default {
     }
   },
 
+  async deleteDocument(penRequestId, documentId) {
+    try{
+      const response = await apiAxios.delete(ApiRoutes.PEN_REQUEST + `/${penRequestId}` + '/documents' + `/${documentId}`);
+      return response;
+    } catch(e) {
+      console.log(`Failed to deleteDocument from Nodejs API - ${e}`);
+      throw e;
+    }
+  },
+
   async getCommentList(penRequestId) {
     try{
       const response = await apiAxios.get(ApiRoutes.PEN_REQUEST + `/${penRequestId}` + '/comments');
@@ -193,6 +203,16 @@ export default {
       return response;
     } catch(e) {
       console.log(`Failed to get from Nodejs getUserInfo API - ${e}`);
+      throw e;
+    }
+  },
+
+  async resendVerificationEmail(penRequestId){
+    try{
+      const response = await apiAxios.post(ApiRoutes.PEN_REQUEST+ `/${penRequestId}` + '/verification-email');
+      return response;
+    } catch(e) {
+      console.log(`Failed to post to Nodejs resendVerificationEmail API - ${e}`);
       throw e;
     }
   },

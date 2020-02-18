@@ -256,7 +256,7 @@ export default {
     closeDialog() {
       this.dialog = false;
       if(this.isSubmitted) {
-        this.$router.replace('home');
+        this.$router.replace({name: 'home'});
       }
     }
   },

@@ -1,6 +1,19 @@
 <template>
     <v-card class="request-display">  
         <!-- <v-col class="fill-height pb-5" > -->
+        <v-row>
+            <v-alert
+                dense
+                text
+                dismissible
+                v-model="alert"
+                :type="alertType"
+                class="mb-5"
+                width="100%"
+            >
+                {{ alertMessage }}
+            </v-alert>
+        </v-row>
         <v-row class="pb-5">
             <v-card height="100%" width="100%" outlined color="#00e6ac" class="pa-3" v-if="this.status === this.requestStatuses.INITREV || this.status === this.requestStatuses.SUBSREV">
                 <p class="mb-2"><b>Your email has been verified and your PEN request has now been submitted for processing.</b></p>
@@ -76,7 +89,7 @@
                             <p>Request was first Submitted:</p>
                         </v-col>
                         <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                            <p><b>{{ this.request.initialSubmitDate ? moment(this.request.initialSubmitDate).fromNow():'' }}</b> {{ this.request.initialSubmitDate ? ', at' + moment(this.request.initialSubmitDate).format('YYYY-MM-DD LT'):'' }}</p>
+                            <p><b>{{ this.request.initialSubmitDate ? moment(this.request.initialSubmitDate).fromNow():'' }}</b> {{ this.request.initialSubmitDate ? ', at ' + moment(this.request.initialSubmitDate).format('YYYY-MM-DD LT'):'' }}</p>
                         </v-col>
                     </v-row>
                 </v-card>
@@ -84,14 +97,14 @@
             <v-col xl="4" lg="4" md="4" sm="4" class="pa-0 align-self-start" v-if="this.status === this.requestStatuses.REJECTED || this.status === this.requestStatuses.UNMATCHED">
               <v-card height="100%" width="100%" elevation=0>
                 <v-row no-gutters justify="end" class="pb-5">
-                  <v-btn color="#38598a" dark class="ml-2 text-none" @click="$router.push('pen-request')">Create a new PEN Request</v-btn>
+                  <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="$router.push('pen-request')">Create a new PEN Request</v-btn>
                 </v-row>
               </v-card>
             </v-col>
             <v-col xl="4" lg="4" md="4" sm="4" class="pa-0 align-self-start" v-else-if="this.status === this.requestStatuses.DRAFT">
               <v-card height="100%" width="100%" elevation=0>
                 <v-row no-gutters justify="end" class="pb-5">
-                  <v-btn color="#38598a" dark class="ml-2 text-none" >Resend Verification Email</v-btn>
+                  <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="resendVerificationEmail">Resend Verification Email</v-btn>
                 </v-row>
               </v-card>
             </v-col>
@@ -291,7 +304,6 @@ export default {
   },
   data() {
     return {
-      alert: false,
       dialog: false,
       headers: [
         { text: 'Type', value: 'documentTypeCode',  },
@@ -303,6 +315,10 @@ export default {
       loadingDocuments: true,
       participants: [],
       messages: [],
+
+      alert: false,
+      alertMessage: null,
+      alertType: null
     };
   },
   computed: {
@@ -332,7 +348,7 @@ export default {
       this.documents.map(this.humanDocument);
     }).catch(error => {
       console.log(error);
-      this.alert = true;
+      this.setLoadingErrorAlert();
     }).finally(() => this.loadingDocuments = false);
 
     ApiService.getCommentList(this.request.penRequestID).then(response => {
@@ -340,7 +356,7 @@ export default {
       this.messages = response.data.messages;
     }).catch(error => {
       console.log(error);
-      this.alert = true;
+      this.setLoadingErrorAlert();
     });
   },
   methods: {
@@ -352,6 +368,27 @@ export default {
     },
     addDocument(document) {
       this.documents.push(this.humanDocument(document));
+    },
+    setSuccessAlert() {
+      this.alertMessage = 'Your verification email has been sent successfully.';
+      this.alertType = 'success';
+      this.alert = true;
+    },
+    setErrorAlert(alertMessage) {
+      this.alertMessage = alertMessage;
+      this.alertType = 'error';
+      this.alert = true;
+    },
+    setLoadingErrorAlert() {
+      this.setSuccessAlert('Sorry, an unexpected error seems to have occured. You can refresh the page later.');
+    },
+    resendVerificationEmail() {
+      ApiService.resendVerificationEmail(this.request.penRequestID).then(() => {
+        this.setSuccessAlert();
+      }).catch(error => {
+        console.log(error);
+        this.setErrorAlert('Sorry, an unexpected error seems to have occured. You can click on the resend button again later.');
+      });
     }
   }
 };

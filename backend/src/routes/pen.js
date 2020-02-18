@@ -2,7 +2,7 @@
 
 const passport = require('passport');
 const express = require('express');
-const { getUserInfo, submitPenRequest, getComments, postComment, verifyEmail, setPenRequestAsSubsrev } = require('../components/pen');
+const { getUserInfo, submitPenRequest, getComments, postComment, verifyEmail, setPenRequestAsSubsrev, resendVerificationEmail, getPenRequest, deleteDocument, downloadFile } = require('../components/pen');
 const { forwardGetReq, forwardPostReq } = require('../components/utils');
 const config = require('../config/index');
 
@@ -48,9 +48,15 @@ router.get('/request/:id/documents/:documentId', passport.authenticate('jwt', { 
   (req, res) => forwardGetReq(req, res, `${config.get('penRequest:apiEndpoint')}/${req.params.id}/documents/${req.params.documentId}`)   //todo: check the pen request id
 );
 
+router.get('/request/:id/documents/:documentId/download/:fileName', [getPenRequest, downloadFile]);
+
+router.delete('/request/:id/documents/:documentId', passport.authenticate('jwt', { session: false }), [getPenRequest, deleteDocument]);
+
 router.get('/request/:id/comments', passport.authenticate('jwt', { session: false }), getComments); //todo: check the pen request id
 
 router.post('/request/:id/comments', passport.authenticate('jwt', { session: false }), postComment); //todo: check the pen request id
+
+router.post('/request/:id/verification-email', passport.authenticate('jwt', { session: false }), [getPenRequest, resendVerificationEmail]); //todo: check the pen request id
 
 router.patch('/request/:id', passport.authenticate('jwt', { session: false }), setPenRequestAsSubsrev);
 

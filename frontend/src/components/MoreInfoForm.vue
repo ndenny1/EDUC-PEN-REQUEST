@@ -9,6 +9,7 @@
                 v-model="alert"
                 :type="alertType"
                 class="mb-5"
+                width="100%"
             >
                 {{ alertMessage }}
             </v-alert>
@@ -213,6 +214,44 @@
                         :items-per-page="15"
                         :loading="loadingDocuments"
                         class="fill-height">
+                            <template v-slot:item.fileName="{item: document}">
+                                <router-link :to="{ path: `${apiRoute}/${request.penRequestID}/documents/${document.documentID}/download/${document.fileName}` }" target="_blank">{{document.fileName}}</router-link> 
+                            </template>
+                            <template v-slot:item.action="{item: document}">
+                                <v-dialog v-model="deleteDialog" max-width="500px">
+                                    <template v-slot:activator="{ on: dialogOn }">
+                                        <v-tooltip bottom >
+                                            <template v-slot:activator="{ on }">
+                                                <v-icon
+                                                    small
+                                                    v-on="on"
+                                                    @click="dialogOn.click"
+                                                    v-show="document.createDate > request.statusUpdateDate && !document.deleting"
+                                                >
+                                                    delete
+                                                </v-icon>
+                                                <v-progress-circular
+                                                    indeterminate
+                                                    :width="2"
+                                                    :size="15"
+                                                    v-show="document.deleting"
+                                                ></v-progress-circular>
+                                            </template>
+                                            <span>Delete</span>
+                                        </v-tooltip>
+                                    </template>
+                                    <v-card> 
+                                        <v-card-text>
+                                            Are you sure you want to delete this document?
+                                        </v-card-text>
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn color="#003366" class="white--text" @click="deleteDocument(document)">Ok</v-btn>
+                                            <v-btn color="#003366" class="white--text" @click="deleteDialog = false">Cancel</v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                            </template>
                     </v-data-table>
                 </v-card>
             </v-col>
@@ -224,6 +263,7 @@
                 dismissible
                 v-model="alert"
                 :type="alertType"
+                width="100%"
             >
                 {{ alertMessage }}
             </v-alert>
@@ -249,8 +289,9 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import { mapGetters, mapMutations } from 'vuex';
-import { PenRequestStatuses } from '@/utils/constants';
+import { ApiRoutes, PenRequestStatuses } from '@/utils/constants';
 import moment from 'moment';
 import ApiService from '@/common/apiService';
 import { humanFileSize } from '@/utils/file';
@@ -266,11 +307,13 @@ export default {
   data() {
     return {
       dialog: false,
+      deleteDialog: false,
       headers: [
         { text: 'Type', value: 'documentTypeCode',  },
         { text: 'File Name', value: 'fileName' },
         { text: 'Upload Date/time', value: 'createDate' },
         { text: 'Size', value: 'fileSize' },
+        { text: '', value: 'action', sortable: false },
       ],
       documents: [],
       loadingDocuments: true,
@@ -302,12 +345,14 @@ export default {
     },
     timedout() {
       return Math.floor(new Date() - new Date(this.request.statusUpdateDate)) / (1000*60*60) > 24;
+    },
+    apiRoute() {
+      return ApiRoutes.PEN_REQUEST;
     }
   },
   mounted() {
     ApiService.getDocumentList(this.request.penRequestID).then(response => {
-      this.documents = response.data;
-      this.documents.map(this.humanDocument);
+      this.documents = response.data.map(this.humanDocument);
     }).catch(error => {
       console.log(error);
       this.alert = true;
@@ -326,19 +371,32 @@ export default {
     moment,
     humanDocument(document) {
       document.fileSize = humanFileSize(document.fileSize);
-      document.createDate = new Date().toISOString().replace(/T/, ', ').replace(/\..+/, '');
+      document.createDate = document.createDate.replace(/T/, ', ').replace(/\..+/, '');
+      document.deleting = false;
       return document;
     },
     addDocument(document) {
       this.documents.push(this.humanDocument(document));
     },
-    setSuccessAlert() {
-      this.alertMessage = 'Your PEN request has been submitted successfully.';
+    deleteDocument(document) {
+      this.deleteDialog = false;
+      document.deleting = true;
+      const index = this.documents.indexOf(document);
+      ApiService.deleteDocument(this.request.penRequestID, document.documentID).then(response => {
+        this.documents.splice(index, 1);
+        this.setSuccessAlert('Your document has been deleted successfully.');
+      }).catch(() => {
+        this.documents[index].deleting = false;
+        this.setErrorAlert('Sorry, an unexpected error seems to have occured. You can click on the delete button again later.');
+      });
+    },
+    setSuccessAlert(alertMessage) {
+      this.alertMessage = alertMessage;
       this.alertType = 'success';
       this.alert = true;
     },
-    setErrorAlert() {
-      this.alertMessage = 'Sorry, an unexpected error seems to have occured. You can click on the submmit button again later.';
+    setErrorAlert(alertMessage) {
+      this.alertMessage = alertMessage;
       this.alertType = 'error';
       this.alert = true;
     },
@@ -348,10 +406,10 @@ export default {
         if(response.data) {
           this.setPenRequest(response.data);
         }
-        this.setSuccessAlert();
+        this.setSuccessAlert('Your PEN request has been submitted successfully.');
         window.scrollTo(0,0);
       }).catch(() => {
-        this.setErrorAlert();
+        this.setErrorAlert('Sorry, an unexpected error seems to have occured. You can click on the submmit button again later.');
       }).finally(() => {
         this.submitting = false;
       });
