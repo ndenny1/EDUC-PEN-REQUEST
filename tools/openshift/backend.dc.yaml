@@ -76,7 +76,7 @@ objects:
   kind: Service
   metadata:
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: 'pen-request-backend-cert'
+      service.alpha.openshift.io/serving-cert-secret-name: "pen-request-backend-cert"
       openshift.io/generated-by: OpenShiftNewApp
     creationTimestamp:
     labels:

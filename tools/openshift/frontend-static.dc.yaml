@@ -36,10 +36,6 @@ objects:
         containers:
         - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-frontend-static:${JOB_NAME}
           imagePullPolicy: IfNotPresent
-          volumeMounts:
-          - name: tls-certs
-            mountPath: "/etc/tls-certs"
-            readOnly: true
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -83,7 +79,7 @@ objects:
   kind: Service
   metadata:
     annotations:
-      service.alpha.openshift.io/serving-cert-secret-name: 'pen-request-frontend-cert'
+      service.alpha.openshift.io/serving-cert-secret-name: "pen-request-frontend-cert"
       openshift.io/generated-by: OpenShiftNewApp
     creationTimestamp:
     labels:
