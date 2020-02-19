@@ -35,9 +35,7 @@ router.get('/callback',
 
 //a prettier way to handle errors
 router.get('/error', (_req, res) => {
-  res.status(401).json({
-    message: 'Error: Unable to authenticate'
-  });
+  res.redirect(config.get('server:frontend') + '/error?message=Unable_to_authenticate');
 });
 
 //redirects to the SSO login screen
