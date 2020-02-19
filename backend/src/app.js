@@ -142,24 +142,20 @@ apiRouter.use('/pen', penRouter);
 //Handle 500 error
 app.use((err, _req, res, next) => {
   log.error(err.stack);
-  res.status(500).json({
-    status: 500,
-    message: 'Internal Server Error: ' + err.stack.split('\n', 1)[0]
-  });
+  res.redirect(config.get('server:frontend') + '/error?message=500_internal_error');
   next();
 });
 
 // Handle 404 error
 app.use((_req, res) => {
-  res.status(404).json({
-    status: 404,
-    message: 'Page Not Found'
-  });
+  log.error('404 Error');
+  res.redirect(config.get('server:frontend') + '/error?message=404_Page_Not_Found');
 });
 
 // Prevent unhandled errors from crashing application
 process.on('unhandledRejection', err => {
   log.error(err.stack);
+  res.redirect(config.get('server:frontend') + '/error?message=unhandled_rejection');
 });
 
 module.exports = app;

@@ -19,7 +19,10 @@ export default new Vuetify({
       downArrow: 'fas fa-angle-down',
       upArrow: 'fas fa-angle-up',
       user: 'far fa-user',
-      copy: 'fas fa-copy'
+      copy: 'fas fa-copy',
+      search: 'fas fa-search',
+      error: 'fas fa-exclamation-triangle',
+      lock: 'fas fa-lock'
     }
   }
 });
