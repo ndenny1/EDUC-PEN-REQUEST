@@ -114,12 +114,7 @@
                 <RequestCard> </RequestCard>
             </v-col>
             <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
-                <v-card height="100%" width="100%">
-                    <v-toolbar flat color="#036" class="white--text">
-                        <v-toolbar-title>Discussion with PEN Administrator</v-toolbar-title>
-                    </v-toolbar>
-                    <Chat id="chat-box" :myself="myself" :participants="participants" :messages="messages" :penRequestID="request.penRequestID" :hideInput="this.status !== this.requestStatuses.RETURNED"></Chat>
-                </v-card>
+                <Chat :hideInput="this.status !== this.requestStatuses.RETURNED"></Chat>
             </v-col>
         </v-row>
         <v-row>

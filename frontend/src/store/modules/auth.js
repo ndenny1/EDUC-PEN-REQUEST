@@ -91,7 +91,7 @@ export default {
 
         // userInf.penRequest.penRequestStatusCode = 'INITREV';
 
-        // userInf.penRequest.penRequestStatusCode = 'RETURNED';
+        userInf.penRequest.penRequestStatusCode = 'RETURNED';
 
         //userInf.pen = '1234567890';
 

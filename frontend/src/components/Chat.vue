@@ -1,51 +1,41 @@
 <template>
-  <div v-if="this.myself.name == null"></div>
-  <div :class="{hide: hideInput}" v-else>
-    <Chat
-      :participants="this.participants"
-      :myself="this.myself"
-      :messages="this.messages"
-      :on-message-submit="onMessageSubmit"
-      :placeholder="placeholder"
-      :colors="colors"
-      :border-style="borderStyle"
-      :hide-close-button="hideCloseButton"
-      :close-button-icon-size="closeButtonIconSize"
-      :on-close="onClose"
-      :submit-icon-size="submitIconSize"
-      :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
-      :async-mode="asyncMode"
-      :scroll-bottom="scrollBottom"
-      :display-header="displayHeader">
-    </Chat>
-  </div>
+  <v-card height="100%" width="100%">
+    <v-toolbar flat color="#036" class="white--text">
+      <v-toolbar-title>Discussion with PEN Administrator</v-toolbar-title>
+    </v-toolbar>
+    <div id="chat-box" :class="{hide: hideInput}">
+      <Chat
+        :participants="participants"
+        :myself="myself"
+        :messages="messages"
+        :on-message-submit="onMessageSubmit"
+        :placeholder="placeholder"
+        :colors="colors"
+        :border-style="borderStyle"
+        :hide-close-button="hideCloseButton"
+        :close-button-icon-size="closeButtonIconSize"
+        :on-close="onClose"
+        :submit-icon-size="submitIconSize"
+        :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
+        :async-mode="asyncMode"
+        :scroll-bottom="scrollBottom"
+        :display-header="displayHeader">
+      </Chat>
+    </div>
+  </v-card>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import { Chat } from 'vue-quick-chat';
 import 'vue-quick-chat/dist/vue-quick-chat.css';
 //import { Routes } from '@/utils/constants';
 import ApiService from '@/common/apiService';
+
 export default {
   components: {
     Chat
   },
   props: {
-    myself: {
-      type: Object,
-      required: true
-    },
-    participants: {
-      type: Array,
-      required: true
-    },
-    messages: {
-      type: Array,
-      required: true
-    },
-    penRequestID: {
-      type: String,
-      required: true
-    },
     hideInput: {
       type: Boolean,
       default: false
@@ -53,6 +43,9 @@ export default {
   },
   data() {
     return {
+      participants: [],
+      messages: [],
+
       visible: true,
       placeholder: 'send your message',
       colors: {
@@ -93,7 +86,23 @@ export default {
       displayHeader:false
     };
   },
-  mounted() {
+  computed: {
+    ...mapGetters('auth', ['userInfo']),
+    request() {
+      return this.userInfo.penRequest;
+    },
+    myself() {
+      return ({name: this.userInfo.displayName, id: '1'});
+    },
+  },
+  created() {
+    ApiService.getCommentList(this.request.penRequestID).then(response => {
+      this.participants = response.data.participants;
+      this.messages = response.data.messages;
+    }).catch(error => {
+      console.log(error);
+      this.alert = true;
+    });    
   },
   methods: {
     /*onType: function (event) {
@@ -108,7 +117,7 @@ export default {
       }, 1000);
     },
     onMessageSubmit: function (message) {
-      ApiService.postComment(this.penRequestID, message)
+      ApiService.postComment(this.request.penRequestID, message)
         .then(() => {
           this.messages.push(message);
         })
@@ -126,5 +135,11 @@ export default {
 <style scoped>
   .hide /deep/ .container-message-manager {
     display: none;
+  }
+
+  #chat-box {
+    height: 90%;
+    min-height: 425px;
+    padding-bottom: 8px;
   }
 </style>
