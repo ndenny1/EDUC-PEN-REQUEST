@@ -72,17 +72,17 @@ async function getUserInfo(req, res) {
   }
 
   const userInfo = getSessionUser(req);
-  console.log(userInfo._json);
   if(!userInfo) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
       message: 'No session data'
     });
   }
-  let givenArray = (userInfo._json.givenNames).split(" ");
-  givenArray.shift();
-  let middleNames = givenArray.join(" ");
-  let resData;
+
   if(userInfo._json.accountType === 'BCSC'){
+    let givenArray = (userInfo._json.givenNames).split(" ");
+    givenArray.shift();
+    let middleNames = givenArray.join(" ");
+    let resData;
     resData = {
       displayName: userInfo._json.displayName,
       accountType: userInfo._json.accountType,
