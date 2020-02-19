@@ -77,12 +77,12 @@ async function getUserInfo(req, res) {
       message: 'No session data'
     });
   }
+  let resData;
 
   if(userInfo._json.accountType === 'BCSC'){
     let givenArray = (userInfo._json.givenNames).split(" ");
     givenArray.shift();
     let middleNames = givenArray.join(" ");
-    let resData;
     resData = {
       displayName: userInfo._json.displayName,
       accountType: userInfo._json.accountType,
