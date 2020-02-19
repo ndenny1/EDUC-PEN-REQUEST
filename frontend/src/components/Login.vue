@@ -1,4 +1,6 @@
 <template>
+    <v-container style="padding-bottom: 1vh">
+            <v-col xs="6" sm="6" md="6" lg="6" xl="6" offset-xs="3" offset-sm="3" offset-md="3" offset-lg="3" offset-xl="3">
     <v-card class="login-card">
         <v-card-title class="gov-header">
           <h4 id="login_text">Log In</h4>
@@ -11,7 +13,8 @@
                 <v-btn id="login-button" @click="clearStorage" :href="authRoutes.LOGIN" class="ma-2" dark color='#003366'>Log In <v-icon>$sign_in</v-icon></v-btn>
             </v-row>
         </v-card-actions>
-    </v-card>
+    </v-card></v-col>
+    </v-container>
 </template>
 
 <script>
@@ -41,7 +44,8 @@ export default {
     padding-left: 10px;
   }
   .login-card{
-    max-width: 400px;
+      padding-left: 5%;
+    max-width: 95%;
   }
   .gov-header{
     color: #003366;
