@@ -36,7 +36,9 @@
   <v-container fluid class="full-height" v-else-if="isAuthenticated && hasPen">
     <article id="pen-display-container" class="top-banner full-height">
       <v-row align="center" justify="center" style="width: 1vw;margin-right: 0;margin-left: 0;margin-bottom: 5rem;">
+        <v-col xs="6" sm="6" md="6" lg="6" xl="6">
         <PenDisplay></PenDisplay>
+        </v-col>
       </v-row>
     </article>
   </v-container>

@@ -1,5 +1,5 @@
 <template>
-     <v-card class="display-card">
+     <v-card>
        <v-card-title>
          <h3>Your PEN</h3>
         </v-card-title>
@@ -62,7 +62,7 @@ export default {
   methods: {
     async copyClipboard() {
       /* Get the text field */
-      var copyText = document.getElementById('penContainer');
+      const copyText = document.getElementById('penContainer');
 
       /* Select the text field */
       copyText.select();
@@ -76,25 +76,16 @@ export default {
 </script>
 
 <style scoped>
-.display-card{
-  width: 40%;
-  max-width: 550px;
-  min-width: 400px
-}
 .card-row{
-  padding: 0px 15px;
+  padding: 0 15px;
 }
-.v-divider{
-  padding-bottom: 20px
-}
+
 p{
   padding-top: 10px
 }
 ul{
-  width: 100%
+  width: 100%;
 }
 
-.pen_text{
-  border-radius: 4px;
-}
+
 </style>
