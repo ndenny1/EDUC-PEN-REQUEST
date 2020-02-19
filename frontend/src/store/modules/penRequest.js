@@ -1,11 +1,22 @@
 import ApiService from '@/common/apiService';
 import {getData} from '@/store/modules/helpers';
+import { find } from 'lodash';
 
 export default {
   namespaced: true,
-  state: {},
-  getters: {},
-  mutations: {},
+  state: {
+    genders: null,
+    penRequest: null,
+  },
+  getters: {
+    genders: state => state.genders,
+    genderInfo: state => genderCode => find(state.genders, ['genderCode', genderCode])
+  },
+  mutations: {
+    setGenders: (state, genders) => {
+      state.genders = genders;
+    },
+  },
   actions: {
     async postRequest(_context, info){
       try {
@@ -19,7 +30,10 @@ export default {
         return false;
       }
     },
-    getGenderCodes: () => getData(ApiService.getGenderCodes),
+    async getGenderCodes({commit}) {
+      const response = await ApiService.getGenderCodes();
+      commit('setGenders', response.data);
+    },
     getPenRequest: (_context, penRequestId) => getData(ApiService.getPenRequest, penRequestId),
   }
 };

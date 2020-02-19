@@ -78,7 +78,7 @@ import PenDisplay from './PenDisplay';
 import RequestDisplay from './RequestDisplay';
 import MoreInfoForm from './MoreInfoForm';
 import { PenRequestStatuses } from '../utils/constants';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'home',
   components: {
@@ -103,6 +103,16 @@ export default {
         this.userInfo.penRequest.penRequestStatusCode == PenRequestStatuses.RETURNED;
     }
   },
+  methods: {
+    ...mapActions('penRequest', ['getGenderCodes'])
+  },
+  watch: {
+    isAuthenticated : function(val) {
+      if(val) {
+        this.getGenderCodes();
+      }
+    }
+  }
 };
 </script>
 
