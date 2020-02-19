@@ -162,6 +162,4 @@ export default {
     margin-bottom: 0px;
   }
 
-  .img-theme {
-  }
 </style>
