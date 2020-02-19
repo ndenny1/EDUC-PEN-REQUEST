@@ -1,7 +1,7 @@
 import ApiService from '@/common/apiService';
 import AuthService from '@/common/authService';
-import router from '@/router';
-import { AuthRoutes } from '@/utils/constants';
+// import router from '@/router';
+// import { AuthRoutes } from '@/utils/constants';
 import HttpStatus from 'http-status-codes';
 
 function isFollowUpVisit({jwtToken}) {
@@ -89,7 +89,7 @@ export default {
         // userInf.penRequest.penRequestStatusCode = 'DRAFT';
         // userInf.penRequest.statusUpdateDate = '2020-02-05T22:23:18.000+0000';
 
-        // userInf.penRequest.penRequestStatusCode = 'INITREV';
+        userInf.penRequest.penRequestStatusCode = 'INITREV';
 
         // userInf.penRequest.penRequestStatusCode = 'RETURNED';
 
@@ -124,7 +124,7 @@ export default {
   actions: {
     logout(context) {
       context.commit('logoutState');
-      router.push(AuthRoutes.LOGOUT);
+      // router.push(AuthRoutes.LOGOUT);
     },
     async getUserInfo({getters, commit, dispatch}){
       try{

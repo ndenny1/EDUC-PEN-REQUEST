@@ -64,131 +64,7 @@
         </v-row>
         <v-row>
             <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
-                <v-card height="100%" width="99%">
-                    <v-toolbar flat color="#036" class="white--text">
-                        <v-toolbar-title>PEN Request Data you submitted</v-toolbar-title>
-                    </v-toolbar>
-                    <v-row no-gutters class="pt-2 px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2" color="green">Legal Last Name:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.legalLastName }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="pt-2 px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2" color="green">Legal First Names:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.legalFirstName }}</b></p>
-                        </v-col>
-                    </v-row>   
-                    <v-row no-gutters class="pt-2 px-2 pb-8">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2" color="green">Legal Middle Names:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.legalMiddleNames }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Usual Last Name:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.usualLastName }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Usual First Names:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.usualFirstName }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2 pb-8">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Usual Middle Names:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.usualMiddleName }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p>Maiden Name:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p><b>{{ this.request.maidenName }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2" color="green">Past Names:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.pastNames }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Date of Birth:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.dob ? moment(this.request.dob).format('YYYY-MM-DD'):'' }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p>Gender:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p><b>{{ this.request.genderCode }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2" color="green">Current BC School:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.currentSchool }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Last BC School:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.lastBCSchool }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p>School Student #:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p><b>{{ this.request.lastBCSchoolStudentNumber }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Email:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.email }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="pb-2 px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-0">ID Type:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-0"><b>{{ this.request.dataSourceCode }}</b></p>
-                        </v-col>
-                    </v-row>
-                </v-card>
+                <RequestCard></RequestCard>
             </v-col>
             <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
                 <v-card height="100%" width="100%">
@@ -201,59 +77,7 @@
         </v-row>
         <v-row>
             <v-col col="12" class="px-0 py-3">
-                <v-card>
-                    <v-toolbar flat color="#036" class="white--text">
-                        <v-toolbar-title>Documents</v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="dialog = true">Upload Document</v-btn>
-                    </v-toolbar>
-                    <v-data-table
-                        :headers="headers"
-                        :items="documents"
-                        sort-by="['createDate']"
-                        :items-per-page="15"
-                        :loading="loadingDocuments"
-                        class="fill-height">
-                            <template v-slot:item.fileName="{item: document}">
-                                <router-link :to="{ path: `${apiRoute}/${request.penRequestID}/documents/${document.documentID}/download/${document.fileName}` }" target="_blank">{{document.fileName}}</router-link> 
-                            </template>
-                            <template v-slot:item.action="{item: document}">
-                                <v-dialog v-model="deleteDialog" max-width="500px">
-                                    <template v-slot:activator="{ on: dialogOn }">
-                                        <v-tooltip bottom >
-                                            <template v-slot:activator="{ on }">
-                                                <v-icon
-                                                    small
-                                                    v-on="on"
-                                                    @click="dialogOn.click"
-                                                    v-show="document.createDate > request.statusUpdateDate && !document.deleting"
-                                                >
-                                                    delete
-                                                </v-icon>
-                                                <v-progress-circular
-                                                    indeterminate
-                                                    :width="2"
-                                                    :size="15"
-                                                    v-show="document.deleting"
-                                                ></v-progress-circular>
-                                            </template>
-                                            <span>Delete</span>
-                                        </v-tooltip>
-                                    </template>
-                                    <v-card> 
-                                        <v-card-text>
-                                            Are you sure you want to delete this document?
-                                        </v-card-text>
-                                        <v-card-actions>
-                                            <v-spacer></v-spacer>
-                                            <v-btn color="#003366" class="white--text" @click="deleteDocument(document)">Ok</v-btn>
-                                            <v-btn color="#003366" class="white--text" @click="deleteDialog = false">Cancel</v-btn>
-                                        </v-card-actions>
-                                    </v-card>
-                                </v-dialog>
-                            </template>
-                    </v-data-table>
-                </v-card>
+                <DocumentList></DocumentList>
             </v-col>
         </v-row>
         <v-row v-if="alertType === 'error'">
@@ -273,50 +97,28 @@
             <v-btn color="#38598a" dark class="ml-2 text-none" :loading="submitting" @click.stop="submitMoreInfo">Submit</v-btn>
           </v-row>
         </v-card>
-
-        <v-dialog
-          v-model="dialog"
-          cols="12" xl="6" lg="6" md="6"
-        >
-          <DocumentUpload 
-            :penRequestID="this.request.penRequestID"
-            @close:form="() => dialog = false"
-            @uploaded="addDocument">
-          </DocumentUpload>
-        </v-dialog>
     <!-- </v-col> -->
   </v-card>
 </template>
 
 <script>
-import Vue from 'vue';
 import { mapGetters, mapMutations } from 'vuex';
-import { ApiRoutes, PenRequestStatuses } from '@/utils/constants';
+import { PenRequestStatuses } from '@/utils/constants';
 import moment from 'moment';
 import ApiService from '@/common/apiService';
-import { humanFileSize } from '@/utils/file';
 import Chat from './Chat';
-import DocumentUpload from './DocumentUpload';
+import RequestCard from './RequestCard';
+import DocumentList from './DocumentList';
 
 export default {
   name: 'moreInfoForm',
   components: {
     Chat,
-    DocumentUpload
+    RequestCard,
+    DocumentList,
   },
   data() {
     return {
-      dialog: false,
-      deleteDialog: false,
-      headers: [
-        { text: 'Type', value: 'documentTypeCode',  },
-        { text: 'File Name', value: 'fileName' },
-        { text: 'Upload Date/time', value: 'createDate' },
-        { text: 'Size', value: 'fileSize' },
-        { text: '', value: 'action', sortable: false },
-      ],
-      documents: [],
-      loadingDocuments: true,
       participants: [],
       messages: [],
       submitting: false,
@@ -346,18 +148,8 @@ export default {
     timedout() {
       return Math.floor(new Date() - new Date(this.request.statusUpdateDate)) / (1000*60*60) > 24;
     },
-    apiRoute() {
-      return ApiRoutes.PEN_REQUEST;
-    }
   },
   mounted() {
-    ApiService.getDocumentList(this.request.penRequestID).then(response => {
-      this.documents = response.data.map(this.humanDocument);
-    }).catch(error => {
-      console.log(error);
-      this.alert = true;
-    }).finally(() => this.loadingDocuments = false);
-
     ApiService.getCommentList(this.request.penRequestID).then(response => {
       this.participants = response.data.participants;
       this.messages = response.data.messages;
@@ -369,27 +161,6 @@ export default {
   methods: {
     ...mapMutations('auth', ['setPenRequest']),
     moment,
-    humanDocument(document) {
-      document.fileSize = humanFileSize(document.fileSize);
-      document.createDate = document.createDate.replace(/T/, ', ').replace(/\..+/, '');
-      document.deleting = false;
-      return document;
-    },
-    addDocument(document) {
-      this.documents.push(this.humanDocument(document));
-    },
-    deleteDocument(document) {
-      this.deleteDialog = false;
-      document.deleting = true;
-      const index = this.documents.indexOf(document);
-      ApiService.deleteDocument(this.request.penRequestID, document.documentID).then(response => {
-        this.documents.splice(index, 1);
-        this.setSuccessAlert('Your document has been deleted successfully.');
-      }).catch(() => {
-        this.documents[index].deleting = false;
-        this.setErrorAlert('Sorry, an unexpected error seems to have occured. You can click on the delete button again later.');
-      });
-    },
     setSuccessAlert(alertMessage) {
       this.alertMessage = alertMessage;
       this.alertType = 'success';
@@ -413,7 +184,7 @@ export default {
       }).finally(() => {
         this.submitting = false;
       });
-    }
+    },
   }
 };
 </script>

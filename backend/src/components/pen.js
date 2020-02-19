@@ -77,6 +77,7 @@ async function getUserInfo(req, res) {
       message: 'No session data'
     });
   }
+  
   let resData;
 
   if(userInfo._json.accountType === 'BCSC'){
@@ -109,6 +110,17 @@ async function getUserInfo(req, res) {
 
   req.session.digitalIdentityData = data;
 
+  const identityType = await getIdentityType(accessToken, data.identityTypeCode);
+  if(! identityType) {
+    log.error('getIdentityType Error identityTypeCode', identityTypeCode);
+    return [HttpStatus.INTERNAL_SERVER_ERROR, {
+      message: 'Wrong identityTypeCode'
+    }];
+  }
+
+  req.session.digitalIdentityData.identityTypeLabel = identityType.label;
+  resData.identityTypeLabel = identityType.label;
+
   if(data.studentID) {
     [status, data] = await getStudentPen(accessToken, data.studentID);
   } else {
@@ -127,7 +139,7 @@ async function getIdentityType(accessToken, identityTypeCode) {
     const url = `${config.get('digitalID:apiEndpoint')}/identityTypeCodes`;
     const [status, resData] = await getData(accessToken, url);
     if(status !== HttpStatus.OK) {
-      log.error('getIdentityTypeLabel Error Status', status);
+      log.error('getIdentityType Error Status', status);
       return null;
     }
     identityTypes = resData;
@@ -135,19 +147,11 @@ async function getIdentityType(accessToken, identityTypeCode) {
   return lodash.find(identityTypes, ['identityTypeCode', identityTypeCode]);
 }
 
-async function sendVerificationEmail(accessToken, emailAddress, penRequestId, identityTypeCode) {
-  const identityType = await getIdentityType(accessToken, identityTypeCode);
-  if(! identityType) {
-    log.error('getIdentityTypeLabel Error identityTypeCode', identityTypeCode);
-    return [HttpStatus.INTERNAL_SERVER_ERROR, {
-      message: 'Wrong identityTypeCode'
-    }];
-  }
-
+async function sendVerificationEmail(accessToken, emailAddress, penRequestId, identityTypeLabel) {
   const reqData = {
     emailAddress,
     penRequestId,
-    identityTypeLabel: identityType.label
+    identityTypeLabel
   };
   const url = config.get('email:apiEndpoint') + '/verify';
 
@@ -199,6 +203,13 @@ async function submitPenRequest(req, res) {
 
     const accessToken = userInfo.jwt;
 
+    if(req.session.penRequest && (req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.REJECTED || 
+      req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.UNMATCHED)) {
+      return res.status(HttpStatus.CONFLICT).json({
+        message: 'Submit PEN Request not allowed'
+      });
+    }
+
     const [status, resData] = await postPenRequest(accessToken, req.body, userInfo);
     if(status !== HttpStatus.OK) {
       return res.status(status).json(resData);
@@ -206,7 +217,7 @@ async function submitPenRequest(req, res) {
 
     req.session.penRequest = resData.penRequest;
 
-    sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeCode);
+    sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeLabel);
 
     return res.status(status).json(resData);
   } catch(e) {
@@ -223,6 +234,12 @@ async function postComment(req, res) {
     if(!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'No access token'
+      });
+    }
+
+    if(req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
+      return res.status(HttpStatus.CONFLICT).json({
+        message: 'Post comment not allowed'
       });
     }
 
@@ -486,8 +503,14 @@ async function resendVerificationEmail(req, res) {
       });
     }
 
+    if(req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.DRAFT) {
+      return res.status(HttpStatus.CONFLICT).json({
+        message: 'Resend email not allowed'
+      });
+    }
+
     const [status, data] = await sendVerificationEmail(accessToken, req.session.penRequest.email, req.session.penRequest.penRequestID, 
-      req.session.digitalIdentityData.identityTypeCode);
+      req.session.digitalIdentityData.identityTypeLabel);
 
     return res.status(status).json(data);
   } catch(e) {
@@ -498,6 +521,32 @@ async function resendVerificationEmail(req, res) {
   }
 }
 
+async function uploadFile(req, res) {
+  try{
+    const accessToken = getAccessToken(req);
+    if(!accessToken) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        message: 'No access token'
+      });
+    }
+
+    if(req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
+      return res.status(HttpStatus.CONFLICT).json({
+        message: 'Upload file not allowed'
+      });
+    }
+
+    const url = `${config.get('penRequest:apiEndpoint')}/${req.params.id}/documents`;
+
+    const [status, data] = await postData(accessToken, req.body, url);
+    return res.status(status).json(data);
+  } catch(e) {
+    log.error('postComment Error', e);
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Post comment error'
+    });
+  }
+}
 
 async function getDocument(token, penRequestID, documentID, includeDocData = 'Y') {
   let [status, data] = await getData(token, `${config.get('penRequest:apiEndpoint')}/${penRequestID}/documents/${documentID}?includeDocData=${includeDocData}`);
@@ -522,9 +571,9 @@ async function deleteDocument(req, res) {
     }
 
     if(resData.createDate <= req.session.penRequest.statusUpdateDate || 
-      req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED ) {
+      req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
       return res.status(HttpStatus.CONFLICT).json({
-        message: 'Delete not allowed'
+        message: 'Delete file not allowed'
       });
     }
 
@@ -577,5 +626,6 @@ module.exports = {
   resendVerificationEmail,
   getPenRequest,
   deleteDocument,
-  downloadFile
+  downloadFile,
+  uploadFile
 };

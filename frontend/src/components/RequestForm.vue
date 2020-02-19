@@ -80,7 +80,7 @@
                     </v-menu>
                   </v-col>
                 <v-col>
-                  <v-select id='gender' color="#003366" :readonly="serviceCardBool" v-model="genderLabel" required :rules="requiredRules" outlined :items="genders" label="Gender"></v-select>
+                  <v-select id='gender' color="#003366" :readonly="serviceCardBool" v-model="genderLabel" required :rules="requiredRules" outlined :items="genderLabels" label="Gender"></v-select>
                 </v-col>
               </v-row>
               <v-row class="bottom_group">
@@ -148,7 +148,7 @@ import { mapGetters, mapMutations } from 'vuex';
 export default {
   data() {
     return {
-      genders: [],
+      genderLabels: [],
       requiredRules: [v => !!v || 'Required'],
       emailRules: [
         v => !!v || 'Required',
@@ -189,6 +189,7 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['userInfo']),
+    ...mapGetters('penRequest', ['genders']),
     dataReady () {
       if(this.userInfo !== null){
         return true;
@@ -207,9 +208,8 @@ export default {
       val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'));
     },
   },
-  async mounted() {
-    this.apiGenderCodes = await this.$store.dispatch('penRequest/getGenderCodes');
-    this.genders = this.apiGenderCodes.map(a => a.label);
+  mounted() {
+    this.genderLabels = this.genders.map(a => a.label);
     //populate form if user is logged in with BCSC
     if(this.userInfo.accountType === 'BCSC'){
       this.userPost.legalLastName = this.userInfo.legalLastName;
@@ -241,7 +241,7 @@ export default {
       this.validate();
       if(this.validForm){
         try{
-          const code = this.apiGenderCodes.filter(it => (it.label === this.genderLabel));
+          const code = this.genders.filter(it => (it.label === this.genderLabel));
           this.userPost.genderCode = code[0].genderCode;
 
           const resData = await this.$store.dispatch('penRequest/postRequest', this.userPost);

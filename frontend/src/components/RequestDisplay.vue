@@ -111,131 +111,7 @@
         </v-row>
         <v-row>
             <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
-                <v-card height="100%" width="99%">
-                    <v-toolbar flat color="#036" class="white--text">
-                        <v-toolbar-title>PEN Request Data you submitted</v-toolbar-title>
-                    </v-toolbar>
-                    <v-row no-gutters class="pt-2 px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2" color="green">Legal Last Name:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.legalLastName }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="pt-2 px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2" color="green">Legal First Names:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.legalFirstName }}</b></p>
-                        </v-col>
-                    </v-row>   
-                    <v-row no-gutters class="pt-2 px-2 pb-8">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2" color="green">Legal Middle Names:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.legalMiddleNames }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Usual Last Name:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.usualLastName }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Usual First Names:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.usualFirstName }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2 pb-8">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Usual Middle Names:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.usualMiddleName }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p>Maiden Name:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p><b>{{ this.request.maidenName }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2" color="green">Past Names:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.pastNames }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Date of Birth:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.dob ? moment(this.request.dob).format('YYYY-MM-DD'):'' }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p>Gender:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p><b>{{ this.request.genderCode }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2" color="green">Current BC School:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.currentSchool }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Last BC School:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.lastBCSchool }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p>School Student #:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p><b>{{ this.request.lastBCSchoolStudentNumber }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-2">Email:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-2"><b>{{ this.request.email }}</b></p>
-                        </v-col>
-                    </v-row>
-                    <v-row no-gutters class="pb-2 px-2">
-                        <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-                            <p class="mb-0">ID Type:</p>
-                        </v-col>
-                        <v-col cols="12" xl="6" lg="6" md="6" sm="6">
-                            <p class="mb-0"><b>{{ this.request.dataSourceCode }}</b></p>
-                        </v-col>
-                    </v-row>
-                </v-card>
+                <RequestCard> </RequestCard>
             </v-col>
             <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
                 <v-card height="100%" width="100%">
@@ -248,23 +124,7 @@
         </v-row>
         <v-row>
             <v-col col="12" class="px-0 py-3">
-                <v-card>
-                    <v-toolbar flat color="#036" class="white--text">
-                        <v-toolbar-title>Documents</v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="this.dialog = true" v-if="this.status === this.requestStatuses.RETURNED">
-                            Upload Document
-                        </v-btn>
-                    </v-toolbar>
-                    <v-data-table
-                        :headers="headers"
-                        :items="documents"
-                        sort-by="['createDate']"
-                        :items-per-page="15"
-                        :loading="loadingDocuments"
-                        class="fill-height">
-                    </v-data-table>
-                </v-card>
+                <DocumentList :editable="this.status === this.requestStatuses.RETURNED"></DocumentList>
             </v-col>
         </v-row>
         <v-card height="100%" width="100%" elevation=0 v-if="this.status === this.requestStatuses.RETURNED">
@@ -272,17 +132,6 @@
             <v-btn color="#38598a" dark class="ml-2 text-none" to="/">Submit</v-btn>
           </v-row>
         </v-card>
-
-        <v-dialog
-          v-model="dialog"
-          cols="12" xl="6" lg="6" md="6"
-        >
-          <DocumentUpload 
-            :penRequestID="this.request.penRequestID"
-            @close:form="() => dialog = false"
-            @uploaded="addDocument">
-          </DocumentUpload>
-        </v-dialog>
     <!-- </v-col> -->
   </v-card>
 </template>
@@ -292,27 +141,19 @@ import { mapGetters } from 'vuex';
 import { PenRequestStatuses } from '@/utils/constants';
 import moment from 'moment';
 import ApiService from '@/common/apiService';
-import { humanFileSize } from '@/utils/file';
 import Chat from './Chat';
-import DocumentUpload from './DocumentUpload';
+import DocumentList from './DocumentList';
+import RequestCard from './RequestCard';
 
 export default {
   name: 'requestDisplay',
   components: {
     Chat,
-    DocumentUpload
+    DocumentList,
+    RequestCard
   },
   data() {
     return {
-      dialog: false,
-      headers: [
-        { text: 'Type', value: 'documentTypeCode',  },
-        { text: 'File Name', value: 'fileName' },
-        { text: 'Upload Date/time', value: 'createDate' },
-        { text: 'Size', value: 'fileSize' },
-      ],
-      documents: [],
-      loadingDocuments: true,
       participants: [],
       messages: [],
 
@@ -343,14 +184,6 @@ export default {
     }
   },
   mounted() {
-    ApiService.getDocumentList(this.request.penRequestID).then(response => {
-      this.documents = response.data;
-      this.documents.map(this.humanDocument);
-    }).catch(error => {
-      console.log(error);
-      this.setLoadingErrorAlert();
-    }).finally(() => this.loadingDocuments = false);
-
     ApiService.getCommentList(this.request.penRequestID).then(response => {
       this.participants = response.data.participants;
       this.messages = response.data.messages;
@@ -361,14 +194,6 @@ export default {
   },
   methods: {
     moment,
-    humanDocument(document) {
-      document.fileSize = humanFileSize(document.fileSize);
-      document.createDate = new Date().toISOString().replace(/T/, ', ').replace(/\..+/, '');
-      return document;
-    },
-    addDocument(document) {
-      this.documents.push(this.humanDocument(document));
-    },
     setSuccessAlert() {
       this.alertMessage = 'Your verification email has been sent successfully.';
       this.alertType = 'success';
@@ -380,7 +205,7 @@ export default {
       this.alert = true;
     },
     setLoadingErrorAlert() {
-      this.setSuccessAlert('Sorry, an unexpected error seems to have occured. You can refresh the page later.');
+      this.setErrorAlert('Sorry, an unexpected error seems to have occured. You can refresh the page later.');
     },
     resendVerificationEmail() {
       ApiService.resendVerificationEmail(this.request.penRequestID).then(() => {
