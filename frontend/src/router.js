@@ -6,6 +6,7 @@ import Home from '@/components/Home.vue';
 //import store from '@/store/index.js';
 import RequestPage from '@/components/RequestPage.vue';
 import Verification from '@/components/Verification.vue';
+import ErrorPage from '@/components/ErrorPage.vue';
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,11 @@ const router = new VueRouter({
       path: '/verification/:status',
       name: 'verification',
       component: Verification
+    },
+    {
+      path: '/error',
+      name: 'error',
+      component: ErrorPage
     },
     /*
     {
