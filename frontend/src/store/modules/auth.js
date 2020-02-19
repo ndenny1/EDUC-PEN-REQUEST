@@ -89,7 +89,7 @@ export default {
         // userInf.penRequest.penRequestStatusCode = 'DRAFT';
         // userInf.penRequest.statusUpdateDate = '2020-02-05T22:23:18.000+0000';
 
-        userInf.penRequest.penRequestStatusCode = 'INITREV';
+        // userInf.penRequest.penRequestStatusCode = 'INITREV';
 
         // userInf.penRequest.penRequestStatusCode = 'RETURNED';
 
