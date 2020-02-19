@@ -14,7 +14,11 @@
                 Error Details
               </v-expansion-panel-header>
               <v-expansion-panel-content class="detail-text">
-               {{ errorMessage.split('_').join(' ') }}
+                <v-icon v-if="errorMessage.includes('404')">$search</v-icon>
+                <v-icon v-if="errorMessage.includes('500')">$error</v-icon>
+                <v-icon v-if="errorMessage.includes('401')">$lock</v-icon>
+                &nbsp;&nbsp;
+                {{ errorMessage.split('_').join(' ') }}
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
