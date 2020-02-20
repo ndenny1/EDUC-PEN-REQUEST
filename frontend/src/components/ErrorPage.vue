@@ -1,12 +1,13 @@
 <template>
   <v-container class="blue-back" fluid>
       <v-row align="center" justify="center">
+        <v-col xs="4" sm="4" md="4" lg="4" xl="4">
         <v-card class="error-card">
           <v-card-title class="gov-header">
             <h4 id="error_text">Error</h4>
           </v-card-title>
           <v-card-text id="error_message">
-            Uh-oh, something went wrong! Try contatcting support at <a href="mailto:John.Cox@gov.bc.ca?subject=GetMyPEN Support">John.Cox@gov.bc.ca</a>
+            Uh-oh, something went wrong! Try contacting support at <a href="mailto:John.Cox@gov.bc.ca?subject=GetMyPEN Support">John.Cox@gov.bc.ca</a>
           </v-card-text>
           <v-expansion-panels>
             <v-expansion-panel>
@@ -23,6 +24,7 @@
             </v-expansion-panel>
           </v-expansion-panels>
       </v-card>
+        </v-col>
     </v-row>
   </v-container>
 </template>

@@ -7,7 +7,7 @@
                     <p class="mb-2">Status of your request:</p>
                 </v-col>
                 <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p class="mb-2"><b>{{statusLabel}}</b></p>
+                    <p class="ml-2 mb-2"><strong>{{statusLabel}}</strong></p>
                 </v-col>
             </v-row>
             <v-row no-gutters>
@@ -15,7 +15,7 @@
                     <p class="mb-2">Status was last updated:</p>
                 </v-col>
                 <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p class="mb-2"><b>{{ request.statusUpdateDate ? moment(request.statusUpdateDate).fromNow():'' }}</b>, at {{ request.statusUpdateDate ? moment(request.statusUpdateDate).format('YYYY-MM-DD LT'):'' }}</p>
+                    <p class="ml-2 mb-2"><strong>{{ request.statusUpdateDate ? moment(request.statusUpdateDate).fromNow():'' }}</strong>, at {{ request.statusUpdateDate ? moment(request.statusUpdateDate).format('YYYY-MM-DD LT'):'' }}</p>
                 </v-col>
             </v-row>
             <v-row no-gutters>
@@ -23,7 +23,7 @@
                     <p>Request was first Submitted:</p>
                 </v-col>
                 <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p><b>{{ request.initialSubmitDate ? moment(request.initialSubmitDate).fromNow():'' }}</b> {{ request.initialSubmitDate ? ', at ' + moment(request.initialSubmitDate).format('YYYY-MM-DD LT'):'' }}</p>
+                    <p class="ml-2 mb-2"><strong>{{ request.initialSubmitDate ? moment(request.initialSubmitDate).fromNow():'' }}</strong> {{ request.initialSubmitDate ? ', at ' + moment(request.initialSubmitDate).format('YYYY-MM-DD LT'):'' }}</p>
                 </v-col>
             </v-row>
         </v-card>
@@ -36,7 +36,7 @@
       </v-card>
     </v-col>
     <v-col xl="4" lg="4" md="4" sm="4" class="pa-0 align-self-start" v-else-if="status === requestStatuses.DRAFT">
-      <v-card height="100%" width="100%" elevation=0>
+      <v-card height="100%" width="100%" elevation=0 min-width="30vw">
         <v-row no-gutters justify="end" class="pb-5">
           <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="resendVerificationEmail">Resend Verification Email</v-btn>
         </v-row>
