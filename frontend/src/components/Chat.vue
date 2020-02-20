@@ -76,7 +76,6 @@ export default {
       //   content: message,
       //   timestamp: new Date()
       // };
-      console.log(message);
       ApiService.postComment(this.request.penRequestID, message)
         .then(() => {
           this.messages.push(message);
