@@ -54,9 +54,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog
+    <v-dialog  max-width="30rem" max-height="50rem"
       v-model="dialog"
-      cols="12" xl="6" lg="6" md="6"
+      xl="2" lg="2" md="2" xs="2" sm="2"
     >
       <DocumentUpload 
         :penRequestID="request.penRequestID"

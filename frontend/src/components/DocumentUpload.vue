@@ -195,8 +195,10 @@ export default {
 
 <style scoped>
 .document-upload{
-  /* margin: 20px 0px; */
-  padding: 20px;
+  padding: 1rem;
+  max-width: 50rem;
+  min-width: 10rem;
+  ;
 }
 
 .v-dialog > .v-card > .v-card__text {

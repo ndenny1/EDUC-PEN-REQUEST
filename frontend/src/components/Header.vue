@@ -131,6 +131,9 @@ export default {
       max-height: 100px !important;
       padding-right: inherit;
     }
+    .display-name{
+      display: none;
+    }
   }
   .toolbar_header {
     background-color: rgb(0, 51, 102) !important;

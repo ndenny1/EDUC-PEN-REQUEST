@@ -51,7 +51,6 @@
                       :disabled="serviceCardBool"
                       transition="scale-transition"
                       offset-y
-                      full-width
                       min-width="290px"
                     >
                           <template v-slot:activator="{ on }">
@@ -296,7 +295,14 @@ export default {
 .bottom_group{
   padding-bottom: 15px;
 }
-
+@media screen and (max-width: 300px) {
+  .mainCard{
+    margin-top: .1vh;
+    padding-top: 10px;
+    width: 100%;
+    margin-bottom: 8rem;
+  }
+}
 @media screen and (min-width: 301px) and (max-width: 600px) {
   .mainCard{
     margin-top: .1vh;
