@@ -101,7 +101,7 @@
     </v-row>
     <v-row no-gutters class="px-2">
       <v-col cols="12" xl="5" lg="5" md="5" sm="5">
-        <p>School Student #:</p>
+        <p>School Student ID:</p>
       </v-col>
       <v-col cols="12" xl="6" lg="6" md="6" sm="6">
         <p><b>{{ request.lastBCSchoolStudentNumber }}</b></p>

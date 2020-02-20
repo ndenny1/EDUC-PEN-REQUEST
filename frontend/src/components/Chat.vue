@@ -14,27 +14,12 @@
 <script>
 import comments from './Comment.vue';
 import ApiService from '@/common/apiService';
+
 export default {
   components: {
     comments
   },
   props: {
-    myself: {
-      type: Object,
-      required: true
-    },
-    participants: {
-      type: Array,
-      required: true
-    },
-    messages: {
-      type: Array,
-      required: true
-    },
-    penRequestID: {
-      type: String,
-      required: true
-    },
     hideInput: {
       type: Boolean,
       default: false
@@ -69,9 +54,23 @@ export default {
       ]
     };
   },
-  mounted() {
-    //console.log(this.messages);
-    // console.log(this.myself);
+  computed: {
+    ...mapGetters('auth', ['userInfo']),
+    request() {
+      return this.userInfo.penRequest;
+    },
+    myself() {
+      return ({name: this.userInfo.displayName, id: '1'});
+    },
+  },
+  created() {
+    ApiService.getCommentList(this.request.penRequestID).then(response => {
+      this.participants = response.data.participants;
+      this.messages = response.data.messages;
+    }).catch(error => {
+      console.log(error);
+      this.alert = true;
+    });    
   },
   methods: {
     /*onType: function (event) {

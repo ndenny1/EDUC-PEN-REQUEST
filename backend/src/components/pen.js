@@ -216,6 +216,7 @@ async function submitPenRequest(req, res) {
     }
 
     req.session.penRequest = resData.penRequest;
+    req.session.save();
 
     sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeLabel);
 

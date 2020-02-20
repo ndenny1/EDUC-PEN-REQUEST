@@ -107,6 +107,16 @@ export default {
     }
   },
 
+  async getPenRequestStatusCodes() {
+    try{
+      const response = await apiAxios.get(ApiRoutes.PEN_REQUEST_STATUS_CODES);
+      return response;
+    } catch(e) {
+      console.log(`Failed to get from Nodejs getPenRequestStatusCodes API - ${e}`);
+      throw e;
+    }
+  },
+
   async getDocumentTypeCodes() {
     try{
       const response = await apiAxios.get(ApiRoutes.DOCUMENT_TYPE_CODES);

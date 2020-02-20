@@ -120,7 +120,7 @@
        </v-form>
        <v-dialog
         v-model="dialog"
-        width="500"
+        width="1vw"
       >
         <v-card>
   
@@ -191,16 +191,12 @@ export default {
     ...mapGetters('auth', ['userInfo']),
     ...mapGetters('penRequest', ['genders']),
     dataReady () {
-      if(this.userInfo !== null){
-        return true;
-      }
-      return false;
+      return this.userInfo !== undefined;
+
     },
     serviceCardBool () {
-      if(this.dataReady && this.userInfo.accountType === 'BCSC'){
-        return true;
-      }
-      return false;
+      return this.dataReady && this.userInfo.accountType === 'BCSC';
+
     }
   },
   watch: {
@@ -278,21 +274,19 @@ export default {
 
 <style scoped>
 .mainCard{
-    margin: 20px 0px;
+    margin: 20px 0;
     padding:10px;
-    max-width: 1000px;
-    min-width: 500px;
-    width: 65%;
+    width: 100%;
 }
 .v-dialog > .v-card > .v-card__text {
   padding: 24px 24px 20px;
 }
 .noPadding{
-    padding-top: 0px;
-    margin-top: 0px;
+    padding-top: 0;
+    margin-top: 0;
 }
 .col{
-  padding: 0px 10px;
+  padding: 0 10px;
 }
 
 .top_group{
@@ -301,5 +295,22 @@ export default {
 
 .bottom_group{
   padding-bottom: 15px;
+}
+
+@media screen and (min-width: 301px) and (max-width: 600px) {
+  .mainCard{
+    margin-top: .1vh;
+    padding-top: 10px;
+    width: 100%;
+    margin-bottom: 7rem;
+  }
+}
+@media screen and (min-width: 601px) and (max-width: 900px) {
+  .mainCard{
+    margin-top: .1vh;
+    padding-top: 10px;
+    width: 100%;
+    margin-bottom: 7rem;
+  }
 }
 </style>
