@@ -1,39 +1,25 @@
 <template>
   <v-card height="100%" width="100%">
-    <v-toolbar flat color="#036" class="white--text">
-      <v-toolbar-title>Discussion with PEN Administrator</v-toolbar-title>
-    </v-toolbar>
-    <div id="chat-box" :class="{hide: hideInput}">
-      <Chat
-        :participants="participants"
-        :myself="myself"
-        :messages="messages"
-        :on-message-submit="onMessageSubmit"
-        :placeholder="placeholder"
-        :colors="colors"
-        :border-style="borderStyle"
-        :hide-close-button="hideCloseButton"
-        :close-button-icon-size="closeButtonIconSize"
-        :on-close="onClose"
-        :submit-icon-size="submitIconSize"
-        :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
-        :async-mode="asyncMode"
-        :scroll-bottom="scrollBottom"
-        :display-header="displayHeader">
-      </Chat>
-    </div>
+    <div id="comments-outer" class="comments-outside">
+      <comments 
+          :comments_wrapper_classes="['custom-scrollbar', 'comments-wrapper']"
+          :myself="myself"
+          :participants="participants"
+          :messages="messages"
+          :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
+          @submit-comment="submitComment"
+      ></comments>
+  </div>
   </v-card>
 </template>
 <script>
-import { mapGetters } from 'vuex';
-import { Chat } from 'vue-quick-chat';
-import 'vue-quick-chat/dist/vue-quick-chat.css';
-//import { Routes } from '@/utils/constants';
+import comments from './Comment.vue';
 import ApiService from '@/common/apiService';
+import {mapGetters} from 'vuex'; 
 
 export default {
   components: {
-    Chat
+    comments
   },
   props: {
     hideInput: {
@@ -45,45 +31,7 @@ export default {
     return {
       participants: [],
       messages: [],
-
-      visible: true,
-      placeholder: 'send your message',
-      colors: {
-        header: {
-          bg: '#38598a',
-          text: '#fff'
-        },
-        message: {
-          myself: {
-            bg: '#fff',
-            text: '#38598a'
-          },
-          others: {
-            bg: '#38598a',
-            text: '#fff'
-          },
-          messagesDisplay: {
-            bg: '#fafafa'
-          }
-        },
-        submitIcon: '#036'
-      },
-      borderStyle: {
-        topLeft: '10px',
-        topRight: '10px',
-        bottomLeft: '10px',
-        bottomRight: '10px',
-      },
-      hideCloseButton: true,
-      submitIconSize: '30px',
-      closeButtonIconSize: '20px',
-      asyncMode: false,
-      toLoad: [],
-      scrollBottom: {
-        messageSent: true,
-        messageReceived: true
-      },
-      displayHeader:false
+      toLoad: []
     };
   },
   computed: {
@@ -99,10 +47,17 @@ export default {
     ApiService.getCommentList(this.request.penRequestID).then(response => {
       this.participants = response.data.participants;
       this.messages = response.data.messages;
+      this.messages.forEach(element => {
+        const dateObj = new Date(element.timestamp.year, element.timestamp.month - 1, element.timestamp.day, element.timestamp.hour, element.timestamp.minute, element.timestamp.second);
+        element.timestamp = dateObj;
+      });
+      this.messages.sort(function(a,b){
+        return a.timestamp - b.timestamp;
+      });
     }).catch(error => {
       console.log(error);
       this.alert = true;
-    });    
+    });
   },
   methods: {
     /*onType: function (event) {
@@ -116,7 +71,12 @@ export default {
         this.toLoad = [];
       }, 1000);
     },
-    onMessageSubmit: function (message) {
+    submitComment: function (message) {
+      // const messageObject = {
+      //   content: message,
+      //   timestamp: new Date()
+      // };
+      console.log(message);
       ApiService.postComment(this.request.penRequestID, message)
         .then(() => {
           this.messages.push(message);
@@ -133,13 +93,68 @@ export default {
 </script>
 
 <style scoped>
-  .hide /deep/ .container-message-manager {
-    display: none;
-  }
+a {
+  text-decoration: none;
+}
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ececec;
+  margin: 1em;
+  padding: 0;
+}
+.comments-outside {
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  margin-top: 0p;
+  max-width: 100%;
+  height:100%;
+  width: 100%;
+  position: relative;
+  overflow-y: auto;
 
-  #chat-box {
-    height: 90%;
-    min-height: 425px;
-    padding-bottom: 8px;
-  }
+}
+.comments-header {
+  background-color: #C8C8C8;
+  padding: 1rem;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  color: #333;
+  min-height: 80px;
+  font-size: 2rem;
+}
+.comments-header .comments-stats span {
+  margin-left: 1rem;
+}
+.post-owner {
+  display: flex;
+  align-items: center;
+}
+
+.post-owner .username > a {
+  color: #333;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -moz-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #fff;
+}
+.custom-scrollbar::-webkit-scrollbar
+{
+    width: 0.8rem;
+    background-color: #fff;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb
+{
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    -moz-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+}
 </style>
