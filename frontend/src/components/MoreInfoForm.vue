@@ -66,7 +66,7 @@
             <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
                 <RequestCard></RequestCard>
             </v-col>
-            <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
+            <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3 max-height">
                 <Chat :hideInput="this.status !== this.requestStatuses.RETURNED"></Chat>
             </v-col>
         </v-row>
@@ -190,4 +190,10 @@ export default {
   margin: 20px 0px;
   padding: 40px;
 }
+.max-height{
+  max-height: 100%;
+}
+/* .relative{
+  position: relative;
+} */
 </style>

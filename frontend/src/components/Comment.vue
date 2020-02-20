@@ -5,30 +5,33 @@
                 v-for="comment in messages"
                 :comment="comment"
                 :myself="myself"
+                :participants="participants"
                 :key="comment.id"
             ></singleComment>
         </div>
-        <hr>
-        <div class="reply">
-            <div class="avatar">
-                <v-avatar color="#003366">
-                   <span class="white--text headline">{{ myself.name[0] }}</span>
-                </v-avatar>
+        <div class="bottomBar">
+            <hr>
+            <div class="reply">
+                <div class="avatar">
+                    <v-avatar color="#003366">
+                    <span class="white--text headline">{{ myself.name[0] }}</span>
+                    </v-avatar>
+                </div>
+                <input 
+                    type="text" 
+                    v-model.trim="reply" 
+                    class="reply--text" 
+                    placeholder="Leave a comment..."
+                    maxlength="250"
+                    required
+                    @keyup.enter="submitComment"
+                />
+                <button 
+                    class="reply--button" 
+                    @click.prevent="submitComment">
+                    <i class="fa fa-paper-plane"></i> Send
+                </button>
             </div>
-            <input 
-                type="text" 
-                v-model.trim="reply" 
-                class="reply--text" 
-                placeholder="Leave a comment..."
-                maxlength="250"
-                required
-                @keyup.enter="submitComment"
-            />
-            <button 
-                class="reply--button" 
-                @click.prevent="submitComment">
-                <i class="fa fa-paper-plane"></i> Send
-            </button>
         </div>
     </div>
 </template>
@@ -37,7 +40,7 @@
 import singleComment from './Single-comment.vue';
 export default {
   mounted() {
-      console.log(this.messages);
+
   },
   components: {
     singleComment
@@ -50,27 +53,37 @@ export default {
   methods: {
     //Tell the parent component(main app) that we have a new comment
     submitComment: function() {
-      if(this.reply != '') {
-        this.$emit('submit-comment', this.reply);
+      if(this.reply.comment != '') {
+        const timestamp = new Date();
+        const messageToSend = {
+            timestamp: timestamp,
+            content: this.reply,
+            myself: true,
+            participantId: 1
+        };
+        this.$emit('submit-comment', messageToSend);
         this.reply = '';
       }
     }
   },
   //What the component expects as parameters
-  props: ['comments', 'current_user', 'comments_wrapper_classes', 'myself', 'messages']
+  props: ['comments_wrapper_classes', 'myself', 'messages', 'participants']
 };
 </script>
 
 <style scoped>
 .comments {
-    margin-top: 20px;
-    padding: 20px;
-    padding-top: 0;
+    max-height: 100%;
+    height: 100%;
+    width: 100%;
+    bottom: 0;
+    position: relative
 }
 .comments-wrapper {
-
     overflow-y: auto;
-    padding-right: 10px;
+    padding: 1rem;
+    padding-bottom: 0;
+    max-height: 35rem
 }
 .custom-scrollbar::-webkit-scrollbar-track
 {
@@ -100,20 +113,16 @@ export default {
     align-items: center;
     background-color: #EBEBEB;
     border-radius: 30px;
-    padding: 5px 10px;
+    margin: 1rem;
+    padding: 0.5rem;
     overflow: hidden;
 }
 .reply .avatar {
     position: absolute;
 }
-.reply .avatar > img {
-    width: 40px;
-    height: 40px;
-    border-radius: 100%;
-}
 .reply .reply--text {
     min-height: 40px;
-    padding: 10px 10px 10px 55px;
+    padding: 0.7rem 0.7rem 0.7rem 4rem;
     margin-right: 10px;
     border: 0;
     color: #333;
@@ -123,10 +132,10 @@ export default {
     box-shadow: none;
 }
 .reply input.reply--text:valid {
-    margin-right: 71px;
+    margin-right: 4rem;
 }
 .reply input.reply--text:valid + .reply--button {
-    right: 10px;
+    right: 1rem;
 }
 .reply .reply--button {
     position: absolute;
@@ -144,7 +153,7 @@ export default {
     -ms-user-select: none;
     user-select: none;
     padding: 0.375rem 0.75rem;
-    font-size: 15px;
+    font-size: 1rem;
     line-height: 1.5;
     border-radius: 30px;
     transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out, border-color 0.25s ease-in-out, box-shadow 0.25s ease-in-out, right 0.25s ease-in-out;
@@ -159,7 +168,12 @@ export default {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 hr {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 1rem;
 }
+.bottomBar{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
 </style>
