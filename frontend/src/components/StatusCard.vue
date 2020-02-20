@@ -7,7 +7,7 @@
                     <p class="mb-2">Status of your request:</p>
                 </v-col>
                 <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p class="mb-2"><b>{{statusLabel}}</b></p>
+                    <p class="ml-2 mb-2"><strong>{{statusLabel}}</strong></p>
                 </v-col>
             </v-row>
             <v-row no-gutters>
@@ -15,7 +15,7 @@
                     <p class="mb-2">Status was last updated:</p>
                 </v-col>
                 <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p class="mb-2"><b>{{ request.statusUpdateDate ? moment(request.statusUpdateDate).fromNow():'' }}</b>, at {{ request.statusUpdateDate ? moment(request.statusUpdateDate).format('YYYY-MM-DD LT'):'' }}</p>
+                    <p class="ml-2 mb-2"><strong>{{ request.statusUpdateDate ? moment(request.statusUpdateDate).fromNow():'' }}</strong>, at {{ request.statusUpdateDate ? moment(request.statusUpdateDate).format('YYYY-MM-DD LT'):'' }}</p>
                 </v-col>
             </v-row>
             <v-row no-gutters>
@@ -23,7 +23,7 @@
                     <p>Request was first Submitted:</p>
                 </v-col>
                 <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p><b>{{ request.initialSubmitDate ? moment(request.initialSubmitDate).fromNow():'' }}</b> {{ request.initialSubmitDate ? ', at ' + moment(request.initialSubmitDate).format('YYYY-MM-DD LT'):'' }}</p>
+                    <p class="ml-2 mb-2"><strong>{{ request.initialSubmitDate ? moment(request.initialSubmitDate).fromNow():'' }}</strong> {{ request.initialSubmitDate ? ', at ' + moment(request.initialSubmitDate).format('YYYY-MM-DD LT'):'' }}</p>
                 </v-col>
             </v-row>
         </v-card>

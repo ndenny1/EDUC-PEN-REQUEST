@@ -24,7 +24,7 @@
             </v-card>
         </v-row>
         <v-row>
-            <StatusCard></StatusCard>
+            <StatusCard @success-alert="setSuccessAlert" @error-alert="setErrorAlert"></StatusCard>
         </v-row>
         <v-row>
             <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
