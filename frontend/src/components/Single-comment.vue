@@ -1,9 +1,9 @@
 <template>
-    <div class="comment">
+    <div :class="commentObject.color">
           <v-row class="header-row">
-            <v-col class="header-col" md="auto">
-              <v-avatar :color="commentObject.color">
-                  <span class="white--text headline">{{ commentObject.name[0] }}</span>
+            <v-col class="header-col " md="auto">
+              <v-avatar size="48">
+                  <v-icon large>{{ commentObject.icon }}</v-icon>
               </v-avatar>
             </v-col>
             <v-col class="header-col">
@@ -43,7 +43,8 @@ export default {
           name: this.myself.name,
           content: this.comment.content,
           timestamp: readableTime,
-          color: '#003366'
+          color: 'studentGreen',
+          icon: '$info'
         };
       } else {
         let participantName = 'unknown';
@@ -56,7 +57,8 @@ export default {
           name: participantName,
           content: this.comment.content,
           timestamp: readableTime,
-          color: 'red'
+          color: 'adminBlue',
+          icon: '$question'
         };
       }
     }
@@ -116,5 +118,23 @@ export default {
   padding-left: 2rem;
   padding-bottom: 0.5rem;
   padding-top: 0.5rem;
+}
+.studentGreen{
+  background-color: #e2efd9;
+  padding: 0.7rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+  color: #333;
+  border-radius: 30px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+.adminBlue{
+  background-color: #deeaf6;
+  padding: 0.7rem;
+  margin-bottom: 0.4rem;
+  align-items: center;
+  color: #333;
+  border-radius: 30px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 </style>

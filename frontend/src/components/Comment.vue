@@ -13,8 +13,8 @@
             <hr>
             <div class="reply">
                 <div class="avatar">
-                    <v-avatar color="#003366">
-                    <span class="white--text headline">{{ myself.name[0] }}</span>
+                    <v-avatar>
+                         <v-icon large>$info</v-icon>
                     </v-avatar>
                 </div>
                 <input 
@@ -122,8 +122,8 @@ export default {
 }
 .reply .reply--text {
     min-height: 40px;
-    padding: 0.7rem 0.7rem 0.7rem 4rem;
-    margin-right: 10px;
+    padding: 0.7rem 3rem 0.7rem 4rem;
+    margin-right: 2rem;
     border: 0;
     color: #333;
     width: 100%;
