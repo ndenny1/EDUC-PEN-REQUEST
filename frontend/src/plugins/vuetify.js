@@ -22,7 +22,9 @@ export default new Vuetify({
       copy: 'fas fa-copy',
       search: 'fas fa-search',
       error: 'fas fa-exclamation-triangle',
-      lock: 'fas fa-lock'
+      lock: 'fas fa-lock',
+      info: 'fas fa-info-circle fa-10x',
+      question: 'fas fa-question-circle fa-10x'
     }
   }
 });
