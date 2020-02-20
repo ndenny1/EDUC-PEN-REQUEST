@@ -1,33 +1,22 @@
 <template>
-  <div v-if="this.myself.name == null"></div>
-  <div :class="{hide: hideInput}" v-else>
-    <Chat
-      :participants="this.participants"
-      :myself="this.myself"
-      :messages="this.messages"
-      :on-message-submit="onMessageSubmit"
-      :placeholder="placeholder"
-      :colors="colors"
-      :border-style="borderStyle"
-      :hide-close-button="hideCloseButton"
-      :close-button-icon-size="closeButtonIconSize"
-      :on-close="onClose"
-      :submit-icon-size="submitIconSize"
-      :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
-      :async-mode="asyncMode"
-      :scroll-bottom="scrollBottom"
-      :display-header="displayHeader">
-    </Chat>
+    <div class="comments-outside">
+      <comments 
+          :comments_wrapper_classes="['custom-scrollbar', 'comments-wrapper']"
+          :comments="comments"
+          :current_user="current_user"
+          :myself="myself"
+          :messages="messages"
+          @submit-comment="submitComment"
+      ></comments>
   </div>
+
 </template>
 <script>
-import { Chat } from 'vue-quick-chat';
-import 'vue-quick-chat/dist/vue-quick-chat.css';
-//import { Routes } from '@/utils/constants';
+import comments from './Comment.vue';
 import ApiService from '@/common/apiService';
 export default {
   components: {
-    Chat
+    comments
   },
   props: {
     myself: {
@@ -53,47 +42,36 @@ export default {
   },
   data() {
     return {
-      visible: true,
-      placeholder: 'send your message',
-      colors: {
-        header: {
-          bg: '#38598a',
-          text: '#fff'
+      //Info about the owner of the post
+      creator: {
+        user: 'owner',
+        color: 'red'
+      },
+      //Some info about the current user
+      current_user: {
+        user: 'example',
+        color: '#003366'
+      },
+      //Comments that are under the post
+      comments: [
+        {
+          id: 987654321,
+          user: 'owner',
+          color: 'red',
+          text: 'wassup fam'
         },
-        message: {
-          myself: {
-            bg: '#fff',
-            text: '#38598a'
-          },
-          others: {
-            bg: '#38598a',
-            text: '#fff'
-          },
-          messagesDisplay: {
-            bg: '#fafafa'
-          }
+        {
+          id: 123456789,
+          user: 'example',
+          color: '#003366',
+          text: 'lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor',
         },
-        submitIcon: '#036'
-      },
-      borderStyle: {
-        topLeft: '10px',
-        topRight: '10px',
-        bottomLeft: '10px',
-        bottomRight: '10px',
-      },
-      hideCloseButton: true,
-      submitIconSize: '30px',
-      closeButtonIconSize: '20px',
-      asyncMode: false,
-      toLoad: [],
-      scrollBottom: {
-        messageSent: true,
-        messageReceived: true
-      },
-      displayHeader:false
+      ]
     };
   },
   mounted() {
+    //console.log(this.messages);
+    // console.log(this.myself);
   },
   methods: {
     /*onType: function (event) {
@@ -107,8 +85,11 @@ export default {
         this.toLoad = [];
       }, 1000);
     },
-    onMessageSubmit: function (message) {
-      ApiService.postComment(this.penRequestID, message)
+    submitComment: function (message) {
+      const messageObject = {
+        content: message
+      };
+      ApiService.postComment(this.penRequestID, messageObject)
         .then(() => {
           this.messages.push(message);
         })
@@ -124,7 +105,49 @@ export default {
 </script>
 
 <style scoped>
-  .hide /deep/ .container-message-manager {
-    display: none;
-  }
+a {
+  text-decoration: none;
+}
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ececec;
+  margin: 1em 0;
+  padding: 0;
+}
+.comments-outside {
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+  max-width: 600px;
+  padding-top: 0.5em
+}
+.comments-header {
+  background-color: #C8C8C8;
+  padding: 10px;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  color: #333;
+  min-height: 80px;
+  font-size: 20px;
+}
+.comments-header .comments-stats span {
+  margin-left: 10px;
+}
+.post-owner {
+  display: flex;
+  align-items: center;
+}
+.post-owner .avatar > img {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+}
+.post-owner .username {
+  margin-left: 5px;
+}
+.post-owner .username > a {
+  color: #333;
+}
 </style>
