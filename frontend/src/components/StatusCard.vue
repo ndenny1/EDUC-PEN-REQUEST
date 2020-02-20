@@ -36,7 +36,7 @@
       </v-card>
     </v-col>
     <v-col xl="4" lg="4" md="4" sm="4" class="pa-0 align-self-start" v-else-if="status === requestStatuses.DRAFT">
-      <v-card height="100%" width="100%" elevation=0>
+      <v-card height="100%" width="100%" elevation=0 min-width="30vw">
         <v-row no-gutters justify="end" class="pb-5">
           <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="resendVerificationEmail">Resend Verification Email</v-btn>
         </v-row>
