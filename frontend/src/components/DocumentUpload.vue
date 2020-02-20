@@ -71,11 +71,16 @@
 <script>
 import { humanFileSize } from '@/utils/file';
 import ApiService from '@/common/apiService';
+import { sortBy } from 'lodash';
 
 export default {
   props: {
     penRequestID: {
       type: String,
+      required: true
+    },
+    documentTypeCodes: {
+      type: Array,
       required: true
     },
     eager: {
@@ -92,7 +97,6 @@ export default {
       fileInputError: [],
       documentTypeCode: null,
       file: null,
-      documentTypes: [],
       active: false,
 
       alert: false,
@@ -101,12 +105,19 @@ export default {
       
     };
   },
-  mounted() {
-    Promise.all([this.getDocumentTypeCodes(), this.getFileRules()]);
+  created() {
+    this.getFileRules().catch(e => {
+      console.log(e);
+      this.setErrorAlert('Sorry, an unexpected error seems to have occured. You can upload files later.');
+    });
   },
   computed: {
     dataReady () {
       return this.validForm && this.file && !this.active;
+    },
+    documentTypes() {
+      return sortBy(this.documentTypeCodes, ['displayOrder']).map(code => 
+        ({text: code.label, value: code.documentTypeCode}));
     }
   },
   methods: {
@@ -125,8 +136,8 @@ export default {
       this.alertType = 'success';
       this.alert = true;
     },
-    setErrorAlert() {
-      this.alertMessage = 'File upload failure.';
+    setErrorAlert(alertMessage) {
+      this.alertMessage = alertMessage;
       this.alertType = 'error';
       this.alert = true;
     },
@@ -158,7 +169,7 @@ export default {
     },
     handleFileReadErr() {
       this.active = false;
-      this.setErrorAlert();
+      this.setErrorAlert('File upload failure.');
     },
     uploadFile(env) {
       let document = {
@@ -177,12 +188,9 @@ export default {
         this.handleFileReadErr();
       });
     },
-    async getDocumentTypeCodes() {
-      const documentTypeCodes = await this.$store.dispatch('document/getDocumentTypeCodes');
-      this.documentTypes = documentTypeCodes.map(code => ({text: code.label, value: code.documentTypeCode}));
-    },
     async getFileRules() {
-      const fileRequirements = await this.$store.dispatch('document/getFileRequirements');
+      const response = await ApiService.getFileRequirements();
+      const fileRequirements = response.data;
       const maxSize = fileRequirements.maxSize;
       this.fileRules = [
         value => !value || value.size < maxSize || `File size should not be larger than ${humanFileSize(maxSize)}!`,

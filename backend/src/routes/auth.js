@@ -83,8 +83,11 @@ router.post('/refresh', [
   if(!req.user || !req.user.refreshToken){
     res.status(401).json(UnauthorizedRsp);
   } else{
-    await auth.renew(req.user.refreshToken);  //need to update req.user?
+    const result = await auth.renew(req.user.refreshToken);  //need to update req.user?
     if(req.user){
+      req.user.jwt = result.jwt;
+      req.user.refreshToken = result.refreshToken;
+
       var newUiToken = auth.generateUiToken();
       const responseJson = {
         jwtFrontend: newUiToken

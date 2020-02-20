@@ -47,8 +47,7 @@
     <article id="request-display-container" class="top-banner full-height">
         <v-row align="center" justify="center" style="width: 1vw;margin-right: 0;margin-left: 0;margin-bottom: 5rem;">
           <v-col xs="10" sm="10" md="10" lg="10" xl="10">
-            <MoreInfoForm v-if="requireMoreInfo"></MoreInfoForm>
-            <RequestDisplay v-else></RequestDisplay>
+            <RequestDisplay></RequestDisplay>
           </v-col>
         </v-row>
     </article>
@@ -82,8 +81,6 @@ import RequestForm from './RequestForm';
 import LoginCards from './LoginCards';
 import PenDisplay from './PenDisplay';
 import RequestDisplay from './RequestDisplay';
-import MoreInfoForm from './MoreInfoForm';
-import { PenRequestStatuses } from '../utils/constants';
 import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'home',
@@ -94,7 +91,6 @@ export default {
     RequestForm,
     PenDisplay,
     RequestDisplay,
-    MoreInfoForm
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated', 'userInfo', 'isLoading']),
@@ -104,10 +100,6 @@ export default {
     hasPenRequest() {
       return !!this.userInfo && !!this.userInfo.penRequest;
     },
-    requireMoreInfo() {
-      return this.hasPenRequest &&
-            this.userInfo.penRequest.penRequestStatusCode === PenRequestStatuses.RETURNED;
-    }
   },
   methods: {
     ...mapActions('penRequest', ['getGenderCodes'])

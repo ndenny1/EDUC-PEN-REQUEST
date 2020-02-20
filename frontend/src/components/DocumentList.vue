@@ -60,6 +60,7 @@
     >
       <DocumentUpload 
         :penRequestID="request.penRequestID"
+        :documentTypeCodes="documentTypes"
         @close:form="() => dialog = false"
         @uploaded="addDocument">
       </DocumentUpload>
@@ -69,6 +70,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { find } from 'lodash';
 import { humanFileSize } from '@/utils/file';
 import { ApiRoutes } from '@/utils/constants';
 import ApiService from '@/common/apiService';
@@ -90,7 +92,7 @@ export default {
       dialog: false,
       deleteDialog: false,
       headers: [
-        { text: 'Type', value: 'documentTypeCode',  },
+        { text: 'Type', value: 'documentType',  },
         { text: 'File Name', value: 'fileName' },
         { text: 'Upload Date/time', value: 'createDate' },
         { text: 'Size', value: 'fileSize' },
@@ -99,6 +101,7 @@ export default {
       documents: [],
       loadingDocuments: true,
       selectedDocument: null,
+      documentTypes: [],
 
       alert: false,
       alertMessage: null,
@@ -112,8 +115,9 @@ export default {
     },
   },
   created() {
-    ApiService.getDocumentList(this.request.penRequestID).then(response => {
-      this.documents = response.data.map(this.humanDocument);
+    Promise.all([ApiService.getDocumentList(this.request.penRequestID), ApiService.getDocumentTypeCodes()]).then(responses => {
+      this.documentTypes = responses[1].data;
+      this.documents = responses[0].data.map(this.humanDocument);
     }).catch(() => {
       this.setErrorAlert('Sorry, an unexpected error seems to have occured. You can refresh the page later.');
     }).finally(() => this.loadingDocuments = false);
@@ -133,6 +137,8 @@ export default {
       return `${ApiRoutes.PEN_REQUEST}/${penRequestID}/documents/${document.documentID}/download/${document.fileName}`;
     },
     humanDocument(document) {
+      const typeCode = find(this.documentTypes, ['documentTypeCode', document.documentTypeCode]);
+      document.documentType = typeCode && typeCode.label;
       document.fileSize = humanFileSize(document.fileSize);
       document.createDate = document.createDate.replace(/T/, ', ').replace(/\..+/, '');
       document.deleting = false;

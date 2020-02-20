@@ -55,6 +55,7 @@ async function forwardGetReq(req, res, url) {
       });
     }
 
+    log.info('forwardGetReq Url', url);
     const [status, data] = await getData(accessToken, url);
     return res.status(status).json(data);
   } catch (e) {
