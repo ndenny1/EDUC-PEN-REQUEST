@@ -3,7 +3,7 @@
     <!-- pen request form -->
     <article id="request-form-container" class="top-banner full-height">
       <v-row align="center" justify="center">
-        <v-col xs="8" sm="8" md="8" lg="8" xl="8"  offset-xs="2" offset-sm="2" offset-md="2" offset-lg="2" offset-xl="2">
+        <v-col xs="8" sm="8" md="8" lg="8" xl="8">
         <RequestForm></RequestForm>
         </v-col>
       </v-row>

@@ -1,145 +1,248 @@
 <template>
-    <v-card class="mainCard" v-if="dataReady">
-        <v-card-title><h3>{{ appTitle }} Form</h3></v-card-title>
-        <v-card-subtitle>Student Information</v-card-subtitle>
-        <v-form
-          ref="form"
-          v-model="validForm"
-          lazy-validation
-        >
-          <v-card-text class="noPadding">
-              <v-row>
-                  <v-col>
-                    <v-text-field id='legalLastName' :readonly="serviceCardBool" v-model="userPost.legalLastName" color="#003366" outlined :rules="requiredRules" required label="Legal Last Name"></v-text-field>
-                  </v-col>
-              </v-row>
-              <v-row class="bottom_group">
-                  <v-col>
-                    <v-text-field id='legalFirstName' :readonly="serviceCardBool"  v-model="userPost.legalFirstName" color="#003366" hint="Optional (if you have one name, use legal last name box)" outlined label="Legal First Name(s)"></v-text-field>
-                  </v-col>
-                  <v-col>
-                    <v-text-field id='legalMiddleNames' :readonly="serviceCardBool" v-model="userPost.legalMiddleNames" color="#003366" hint="Optional" outlined label="Legal Middle Name(s)"></v-text-field>
-                  </v-col>
-              </v-row>
-              <v-row class="top_group">
-                  <v-col>
-                    <v-text-field id='usualLastName' v-model="userPost.usualLastName" color="#003366" outlined  hint="If different from legal last name" label="Usual Last Name"></v-text-field>
-                  </v-col>
-              </v-row>
-              <v-row class="bottom_group">
-                  <v-col>
-                      <v-text-field id='usualFirstName' v-model="userPost.usualFirstName" color="#003366" outlined  hint="If different from legal first name(s)" label="Usual First Name(s)"></v-text-field>
-                  </v-col>
-                  <v-col>
-                      <v-text-field id='usualMiddleNames' v-model="userPost.usualMiddleName" color="#003366" outlined  hint="If different from legal middle name(s)" label="Usual Middle Name(s)"></v-text-field>
-                  </v-col>
-              </v-row>
-              <v-row class="top_group">
-                  <v-col>
-                      <v-text-field id='maidenName' v-model="userPost.maidenName" color="#003366"  hint="Optional" outlined label="Maiden Name"></v-text-field>
-                  </v-col>
-                  <v-col>
-                      <v-text-field id='pastNames' v-model="userPost.pastNames" color="#003366" hint="Optional"  outlined label="Past Name(s)"></v-text-field>
-                  </v-col>
-              </v-row>
-              <v-row>
-                  <v-col>
-                    <v-menu
-                      ref="menu"
-                      v-model="menu"
-                      :close-on-content-click="false"
-                      :disabled="serviceCardBool"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="290px"
-                    >
-                          <template v-slot:activator="{ on }">
-                            <v-text-field
-                              color="#003366"
-                              outlined
-                              v-model="userPost.dob"
-                              label="Birthdate"
-                              readonly
-                              v-on="on"
-                              id="birthdate"
-                              required
-                              :rules="requiredRules"
-                            ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          id='dob'
-                          color="#003366"
-                          ref="picker"
-                          v-model="userPost.dob"
-                          show-current
-                          :max="new Date().toISOString().substr(0, 10)"
-                          min="1903-01-01"
-                          @change="save"
-                      ></v-date-picker>
-                    </v-menu>
-                  </v-col>
-                <v-col>
-                  <v-select id='gender' color="#003366" :readonly="serviceCardBool" v-model="genderLabel" required :rules="requiredRules" outlined :items="genderLabels" label="Gender"></v-select>
-                </v-col>
-              </v-row>
-              <v-row class="bottom_group">
-                  <v-col>
-                      <v-text-field id='email' :readonly="serviceCardBool" v-model="userPost.email" required :rules="emailRules" color="#003366" outlined label="E-mail Address"></v-text-field>
-                  </v-col>
-              </v-row>
-              <v-row class="top_group">
-                <v-col>
-                  <v-text-field id='lastBCSchool' v-model="userPost.lastBCSchool" color="#003366" hint="Optional" outlined label="Last B.C. School Attended"></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field id='lastBCStudentNumber' v-model="userPost.lastBCSchoolStudentNumber" color="#003366" hint="Optional"  outlined label="School Student ID Number"></v-text-field>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-text-field id='currentSchool' v-model="userPost.currentSchool" color="#003366" hint="Optional" outlined label="Current B.C. School Attending"></v-text-field>
-                </v-col>
-              </v-row>
-          </v-card-text>
+  <v-card class="mainCard" v-if="dataReady">
+    <v-card-title><h3>{{ appTitle }} Form</h3></v-card-title>
+    <v-card-subtitle>Student Information</v-card-subtitle>
 
-        <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
+    <v-card color="#FFECA9" class="pa-3 pb-8 mb-8 mx-3">
+      <h3>Guidance:</h3>
+      <br/>
+      <ul>
+        <li>This form can only be completed by the person whose PEN is being requested.</li>
+        <li>If you are a parent/guardian see here. (do not currently have the URL TBD but this will likely be on journey builder).</li>
+        <li>Enter your legal name exactly as indicated on your Governement Photo ID. </li>
+      </ul>
+    </v-card>
+
+    <v-form
+      ref="form"
+      v-model="validForm"
+      lazy-validation
+    >
+      <v-card-text class="noPadding">
+        <v-row>
+          <v-col>
+            <v-text-field 
+              id='legalLastName' 
+              :readonly="serviceCardBool" 
+              v-model="userPost.legalLastName" 
+              color="#003366" 
+              outlined
+              hint="As shown on current Government Photo ID. Note, If you have ONE name only – enter it in Legal Last Name field and leave Legal First Name blank"
+              label="Legal Last Name"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row class="bottom_group">
+          <v-col>
+            <v-text-field 
+              id='legalFirstName' 
+              :readonly="serviceCardBool"  
+              v-model="userPost.legalFirstName" 
+              color="#003366" 
+              hint="As shown on current Government Photo ID. Note, If you have ONE name only – enter it into the Legal Last Name field and leave Legal First Name blank" 
+              outlined 
+              label="Legal First Name(s) (optional)"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field 
+              id='legalMiddleNames' 
+              :readonly="serviceCardBool" 
+              v-model="userPost.legalMiddleNames" 
+              color="#003366" 
+              hint="As shown on current Government Photo ID" 
+              outlined 
+              label="Legal Middle Name(s) (optional)"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row class="top_group">
+          <v-col>
+            <v-text-field 
+              id='usualLastName' 
+              v-model="userPost.usualLastName" 
+              color="#003366" 
+              outlined  
+              hint="Only if different from Legal Last Name" 
+              label="Usual Last Name (optional)"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row class="bottom_group">
+          <v-col>
+            <v-text-field 
+              id='usualFirstName' 
+              v-model="userPost.usualFirstName" 
+              color="#003366" 
+              outlined  
+              hint="Only if different from Legal First Name" 
+              label="Usual First Name(s) (optional)"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field 
+              id='usualMiddleNames' 
+              v-model="userPost.usualMiddleName" 
+              color="#003366" 
+              outlined  
+              hint="Only if different from Legal Middle Name" 
+              label="Usual Middle Name(s) (optional)"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row class="top_group">
+          <v-col>
+            <v-text-field 
+              id='maidenName' 
+              v-model="userPost.maidenName" 
+              color="#003366"  
+              hint="List all previous Last names used separated with spaces" 
+              outlined 
+              label="Maiden Name (optional)"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field 
+              id='pastNames' 
+              v-model="userPost.pastNames" 
+              color="#003366" 
+              hint="List all previous names used separated with spaces"
+              outlined 
+              label="Past Name(s) (optional)"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              :disabled="serviceCardBool"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  color="#003366"
+                  outlined
+                  v-model="userPost.dob"
+                  label="Birthdate"
+                  readonly
+                  v-on="on"
+                  id="birthdate"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                id='dob'
+                color="#003366"
+                ref="picker"
+                v-model="userPost.dob"
+                show-current
+                :max="new Date().toISOString().substr(0, 10)"
+                min="1903-01-01"
+                @change="save"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col>
+            <v-select 
+              id='gender' 
+              color="#003366" 
+              :readonly="serviceCardBool" 
+              v-model="genderLabel" 
+              outlined 
+              :items="genderLabels"
+              hint="As listed on current Government Photo ID" 
+              label="Gender"
+            ></v-select>
+          </v-col>
+        </v-row>
+        <v-row class="bottom_group">
+          <v-col>
+            <v-text-field 
+              id='email' 
+              :readonly="serviceCardBool" 
+              v-model="userPost.email" 
               color="#003366"
-              class="white--text"
-              id="submit_form"
-              @click="submitRequestForm"
-              :disabled="!validForm"
-            >
+              hint="Valid Email Required"
+              outlined 
+              label="E-mail Address"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row class="top_group">
+          <v-col>
+            <v-text-field 
+              id='lastBCSchool' 
+              v-model="userPost.lastBCSchool" 
+              color="#003366" 
+              hint="Last BC K-12 school or Post Secondary Institute attended" 
+              outlined 
+              label="Last B.C. School Attended (optional)"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field 
+              id='lastBCStudentNumber' 
+              v-model="userPost.lastBCSchoolStudentNumber" 
+              color="#003366" 
+              hint="School Issued Local ID"  
+              outlined 
+              label="School Student ID Number (optional)"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field 
+              id='currentSchool' 
+              v-model="userPost.currentSchool" 
+              color="#003366" 
+              hint="Current BC K-12 school or Post Secondary Institute" 
+              outlined 
+              label="Current B.C. School Attending (optional)"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="#003366"
+          class="white--text"
+          id="submit_form"
+            @click="submitRequestForm"
+            :disabled="!validForm"
+          >
             Submit
-            </v-btn>
+        </v-btn>
+      </v-card-actions>
+    </v-form>
+    <v-dialog
+      v-model="dialog"
+      width="1vw"
+    >
+      <v-card>
+        <v-card-text class="fullPadding">
+          {{ dialogMessage }}
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="closeDialog"
+          >
+            Close
+          </v-btn>
         </v-card-actions>
-       </v-form>
-       <v-dialog
-        v-model="dialog"
-        width="1vw"
-      >
-        <v-card>
-  
-          <v-card-text class="fullPadding">
-            {{ dialogMessage }}
-          </v-card-text>
-  
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-              color="primary"
-              text
-              @click="closeDialog"
-            >
-              Close
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-card>        
+      </v-card>
+    </v-dialog>
+  </v-card>        
 </template>
 
 <script>
