@@ -7,7 +7,7 @@ const log = require('npmlog');
 const lodash = require('lodash');
 const HttpStatus = require('http-status-codes');
 const jsonwebtoken = require('jsonwebtoken');
-
+const localDateTime = require('@js-joda/core').LocalDateTime;
 let identityTypes = null;
 
 
@@ -340,7 +340,7 @@ function beforeUpdatePenRequestAsInitrev(penRequest) {
     return [HttpStatus.CONFLICT, { message: 'Current Email Verification Status: ' + penRequest.emailVerified}];
   }
   
-  penRequest.initialSubmitDate = new Date().toISOString();
+  penRequest.initialSubmitDate = localDateTime.now().toString();
   penRequest.emailVerified = EmailVerificationStatuses.VERIFIED;
 
   return [HttpStatus.OK, penRequest];
@@ -432,7 +432,7 @@ async function updatePenRequestStatus(accessToken, penRequestID, penRequestStatu
 
   let penRequest = data;
   penRequest.penRequestStatusCode = penRequestStatus;
-  penRequest.statusUpdateDate = new Date().toISOString();
+  penRequest.statusUpdateDate = localDateTime.now().toString();
 
   [status, data] = await putData(accessToken, penRequest, config.get('penRequest:apiEndpoint'));
   if(status !== HttpStatus.OK) {
