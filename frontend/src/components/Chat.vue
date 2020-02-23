@@ -47,12 +47,12 @@ export default {
     ApiService.getCommentList(this.request.penRequestID).then(response => {
       this.participants = response.data.participants;
       this.messages = response.data.messages;
-      this.messages.forEach(element => {
+      /*this.messages.forEach(element => {
         const dateObj = new Date(element.timestamp.year, element.timestamp.month - 1, element.timestamp.day, element.timestamp.hour, element.timestamp.minute, element.timestamp.second);
         element.timestamp = dateObj;
-      });
+      });*/
       this.messages.sort(function(a,b){
-        return a.timestamp - b.timestamp;
+        return a.timestamp.compareTo(b.timestamp);
       });
     }).catch(error => {
       console.log(error);
