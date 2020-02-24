@@ -1,18 +1,17 @@
 <template>
     <div :class="commentObject.color">
           <v-row class="header-row">
-            <!-- <v-col class="header-col iconCol" md="auto">
+            <v-col class="header-col " md="auto">
               <v-avatar size="48">
-                  <v-icon :size="iconSize">{{ commentObject.icon }}</v-icon>
+                  <v-icon large>{{ commentObject.icon }}</v-icon>
               </v-avatar>
-            </v-col> -->
+            </v-col>
             <v-col class="header-col">
-              <p class="username" href="#">
-                  <!-- {{ commentObject.name }} on -->
-              <!-- </p>
-              <p class="timestamp"> -->
-                On {{ commentObject.timestamp}},
-                <strong>{{ commentObject.name }}</strong> said:
+              <strong class="username" href="#">
+                  {{ commentObject.name }}
+              </strong>
+              <p class="timestamp">
+                {{ commentObject.timestamp}}
               </p>
             </v-col>
         </v-row>
@@ -29,26 +28,19 @@ export default {
   computed: {
     commentObject() {
       const d = this.comment.timestamp;
-      console.log(d);
+      var weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December'];
       let amPm = 'AM';
-      let hours = d.hour;
-      if(d.hour > 12){
+      let hours = d.getHours();
+      if(d.getHours() > 12){
         amPm = 'PM';
-        hours = d.hour - 12;
+        hours = d.getHours() - 12;
       }
-      // if(d.minute < 10){
-      //   d.minute = "0" + d.minute;
-      // }
 
-      // d.dayOfWeek = d.dayOfWeek.toLower();
-
-
-      // d.month = d.month.pascalCase();
-      d.month = d.month.substring(0, 3);
-      const readableTime = d.month + ' ' + d.day + ', ' + d.year + ' ' + hours + ':' + d.minute + ' ' + amPm;
+      const readableTime = weekdays[d.getDay()] + ' ' +  monthNames[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' ' + hours + ':' + d.getMinutes() + ' ' + amPm;
       if(this.comment.myself){
         return {
-          name: "You",
+          name: this.myself.name,
           content: this.comment.content,
           timestamp: readableTime,
           color: 'studentGreen',
@@ -62,43 +54,38 @@ export default {
           }
         });
         return {
-          name: 'PEN Admin',
+          name: participantName,
           content: this.comment.content,
           timestamp: readableTime,
           color: 'adminBlue',
           icon: '$question'
         };
       }
-    },
-    iconSize() {
-      switch (this.$vuetify.breakpoint.name) {
-          case 'xs': return '30px'
-          case 'sm': return '35px'
-          case 'md': return '37px'
-          case 'lg': return '40px'
-          case 'xl': return '50px'
-        }
     }
   },
   props: ['comment', 'myself', 'participants'],
   mounted() {
 
-  },
-  methods: {
-    toPascal(str){
-      return str.replace(/\w\S*/g, m => m.charAt(0).toUpperCase() + m.substr(1).toLowerCase());
-    }
   }
 };
 </script>
 
 <style scoped>
+.comment {
+    padding: 0.7rem;
+    margin-bottom: 0.7rem;
+    align-items: center;
+    color: #333;
+    background-color: #F2F2F2;
+    border-radius: 30px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
 .comment .avatar {
     align-self: flex-start;
 }
 .comment .avatar > img {
-    width: 3rem;
-    height: 3rem;
+    width: 4rem;
+    height: 4rem;
     border-radius: 100%;
     align-self: start;
 }
@@ -114,8 +101,7 @@ export default {
     color: #333;
 }
 .username{
-  padding-left: 0.5rem;
-  font-size: 0.7rem;
+  font-size: 1rem;
 }
 .timestamp{
   font-size: 0.72rem;
@@ -136,21 +122,19 @@ export default {
 .studentGreen{
   background-color: #e2efd9;
   padding: 0.7rem;
+  margin-bottom: 0.5rem;
   align-items: center;
   color: #333;
-  border-bottom: 1px solid #97888e;
+  border-radius: 30px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 .adminBlue{
   background-color: #deeaf6;
   padding: 0.7rem;
-
+  margin-bottom: 0.4rem;
   align-items: center;
   color: #333;
-  border-bottom: 1px solid #97888e;
+  border-radius: 30px;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-}
-.iconCol{
-  flex-grow: 0
 }
 </style>
