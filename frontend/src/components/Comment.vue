@@ -38,6 +38,7 @@
 
 <script>
 import singleComment from './Single-comment.vue';
+import {LocalDateTime} from '@js-joda/core';
 export default {
   mounted() {
 
@@ -53,13 +54,13 @@ export default {
   methods: {
     //Tell the parent component(main app) that we have a new comment
     submitComment: function() {
-      if(this.reply.comment != '') {
-        const timestamp = new Date();
+      if(this.reply.comment !== '') {
+        const timestamp = LocalDateTime.now().toString();
         const messageToSend = {
-            timestamp: timestamp,
-            content: this.reply,
-            myself: true,
-            participantId: 1
+          timestamp: timestamp,
+          content: this.reply,
+          myself: true,
+          participantId: 1
         };
         this.$emit('submit-comment', messageToSend);
         this.reply = '';

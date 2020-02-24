@@ -7,7 +7,7 @@ const log = require('npmlog');
 const lodash = require('lodash');
 const HttpStatus = require('http-status-codes');
 const jsonwebtoken = require('jsonwebtoken');
-
+const localDateTime = require('@js-joda/core').LocalDateTime;
 let identityTypes = null;
 
 
@@ -162,7 +162,7 @@ async function sendVerificationEmail(accessToken, emailAddress, penRequestId, id
 
   return [status,  {
     message: 'Ok'
-  }]
+  }];
 }
 
 async function postPenRequest(accessToken, req, userInfo) {
@@ -248,7 +248,7 @@ async function postComment(req, res) {
       staffMemberIDIRGUID: null,
       staffMemberName: null,
       commentContent: req.body.content,
-      commentTimestamp: req.body.timestamp
+      commentTimestamp: localDateTime.now().toString()
     };
 
     const [status, data] = await postData(accessToken, commment, url);
@@ -304,20 +304,20 @@ async function getComments(req, res) {
           response.participants.push(participant);
         }
       }
-      let timestamp = new Date(element.commentTimestamp);
+      const retrievedTimestamp = localDateTime.parse(element.commentTimestamp);
 
       response.messages.push({
         content: element.commentContent,
         participantId: (element.staffMemberIDIRGUID ? element.staffMemberIDIRGUID : '1'),
-        myself: participant.id.toUpperCase() == response.myself.id.toUpperCase(),
+        myself: participant.id.toUpperCase() === response.myself.id.toUpperCase(),
         timestamp: {
-          year: timestamp.getFullYear(),
-          month: timestamp.getMonth() + 1,
-          day: timestamp.getDate(),
-          hour: timestamp.getHours(),
-          minute: timestamp.getMinutes(),
-          second: timestamp.getSeconds(),
-          millisecond: timestamp.getMilliseconds()
+          year: retrievedTimestamp.year(),
+          month: retrievedTimestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
+          day: retrievedTimestamp.dayOfMonth(),
+          hour: retrievedTimestamp.hour(),
+          minute: retrievedTimestamp.minute(),
+          second: retrievedTimestamp.second(),
+          millisecond: retrievedTimestamp.nano()
         }
       });
     });
@@ -340,7 +340,7 @@ function beforeUpdatePenRequestAsInitrev(penRequest) {
     return [HttpStatus.CONFLICT, { message: 'Current Email Verification Status: ' + penRequest.emailVerified}];
   }
   
-  penRequest.initialSubmitDate = new Date().toISOString();
+  penRequest.initialSubmitDate = localDateTime.now().toString();
   penRequest.emailVerified = EmailVerificationStatuses.VERIFIED;
 
   return [HttpStatus.OK, penRequest];
@@ -432,7 +432,7 @@ async function updatePenRequestStatus(accessToken, penRequestID, penRequestStatu
 
   let penRequest = data;
   penRequest.penRequestStatusCode = penRequestStatus;
-  penRequest.statusUpdateDate = new Date().toISOString();
+  penRequest.statusUpdateDate = localDateTime.now().toString();
 
   [status, data] = await putData(accessToken, penRequest, config.get('penRequest:apiEndpoint'));
   if(status !== HttpStatus.OK) {
