@@ -17,20 +17,25 @@
                          <v-icon :size="iconSize">$info2</v-icon>
                     </v-avatar>
                 </div> -->
-                <input 
-                    type="text" 
+                <v-textarea
+                    type="text"
+                    rows=1
+                    auto-grow
                     v-model.trim="reply" 
                     class="reply--text" 
                     placeholder="Enter a message and hit the Reply button"
-                    maxlength="250"
+                    maxlength="4000"
                     required
                     @keyup.enter="submitComment"
                 />
-                <button 
+                <v-btn 
+                    :disabled="replyEmpty"
+                    color="#003366"
+                    dark
                     class="reply--button" 
-                    @click.prevent="submitComment">
+                >
                     Reply
-                </button>
+                </v-btn>
             </div>
         </div>
     </div>
@@ -49,6 +54,9 @@ export default {
           case 'lg': return '40px'
           case 'xl': return '50px'
         }
+    },
+    replyEmpty(){
+        return this.reply === '';
     }
   },
   components: {
@@ -126,7 +134,9 @@ export default {
     background-color: #EBEBEB;
     border-radius: 30px;
     margin: 1rem;
-    padding: 0.5rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    width: 90%;
     overflow: hidden;
 }
 .reply .avatar {
@@ -134,8 +144,7 @@ export default {
 }
 .reply .reply--text {
     min-height: 40px;
-    padding: 0.7rem 3rem 0.7rem 0.7rem;
-    margin-right: 2rem;
+    padding: 0.3rem 0.7rem;
     border: 0;
     color: #333;
     width: 100%;
@@ -150,11 +159,9 @@ export default {
     right: 1rem;
 }
 .reply .reply--button {
-    position: absolute;
-    right: -100px;
     border: 1px solid #2a629c;
-    background-color: transparent;
-    color: #2a629c;
+    background-color: #003366;
+    color: #fff;
     display: inline-block;
     font-weight: 400;
     text-align: center;
@@ -173,7 +180,7 @@ export default {
 }
 .reply .reply--button:hover {
     color: #fff;
-    background-color: #2a629c;
+    background-color: #003366;
 }
 .reply .reply--button:focus,
 .reply .reply--button:active {
@@ -185,6 +192,24 @@ hr {
 .bottomBar{
     bottom: 0;
     width: 100%;
+}
+
+.v-text-field{
+    margin-top: 0;
+}
+.v-textarea textarea{
+    padding: 0;
+}
+
+.theme--dark.v-btn.v-btn--disabled{
+    color: #cdbbbb !important;
+}
+
+.v-messages{
+    min-height: 0 !important;
+}
+.v-text-field__details{
+    min-height: 0 !important;
 }
 
 </style>
