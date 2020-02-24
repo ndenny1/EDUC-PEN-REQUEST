@@ -88,6 +88,9 @@ export default {
       return PenRequestStatuses;
     },
   },
+  mounted() {
+    window.scrollTo(0,0);
+  },
   methods: {
     ...mapMutations('auth', ['setPenRequest']),
     setSuccessAlert(alertMessage) {

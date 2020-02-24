@@ -19,12 +19,13 @@ export default {
   },
   methods: {
     ...mapMutations('auth', ['setLoading']),
-    ...mapActions('auth', ['getJwtToken', 'getUserInfo'])
+    ...mapActions('auth', ['getJwtToken', 'getUserInfo']),
+    ...mapActions('penRequest', ['getGenderCodes'])
   },
   async created() {
     this.setLoading(true);
     this.getJwtToken().then(() => 
-      this.getUserInfo()
+      Promise.all([this.getUserInfo(), this.getGenderCodes()])
     ).finally(() => 
       this.setLoading(false)
     );

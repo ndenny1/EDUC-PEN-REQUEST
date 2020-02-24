@@ -101,16 +101,16 @@ export default {
       return !!this.userInfo && !!this.userInfo.penRequest;
     },
   },
-  methods: {
-    ...mapActions('penRequest', ['getGenderCodes'])
-  },
-  watch: {
-    isAuthenticated : function(val) {
-      if(val) {
-        this.getGenderCodes();
-      }
-    }
-  }
+  // methods: {
+  //   ...mapActions('penRequest', ['getGenderCodes'])
+  // },
+  // watch: {
+  //   isAuthenticated : function(val) {
+  //     if(val) {
+  //       this.getGenderCodes();
+  //     }
+  //   }
+  // }
 };
 </script>
 
