@@ -12,16 +12,16 @@
         <div class="bottomBar">
             <hr>
             <div class="reply">
-                <div class="avatar">
+                <!-- <div class="avatar">
                     <v-avatar>
-                         <v-icon large>$info</v-icon>
+                         <v-icon :size="iconSize">$info2</v-icon>
                     </v-avatar>
-                </div>
+                </div> -->
                 <input 
                     type="text" 
                     v-model.trim="reply" 
                     class="reply--text" 
-                    placeholder="Leave a comment..."
+                    placeholder="Enter a message and hit the Reply button"
                     maxlength="250"
                     required
                     @keyup.enter="submitComment"
@@ -29,7 +29,7 @@
                 <button 
                     class="reply--button" 
                     @click.prevent="submitComment">
-                    <i class="fa fa-paper-plane"></i> Send
+                    Reply
                 </button>
             </div>
         </div>
@@ -40,8 +40,16 @@
 import singleComment from './Single-comment.vue';
 import {LocalDateTime} from '@js-joda/core';
 export default {
-  mounted() {
-
+  computed: {
+      iconSize() {
+      switch (this.$vuetify.breakpoint.name) {
+          case 'xs': return '30px'
+          case 'sm': return '35px'
+          case 'md': return '37px'
+          case 'lg': return '40px'
+          case 'xl': return '50px'
+        }
+    }
   },
   components: {
     singleComment
@@ -55,7 +63,10 @@ export default {
     //Tell the parent component(main app) that we have a new comment
     submitComment: function() {
       if(this.reply.comment !== '') {
-        const timestamp = LocalDateTime.now().toString();
+        const timestamp = LocalDateTime.now();
+        // if(timestamp.length > 23){
+        //     timestamp = timestamp.substring(0, 23);
+        // }
         const messageToSend = {
           timestamp: timestamp,
           content: this.reply,
@@ -77,13 +88,13 @@ export default {
     max-height: 100%;
     height: 100%;
     width: 100%;
-    bottom: 0;
     position: relative
 }
 .comments-wrapper {
     overflow-y: auto;
-    padding: 1rem;
+    overflow-x: hidden;
     padding-bottom: 0;
+    margin-bottom: 0;
     max-height: 35rem
 }
 .custom-scrollbar::-webkit-scrollbar-track
@@ -123,7 +134,7 @@ export default {
 }
 .reply .reply--text {
     min-height: 40px;
-    padding: 0.7rem 3rem 0.7rem 4rem;
+    padding: 0.7rem 3rem 0.7rem 0.7rem;
     margin-right: 2rem;
     border: 0;
     color: #333;
@@ -169,10 +180,9 @@ export default {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 hr {
-    margin: 1rem;
+    margin-bottom: 1rem;
 }
 .bottomBar{
-    position: absolute;
     bottom: 0;
     width: 100%;
 }

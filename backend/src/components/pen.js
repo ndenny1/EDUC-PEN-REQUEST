@@ -280,7 +280,7 @@ async function getComments(req, res) {
     if(status !== HttpStatus.OK) {
       return res.status(status).json(apiResData);
     }
-
+    //console.log(apiResData);
     let response = {
       participants: [],
       myself: {
@@ -304,8 +304,16 @@ async function getComments(req, res) {
           response.participants.push(participant);
         }
       }
-      const retrievedTimestamp = localDateTime.parse(element.commentTimestamp);
+      if(element.commentTimestamp.length>23){
+        element.commentTimestamp = element.commentTimestamp.substring(0,23);
+      }
 
+      const retrievedTimestamp = localDateTime.parse(element.commentTimestamp);
+      let minute =  retrievedTimestamp.minute();
+      if(retrievedTimestamp.minute() < 10){
+        minute = "0" + retrievedTimestamp.minute();
+      }
+      console.log(retrievedTimestamp);
       response.messages.push({
         content: element.commentContent,
         participantId: (element.staffMemberIDIRGUID ? element.staffMemberIDIRGUID : '1'),
@@ -315,9 +323,10 @@ async function getComments(req, res) {
           month: retrievedTimestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
           day: retrievedTimestamp.dayOfMonth(),
           hour: retrievedTimestamp.hour(),
-          minute: retrievedTimestamp.minute(),
+          minute: minute,
           second: retrievedTimestamp.second(),
-          millisecond: retrievedTimestamp.nano()
+          millisecond: retrievedTimestamp.nano(),
+          dayOfWeek: retrievedTimestamp.dayOfWeek()
         }
       });
     });
