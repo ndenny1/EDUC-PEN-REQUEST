@@ -7,15 +7,24 @@ export default {
   state: {
     genders: null,
     penRequest: null,
+    isLoading: true,
   },
   getters: {
     genders: state => state.genders,
-    genderInfo: state => genderCode => find(state.genders, ['genderCode', genderCode])
+    genderInfo: state => genderCode => find(state.genders, ['genderCode', genderCode]),
+    penRequest: state => state.penRequest,
+    isLoading: state => state.isLoading,
   },
   mutations: {
     setGenders: (state, genders) => {
       state.genders = genders;
     },
+    setPenRequest: (state, penRequest) => {
+      state.penRequest = penRequest;
+    },
+    setLoading: (state, isLoading) => {
+      state.isLoading = isLoading;
+    }
   },
   actions: {
     async postRequest(_context, info){
@@ -33,6 +42,10 @@ export default {
     async getGenderCodes({commit}) {
       const response = await ApiService.getGenderCodes();
       commit('setGenders', response.data);
+    },
+    async getLatestPenRequest({commit, dispatch}){
+      const userInfoRes = await ApiService.getLatestPenRequest();
+      commit('setUserInfo', userInfoRes.data);
     },
     getPenRequest: (_context, penRequestId) => getData(ApiService.getPenRequest, penRequestId),
   }
