@@ -14,7 +14,7 @@
             <div class="reply">
                 <div class="avatar">
                     <v-avatar>
-                         <v-icon large>$info</v-icon>
+                         <v-icon large>$info2</v-icon>
                     </v-avatar>
                 </div>
                 <input 
