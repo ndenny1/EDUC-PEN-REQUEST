@@ -2,7 +2,7 @@
   <v-container style="padding-bottom: 1vh">
     <v-col xs="8" sm="8" md="8" lg="8" xl="8"  offset-xs="2" offset-sm="2" offset-md="2" offset-lg="2" offset-xl="2">
         <h2 class="gov-header">
-          <v-icon large color="#003366">$info1</v-icon>
+          <v-icon large color="#003366">info</v-icon>
           About PEN Request
         </h2>
         <p class="paragraph">

@@ -51,9 +51,9 @@ export default {
         const dateObj = new Date(element.timestamp.year, element.timestamp.month - 1, element.timestamp.day, element.timestamp.hour, element.timestamp.minute, element.timestamp.second);
         element.timestamp = dateObj;
       });*/
-      // this.messages.sort(function(a,b){
-      //   return a.timestamp.compareTo(b.timestamp);
-      // });
+      this.messages.sort(function(a,b){
+        return a.timestamp.compareTo(b.timestamp);
+      });
     }).catch(error => {
       console.log(error);
       this.alert = true;
@@ -76,23 +76,8 @@ export default {
       //   content: message,
       //   timestamp: new Date()
       // };
-      // this.messages.push(message);
       ApiService.postComment(this.request.penRequestID, message)
         .then(() => {
-          let minute =  message.timestamp.minute();
-          if(message.timestamp.minute() < 10){
-            minute = "0" + message.timestamp.minute();
-          }
-          message.timestamp = {
-          year: message.timestamp.year(),
-          month: message.timestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
-          day: message.timestamp.dayOfMonth(),
-          hour: message.timestamp.hour(),
-          minute: minute,
-          second: message.timestamp.second(),
-          millisecond: message.timestamp.nano(),
-          dayOfWeek: message.timestamp.dayOfWeek()
-        }
           this.messages.push(message);
         })
         .catch(error => {
@@ -125,7 +110,7 @@ hr {
   height:100%;
   width: 100%;
   position: relative;
-  overflow-y: hide;
+  overflow-y: auto;
 
 }
 .comments-header {

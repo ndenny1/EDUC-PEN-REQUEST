@@ -15,7 +15,7 @@ export default new Vuetify({
       login: 'fas fa-user-clock',
       fast: 'fas fa-shipping-fast',
       sign_in: 'fas fa-sign-in-alt',
-      info1: 'fas fa-info-circle',
+      info: 'fas fa-info-circle',
       downArrow: 'fas fa-angle-down',
       upArrow: 'fas fa-angle-up',
       user: 'far fa-user',
@@ -23,7 +23,7 @@ export default new Vuetify({
       search: 'fas fa-search',
       error: 'fas fa-exclamation-triangle',
       lock: 'fas fa-lock',
-      info2: 'fas fa-info-circle fa-10x',
+      info: 'fas fa-info-circle fa-10x',
       question: 'fas fa-question-circle fa-10x'
     }
   }
