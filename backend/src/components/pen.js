@@ -304,8 +304,11 @@ async function getComments(req, res) {
           response.participants.push(participant);
         }
       }
+      if(element.commentTimestamp.length>23){
+        element.commentTimestamp = element.commentTimestamp.substring(0,23);
+      }
       const retrievedTimestamp = localDateTime.parse(element.commentTimestamp);
-
+      console.log(retrievedTimestamp);
       response.messages.push({
         content: element.commentContent,
         participantId: (element.staffMemberIDIRGUID ? element.staffMemberIDIRGUID : '1'),
@@ -317,7 +320,8 @@ async function getComments(req, res) {
           hour: retrievedTimestamp.hour(),
           minute: retrievedTimestamp.minute(),
           second: retrievedTimestamp.second(),
-          millisecond: retrievedTimestamp.nano()
+          millisecond: retrievedTimestamp.nano(),
+          dayOfWeek: retrievedTimestamp.dayOfWeek()
         }
       });
     });

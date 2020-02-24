@@ -51,9 +51,9 @@ export default {
         const dateObj = new Date(element.timestamp.year, element.timestamp.month - 1, element.timestamp.day, element.timestamp.hour, element.timestamp.minute, element.timestamp.second);
         element.timestamp = dateObj;
       });*/
-      this.messages.sort(function(a,b){
-        return a.timestamp.compareTo(b.timestamp);
-      });
+      // this.messages.sort(function(a,b){
+      //   return a.timestamp.compareTo(b.timestamp);
+      // });
     }).catch(error => {
       console.log(error);
       this.alert = true;

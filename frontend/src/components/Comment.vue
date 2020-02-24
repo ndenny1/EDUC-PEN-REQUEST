@@ -56,6 +56,9 @@ export default {
     submitComment: function() {
       if(this.reply.comment !== '') {
         const timestamp = LocalDateTime.now().toString();
+        if(timestamp.length > 23){
+            timestamp = timestamp.substring(0, 23);
+        }
         const messageToSend = {
           timestamp: timestamp,
           content: this.reply,
@@ -77,7 +80,7 @@ export default {
     max-height: 100%;
     height: 100%;
     width: 100%;
-    bottom: 0;
+    padding-bottom: 7rem;
     position: relative
 }
 .comments-wrapper {
@@ -175,6 +178,7 @@ hr {
     position: absolute;
     bottom: 0;
     width: 100%;
+    padding-top: 2rem
 }
 
 </style>

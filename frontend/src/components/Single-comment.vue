@@ -28,16 +28,18 @@ export default {
   computed: {
     commentObject() {
       const d = this.comment.timestamp;
-      var weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June','July', 'August', 'September', 'October', 'November', 'December'];
+      console.log(d);
       let amPm = 'AM';
-      let hours = d.getHours();
-      if(d.getHours() > 12){
+      let hours = d.hour;
+      if(d.hour > 12){
         amPm = 'PM';
-        hours = d.getHours() - 12;
+        hours = d.hour - 12;
+      }
+      if(d.minute < 10){
+        d.minute = "0" + d.minute;
       }
 
-      const readableTime = weekdays[d.getDay()] + ' ' +  monthNames[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() + ' ' + hours + ':' + d.getMinutes() + ' ' + amPm;
+      const readableTime = d.dayOfWeek + ' ' +  d.month + ' ' + d.day + ', ' + d.year + ' ' + hours + ':' + d.minute + ' ' + amPm;
       if(this.comment.myself){
         return {
           name: this.myself.name,
