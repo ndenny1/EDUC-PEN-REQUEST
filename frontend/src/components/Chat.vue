@@ -76,8 +76,23 @@ export default {
       //   content: message,
       //   timestamp: new Date()
       // };
+      // this.messages.push(message);
       ApiService.postComment(this.request.penRequestID, message)
         .then(() => {
+          let minute =  message.timestamp.minute();
+          if(message.timestamp.minute() < 10){
+            minute = "0" + message.timestamp.minute();
+          }
+          message.timestamp = {
+          year: message.timestamp.year(),
+          month: message.timestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
+          day: message.timestamp.dayOfMonth(),
+          hour: message.timestamp.hour(),
+          minute: minute,
+          second: message.timestamp.second(),
+          millisecond: message.timestamp.nano(),
+          dayOfWeek: message.timestamp.dayOfWeek()
+        }
           this.messages.push(message);
         })
         .catch(error => {
@@ -110,7 +125,7 @@ hr {
   height:100%;
   width: 100%;
   position: relative;
-  overflow-y: auto;
+  overflow-y: hide;
 
 }
 .comments-header {
