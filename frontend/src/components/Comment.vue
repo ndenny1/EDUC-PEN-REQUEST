@@ -12,9 +12,9 @@
         <div class="bottomBar">
             <hr>
             <div class="reply">
-                <!-- <div class="avatar">
+                <div class="avatar">
                     <v-avatar>
-                         <v-icon :size="iconSize">$info2</v-icon>
+                         <v-icon large>$info</v-icon>
                     </v-avatar>
                 </div> -->
                 <v-textarea
@@ -71,10 +71,7 @@ export default {
     //Tell the parent component(main app) that we have a new comment
     submitComment: function() {
       if(this.reply.comment !== '') {
-        const timestamp = LocalDateTime.now();
-        // if(timestamp.length > 23){
-        //     timestamp = timestamp.substring(0, 23);
-        // }
+        const timestamp = LocalDateTime.now().toString();
         const messageToSend = {
           timestamp: timestamp,
           content: this.reply,
@@ -96,13 +93,13 @@ export default {
     max-height: 100%;
     height: 100%;
     width: 100%;
+    bottom: 0;
     position: relative
 }
 .comments-wrapper {
     overflow-y: auto;
-    overflow-x: hidden;
+    padding: 1rem;
     padding-bottom: 0;
-    margin-bottom: 0;
     max-height: 35rem
 }
 .custom-scrollbar::-webkit-scrollbar-track
@@ -187,9 +184,10 @@ export default {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 hr {
-    margin-bottom: 1rem;
+    margin: 1rem;
 }
 .bottomBar{
+    position: absolute;
     bottom: 0;
     width: 100%;
 }
