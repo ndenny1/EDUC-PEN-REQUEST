@@ -54,7 +54,7 @@ async function getLatestPenRequest(token, digitalID) {
     data.errorSource = 'getLatestPenRequest';
     return [status, data];
   } else {
-    let penRequest = (status == HttpStatus.NOT_FOUND || data.length == 0) ? null : lodash.maxBy(data, 'statusUpdateDate');
+    let penRequest = (status === HttpStatus.NOT_FOUND || data.length === 0) ? null : lodash.maxBy(data, 'statusUpdateDate');
     if(penRequest) {
       penRequest.digitalID = null;
     }
@@ -81,9 +81,9 @@ async function getUserInfo(req, res) {
   let resData;
 
   if(userInfo._json.accountType === 'BCSC'){
-    let givenArray = (userInfo._json.givenNames).split(" ");
+    let givenArray = (userInfo._json.givenNames).split(' ');
     givenArray.shift();
-    let middleNames = givenArray.join(" ");
+    let middleNames = givenArray.join(' ');
     resData = {
       displayName: userInfo._json.displayName,
       accountType: userInfo._json.accountType,
@@ -112,7 +112,7 @@ async function getUserInfo(req, res) {
 
   const identityType = await getIdentityType(accessToken, data.identityTypeCode);
   if(! identityType) {
-    log.error('getIdentityType Error identityTypeCode', identityTypeCode);
+    log.error('getIdentityType Error identityTypeCode', data.identityTypeCode);
     return [HttpStatus.INTERNAL_SERVER_ERROR, {
       message: 'Wrong identityTypeCode'
     }];
@@ -243,7 +243,7 @@ async function postComment(req, res) {
     }
 
     const url = `${config.get('penRequest:apiEndpoint')}/${req.params.id}/comments`;
-    const commment = {
+    const comment = {
       penRetrievalRequestID: req.params.id,
       staffMemberIDIRGUID: null,
       staffMemberName: null,
@@ -251,7 +251,7 @@ async function postComment(req, res) {
       commentTimestamp: localDateTime.now().toString()
     };
 
-    const [status, data] = await postData(accessToken, commment, url);
+    const [status, data] = await postData(accessToken, comment, url);
     if(status !== HttpStatus.OK) {
       return res.status(status).json(data);
     }
@@ -311,9 +311,8 @@ async function getComments(req, res) {
       const retrievedTimestamp = localDateTime.parse(element.commentTimestamp);
       let minute =  retrievedTimestamp.minute();
       if(retrievedTimestamp.minute() < 10){
-        minute = "0" + retrievedTimestamp.minute();
+        minute = '0' + retrievedTimestamp.minute();
       }
-      console.log(retrievedTimestamp);
       response.messages.push({
         content: element.commentContent,
         participantId: (element.staffMemberIDIRGUID ? element.staffMemberIDIRGUID : '1'),

@@ -42,17 +42,18 @@ import singleComment from './Single-comment.vue';
 import {LocalDateTime} from '@js-joda/core';
 export default {
   computed: {
-      iconSize() {
+    iconSize() {
       switch (this.$vuetify.breakpoint.name) {
-          case 'xs': return '30px'
-          case 'sm': return '35px'
-          case 'md': return '37px'
-          case 'lg': return '40px'
-          case 'xl': return '50px'
-        }
+      case 'xs': return '30px';
+      case 'sm': return '35px';
+      case 'md': return '37px';
+      case 'lg': return '40px';
+      case 'xl': return '50px';
+      default: return '50px';
+      }
     },
     replyEmpty(){
-        return this.reply === '';
+      return this.reply === '';
     }
   },
   components: {

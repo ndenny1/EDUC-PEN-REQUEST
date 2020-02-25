@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <template>
 
 
@@ -81,7 +82,7 @@ import RequestForm from './RequestForm';
 import LoginCards from './LoginCards';
 import PenDisplay from './PenDisplay';
 import RequestDisplay from './RequestDisplay';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 export default {
   name: 'home',
   components: {

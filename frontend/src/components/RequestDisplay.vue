@@ -1,6 +1,5 @@
 <template>
     <v-card class="request-display">  
-        <!-- <v-col class="fill-height pb-5" > -->
         <v-row>
             <v-alert
                 dense
@@ -44,7 +43,6 @@
             <v-btn color="#38598a" dark class="ml-2 text-none" :loading="submitting" @click.stop="submitMoreInfo">Submit</v-btn>
           </v-row>
         </v-card>
-    <!-- </v-col> -->
   </v-card>
 </template>
 
@@ -128,11 +126,11 @@ export default {
 }
 
 .col{
-  padding: 0px 10px;
+  padding: 0 10px;
 }
 
 .request-display{
-  margin: 20px 0px;
+  margin: 20px 0;
   padding: 40px;
 }
 </style>

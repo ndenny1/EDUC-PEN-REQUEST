@@ -92,7 +92,7 @@ export default {
       ApiService.resendVerificationEmail(this.request.penRequestID).then(() => {
         this.$emit('success-alert', 'Your verification email has been sent successfully.');
       }).catch(() => {
-        this.$emit('error-alert', 'Sorry, an unexpected error seems to have occured. You can click on the resend button again later.');
+        this.$emit('error-alert', 'Sorry, an unexpected error seems to have occurred. You can click on the resend button again later.');
       });
     },
   }

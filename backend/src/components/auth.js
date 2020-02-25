@@ -24,7 +24,7 @@ const auth = {
 
     // Check if expiration exists, or lacks expiration
     return (typeof (payload.exp) !== 'undefined' && payload.exp !== null &&
-      payload.exp == 0 || payload.exp > now);
+      payload.exp === 0 || payload.exp > now);
   },
 
   // Get new JWT and Refresh tokens
@@ -90,7 +90,6 @@ const auth = {
       log.error('refreshJWT', error.message);
     }
     next();
-    return;
   },
 
   //this is used to get JWTs for API consumption (eg. PEN Request API, Digital ID API, etc)
@@ -125,10 +124,10 @@ const auth = {
   },*/
 
   generateUiToken() {
-    var i  = config.get('tokenGenerate:issuer');
-    var s = 'user@penrequest.ca';
-    var a  = config.get('server:frontend');
-    var signOptions = {
+    const i  = config.get('tokenGenerate:issuer');
+    const s = 'user@penrequest.ca';
+    const a  = config.get('server:frontend');
+    const signOptions = {
       issuer:  i,
       subject: s,
       audience:  a,

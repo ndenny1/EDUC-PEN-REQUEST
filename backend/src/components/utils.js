@@ -26,14 +26,14 @@ function getAccessToken(req) {
 
 async function deleteData(token, url) {
   try{
-    const config = {
+    const delConfig = {
       headers: {
         Authorization: `Bearer ${token}`,
       }
     };
 
     log.info('delete Data Url', url);
-    const response = await axios.delete(url, config);
+    const response = await axios.delete(url, delConfig);
     log.info('delete Data Status', response.status);
     log.info('delete Data StatusText', response.statusText);
     log.verbose('delete Data Res', response.data);
@@ -68,14 +68,14 @@ async function forwardGetReq(req, res, url) {
 
 async function getData(token, url) {
   try{
-    const config = {
+    const getDataConfig = {
       headers: {
         Authorization: `Bearer ${token}`,
       }
     };
 
     log.info('get Data Url', url);
-    const response = await axios.get(url, config);
+    const response = await axios.get(url, getDataConfig);
     log.info('get Data Status', response.status);
     log.info('get Data StatusText', response.statusText);
     log.verbose('get Data Res', minify(response.data));
@@ -109,7 +109,7 @@ async function forwardPostReq(req, res, url) {
 
 async function postData(token, data, url) {
   try{
-    const config = {
+    const postDataConfig = {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -118,7 +118,7 @@ async function postData(token, data, url) {
     log.info('post Data Url', url);
     log.verbose('post Data Req', minify(data));
 
-    const response = await axios.post(url, data, config);
+    const response = await axios.post(url, data, postDataConfig);
 
     log.info('post Data Status', response.status);
     log.info('post Data StatusText', response.statusText);
@@ -135,7 +135,7 @@ async function postData(token, data, url) {
 
 async function putData(token, data, url) {
   try{
-    const config = {
+    const putDataConfig = {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -144,7 +144,7 @@ async function putData(token, data, url) {
     log.info('put Data Url', url);
     log.verbose('put Data Req', data);
 
-    const response = await axios.put(url, data, config);
+    const response = await axios.put(url, data, putDataConfig);
 
     log.info('put Data Status', response.status);
     log.info('put Data StatusText', response.statusText);
