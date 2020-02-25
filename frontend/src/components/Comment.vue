@@ -12,25 +12,26 @@
         <div class="bottomBar">
             <hr>
             <div class="reply">
-                <div class="avatar">
-                    <v-avatar>
-                         <v-icon large>$info</v-icon>
-                    </v-avatar>
-                </div>
-                <input 
-                    type="text" 
+
+                <v-textarea
+                    type="text"
+                    rows=1
+                    auto-grow
                     v-model.trim="reply" 
                     class="reply--text" 
-                    placeholder="Leave a comment..."
-                    maxlength="250"
+                    placeholder="Enter a message and hit the Reply button"
+                    maxlength="4000"
                     required
                     @keyup.enter="submitComment"
                 />
-                <button 
+                <v-btn 
+                    :disabled="replyEmpty"
+                    color="#003366"
+                    dark
                     class="reply--button" 
-                    @click.prevent="submitComment">
-                    <i class="fa fa-paper-plane"></i> Send
-                </button>
+                >
+                    Reply
+                </v-btn>
             </div>
         </div>
     </div>
@@ -40,8 +41,19 @@
 import singleComment from './Single-comment.vue';
 import {LocalDateTime} from '@js-joda/core';
 export default {
-  mounted() {
-
+  computed: {
+      iconSize() {
+      switch (this.$vuetify.breakpoint.name) {
+          case 'xs': return '30px'
+          case 'sm': return '35px'
+          case 'md': return '37px'
+          case 'lg': return '40px'
+          case 'xl': return '50px'
+        }
+    },
+    replyEmpty(){
+        return this.reply === '';
+    }
   },
   components: {
     singleComment
@@ -82,7 +94,7 @@ export default {
 }
 .comments-wrapper {
     overflow-y: auto;
-    padding: 1rem;
+    overflow-x: hidden;
     padding-bottom: 0;
     max-height: 35rem
 }
@@ -115,7 +127,9 @@ export default {
     background-color: #EBEBEB;
     border-radius: 30px;
     margin: 1rem;
-    padding: 0.5rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    width: 90%;
     overflow: hidden;
 }
 .reply .avatar {
@@ -123,8 +137,7 @@ export default {
 }
 .reply .reply--text {
     min-height: 40px;
-    padding: 0.7rem 3rem 0.7rem 4rem;
-    margin-right: 2rem;
+    padding: 0.3rem 0.7rem;
     border: 0;
     color: #333;
     width: 100%;
@@ -139,11 +152,9 @@ export default {
     right: 1rem;
 }
 .reply .reply--button {
-    position: absolute;
-    right: -100px;
     border: 1px solid #2a629c;
-    background-color: transparent;
-    color: #2a629c;
+    background-color: #003366;
+    color: #fff;
     display: inline-block;
     font-weight: 400;
     text-align: center;
@@ -162,19 +173,37 @@ export default {
 }
 .reply .reply--button:hover {
     color: #fff;
-    background-color: #2a629c;
+    background-color: #003366;
 }
 .reply .reply--button:focus,
 .reply .reply--button:active {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 hr {
-    margin: 1rem;
+    margin-bottom: 1rem;
 }
 .bottomBar{
-    position: absolute;
+    position: relative;
     bottom: 0;
     width: 100%;
+}
+
+.v-text-field{
+    margin-top: 0;
+}
+.v-textarea textarea{
+    padding: 0;
+}
+
+.theme--dark.v-btn.v-btn--disabled{
+    color: #cdbbbb !important;
+}
+
+.v-messages{
+    min-height: 0 !important;
+}
+.v-text-field__details{
+    min-height: 0 !important;
 }
 
 </style>
