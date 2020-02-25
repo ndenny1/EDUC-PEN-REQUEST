@@ -12,11 +12,7 @@
         <div class="bottomBar">
             <hr>
             <div class="reply">
-                <div class="avatar">
-                    <v-avatar>
-                         <v-icon large>$info</v-icon>
-                    </v-avatar>
-                </div> -->
+
                 <v-textarea
                     type="text"
                     rows=1
@@ -98,7 +94,7 @@ export default {
 }
 .comments-wrapper {
     overflow-y: auto;
-    padding: 1rem;
+    overflow-x: hidden;
     padding-bottom: 0;
     max-height: 35rem
 }
@@ -184,10 +180,10 @@ export default {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 hr {
-    margin: 1rem;
+    margin-bottom: 1rem;
 }
 .bottomBar{
-    position: absolute;
+    position: relative;
     bottom: 0;
     width: 100%;
 }
