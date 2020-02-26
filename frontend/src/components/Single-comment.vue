@@ -48,19 +48,19 @@ export default {
       const readableTime = d.month + ' ' + d.day + ', ' + d.year + ' ' + hours + ':' + d.minute + ' ' + amPm;
       if(this.comment.myself){
         return {
-          name: "You",
+          name: 'You',
           content: this.comment.content,
           timestamp: readableTime,
           color: 'studentGreen',
           icon: '$info'
         };
       } else {
-        let participantName = 'unknown';
-        (this.participants).forEach(element => {
-          if(this.comment.participantId === element.id){
-            participantName = element.name;
-          }
-        });
+        // let participantName = 'unknown';
+        // (this.participants).forEach(element => {
+        //   if(this.comment.participantId === element.id){
+        //     participantName = element.name;
+        //   }
+        // });
         return {
           name: 'PEN Admin',
           content: this.comment.content,
@@ -72,12 +72,13 @@ export default {
     },
     iconSize() {
       switch (this.$vuetify.breakpoint.name) {
-          case 'xs': return '30px'
-          case 'sm': return '35px'
-          case 'md': return '37px'
-          case 'lg': return '40px'
-          case 'xl': return '50px'
-        }
+      case 'xs': return '30px';
+      case 'sm': return '35px';
+      case 'md': return '37px';
+      case 'lg': return '40px';
+      case 'xl': return '50px';
+      default: return '50px';
+      }
     }
   },
   props: ['comment', 'myself', 'participants'],

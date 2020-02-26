@@ -167,7 +167,6 @@ const PenRequestStatuses = Object.freeze({
   AUTO: 'AUTO',
   MANUAL: 'MANUAL',
   REJECTED: 'REJECTED',
-  UNMATCHED: 'UNMATCHED'
 });
 
 const EmailVerificationStatuses = Object.freeze({

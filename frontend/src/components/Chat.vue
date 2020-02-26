@@ -36,8 +36,9 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['userInfo']),
+    ...mapGetters('penRequest', ['penRequest']),
     request() {
-      return this.userInfo.penRequest;
+      return this.penRequest;
     },
     myself() {
       return ({name: this.userInfo.displayName, id: '1'});

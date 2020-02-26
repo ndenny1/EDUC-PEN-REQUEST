@@ -45,7 +45,7 @@ var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 app.use(session({
   name: 'pen_request_cookie',
   secret: config.get('oidc:clientSecret'),
-  resave: true,
+  resave: false,
   saveUninitialized: true,
   httpOnly: true,
   secure: true,

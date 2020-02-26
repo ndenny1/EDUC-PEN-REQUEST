@@ -225,8 +225,9 @@
                 color="#003366"
                 class="white--text align-self-center"
                 id="submit_form"
-                  @click="submitRequestForm"
-                  :disabled="!validForm"
+                @click="submitRequestForm"
+                :disabled="!validForm"
+                :loading="submitting"
               >
                 Submit
               </v-btn>
@@ -259,7 +260,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 export default {
   data() {
     return {
@@ -277,6 +278,7 @@ export default {
       validForm: false,
       dialog: false,
       isSubmitted: false,
+      submitting: false,
       dialogMessage: null,
       apiGenderCodes: [],
       genderLabel: null,
@@ -344,7 +346,8 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('auth', ['setPenRequest']),
+    ...mapMutations('penRequest', ['setPenRequest']),
+    ...mapActions('penRequest', ['postRequest']),
     requiredRules(hint='Required') {
       return [v => !!v || hint];
     },
@@ -361,7 +364,8 @@ export default {
           const code = this.genders.filter(it => (it.label === this.genderLabel));
           this.userPost.genderCode = code[0].genderCode;
 
-          const resData = await this.$store.dispatch('penRequest/postRequest', this.userPost);
+          this.submitting = true;
+          const resData = await this.postRequest(this.userPost);
           if(resData){
             this.$refs.form.reset();
             this.dialogMessage = 'Form submit success!';
@@ -379,6 +383,8 @@ export default {
           this.dialog = true;
           this.isSubmitted = false;
           throw e;   
+        } finally {
+          this.submitting = false;
         }
       }
     },

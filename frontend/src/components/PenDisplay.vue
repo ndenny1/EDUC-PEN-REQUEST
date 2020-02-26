@@ -6,7 +6,7 @@
        <v-card-text>
          <v-row class="card-row">
             <v-text-field
-              :value="userInfo.pen"
+              :value="student.pen"
               outlined
               readonly
               id="penContainer"
@@ -15,7 +15,7 @@
               @click:append="copyClipboard"
             ></v-text-field>
             
-        <v-snackbar v-model="clipboard" color="info" timeout=2000>
+        <v-snackbar v-model="clipboard" color="info" :timeout="2000">
           PEN Copied to Clipboard!
         </v-snackbar>
 
@@ -57,7 +57,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('auth', ['userInfo'])
+    ...mapGetters('penRequest', ['student'])
   },
   methods: {
     async copyClipboard() {

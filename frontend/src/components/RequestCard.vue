@@ -1,7 +1,7 @@
 <template>
   <v-card height="100%" width="99%">
     <v-toolbar flat color="#036" class="white--text">
-      <v-toolbar-title>PEN Request Data you submitted</v-toolbar-title>
+      <v-toolbar-title>Original PEN Request Data</v-toolbar-title>
     </v-toolbar>
     <v-row no-gutters class="pt-2 px-2">
       <v-col cols="12" xl="5" lg="5" md="5" sm="5">
@@ -134,9 +134,9 @@ export default {
   name: 'requestCard',
   computed: {
     ...mapGetters('auth', ['userInfo']),
-    ...mapGetters('penRequest', ['genderInfo']),
+    ...mapGetters('penRequest', ['genderInfo', 'penRequest']),
     request() {
-      return this.userInfo.penRequest;
+      return this.penRequest;
     },
     genderLabel() { 
       return this.genderInfo(this.request.genderCode).label;
@@ -147,3 +147,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.v-toolbar /deep/ .v-toolbar__content {
+  padding-left: 20px !important;
+}
+</style>

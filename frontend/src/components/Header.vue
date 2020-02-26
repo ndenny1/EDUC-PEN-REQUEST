@@ -48,7 +48,6 @@ export default {
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('auth', ['userInfo']),
-    ...mapGetters('auth', ['clipboard']),
     dataReady: function () {
       return this.userInfo;
     }

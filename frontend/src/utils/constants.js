@@ -14,10 +14,9 @@ export const AuthRoutes = Object.freeze(object);
 
 export const ApiRoutes = Object.freeze({
   PEN_REQUEST: apiRoot + '/request',
-  GENDER_CODES: apiRoot + '/gender_codes',
-  PEN_REQUEST_STATUS_CODES: apiRoot + '/pen_request_status_codes',
-  DOCUMENT_TYPE_CODES: apiRoot + '/document_type_codes',
-  FILE_REQUIREMENTS: apiRoot + '/file_requirements',
+  CODES: apiRoot + '/codes',
+  DOCUMENT_TYPE_CODES: apiRoot + '/document-type-codes',
+  FILE_REQUIREMENTS: apiRoot + '/file-requirements',
   // FILE_UPLOAD: apiRoot + '/document',
   USER: apiRoot + '/user',
 });
@@ -30,7 +29,6 @@ export const PenRequestStatuses = Object.freeze({
   AUTO: 'AUTO',
   MANUAL: 'MANUAL',
   REJECTED: 'REJECTED',
-  UNMATCHED: 'UNMATCHED'
 });
 
 export const VerificationResults = Object.freeze({

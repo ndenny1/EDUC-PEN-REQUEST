@@ -26,11 +26,12 @@ const intercept = apiAxios.interceptors.response.use(config => config, error => 
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         try {
-          const token = failedQueue.push({ resolve, reject });
-          originalRequest.headers['Authorization'] = `Bearer ${token}`;
-          return axios(originalRequest);
+          failedQueue.push({ resolve: (token) => {
+            originalRequest.headers['Authorization'] = `Bearer ${token}`;
+            resolve(axios(originalRequest));
+          }, reject });
         } catch (e) {
-          return e;
+          reject(e);
         }
       });
     }
@@ -97,22 +98,12 @@ export default {
     }
   },
 
-  async getGenderCodes() {
+  async getCodes() {
     try{
-      const response = await apiAxios.get(ApiRoutes.GENDER_CODES);
+      const response = await apiAxios.get(ApiRoutes.CODES);
       return response;
     } catch(e) {
       console.log(`Failed to get from Nodejs API - ${e}`);
-      throw e;
-    }
-  },
-
-  async getPenRequestStatusCodes() {
-    try{
-      const response = await apiAxios.get(ApiRoutes.PEN_REQUEST_STATUS_CODES);
-      return response;
-    } catch(e) {
-      console.log(`Failed to get from Nodejs getPenRequestStatusCodes API - ${e}`);
       throw e;
     }
   },

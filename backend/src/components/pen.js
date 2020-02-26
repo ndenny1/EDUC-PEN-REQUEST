@@ -33,18 +33,18 @@ async function getDigitalIdData(token, digitalID) {
   let [status, data] = await getData(token, config.get('digitalID:apiEndpoint') + `/${digitalID}`);
   if(status !== HttpStatus.OK) {
     data.errorSource = 'getDigitalIdData';
+    throw [status, data];
   }
   return [status, data];
 }
 
-async function getStudentPen(token, studentID) {
+async function getStudent(token, studentID) {
   let [status, data] = await getData(token, config.get('student:apiEndpoint') + `/${studentID}`);
   if(status !== HttpStatus.OK) {
-    data.errorSource = 'getStudentPen';
-    return [status, data];
+    data.errorSource = 'getStudent';
+    throw [status, data];
   } else {
-    const pen = data.pen;
-    return [HttpStatus.OK, {pen}];
+    return [HttpStatus.OK, data];
   }
 }
 
@@ -52,25 +52,32 @@ async function getLatestPenRequest(token, digitalID) {
   let [status, data] = await getData(token, `${config.get('penRequest:apiEndpoint')}/?digitalID=${digitalID}`);
   if(status !== HttpStatus.OK && status !== HttpStatus.NOT_FOUND) {
     data.errorSource = 'getLatestPenRequest';
-    return [status, data];
+    throw [status, data];
   } else {
     let penRequest = (status === HttpStatus.NOT_FOUND || data.length === 0) ? null : lodash.maxBy(data, 'statusUpdateDate');
     if(penRequest) {
       penRequest.digitalID = null;
     }
 
-    return [HttpStatus.OK, {penRequest}];
+    return [HttpStatus.OK, penRequest];
   }
 }
 
-async function getUserInfo(req, res) {
-  if (! req.user) {
-    log.verbose('getUserInfo', req.user);
-    return res.status(HttpStatus.UNAUTHORIZED).json({
-      message: 'No session data'
-    });
-  }
+function getDefaultBcscInput(userInfo) {
+  let givenArray = (userInfo._json.givenNames).split(' ');
+  givenArray.shift();
+  let middleNames = givenArray.join(' ');
+  return {
+    legalLastName: userInfo._json.surname,
+    legalFirstName: userInfo._json.givenName,
+    legalMiddleNames: middleNames,
+    gender: userInfo._json.gender,
+    email: userInfo._json.email,
+    dob: userInfo._json.birthDate
+  };
+}
 
+async function getUserInfo(req, res) {
   const userInfo = getSessionUser(req);
   if(!userInfo) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
@@ -78,73 +85,89 @@ async function getUserInfo(req, res) {
     });
   }
   
-  let resData;
-
-  if(userInfo._json.accountType === 'BCSC'){
-    let givenArray = (userInfo._json.givenNames).split(' ');
-    givenArray.shift();
-    let middleNames = givenArray.join(' ');
-    resData = {
-      displayName: userInfo._json.displayName,
-      accountType: userInfo._json.accountType,
-      legalLastName: userInfo._json.surname,
-      legalFirstName: userInfo._json.givenName,
-      legalMiddleNames: middleNames,
-      gender: userInfo._json.gender,
-      email: userInfo._json.email,
-      dob: userInfo._json.birthDate
-    };
-  } else{
-    resData = {
-      displayName: userInfo._json.displayName,
-      accountType: userInfo._json.accountType,
-    };
-  }
-
   const accessToken = userInfo.jwt;
   const digitalID = userInfo._json.digitalIdentityID;
-  let [status, data] = await getDigitalIdData(accessToken, digitalID);
-  if(status !== HttpStatus.OK) {
-    return res.status(status).json(data);
-  }
 
-  req.session.digitalIdentityData = data;
-
-  const identityType = await getIdentityType(accessToken, data.identityTypeCode);
-  if(! identityType) {
-    log.error('getIdentityType Error identityTypeCode', data.identityTypeCode);
-    return [HttpStatus.INTERNAL_SERVER_ERROR, {
-      message: 'Wrong identityTypeCode'
-    }];
-  }
-
-  req.session.digitalIdentityData.identityTypeLabel = identityType.label;
-  resData.identityTypeLabel = identityType.label;
-
-  if(data.studentID) {
-    [status, data] = await getStudentPen(accessToken, data.studentID);
-  } else {
-    [status, data] = await getLatestPenRequest(accessToken, digitalID);
-    if(status === HttpStatus.OK) {
-      req.session.penRequest = data.penRequest;
+  Promise.all([
+    getDigitalIdData(accessToken, digitalID), getIdentityTypes(accessToken), getLatestPenRequest(accessToken, digitalID)
+  ]).then(async ([[, digitalIdData], [, typeCodesData], [, penRequest]]) => {
+  
+    const identityType = lodash.find(typeCodesData, ['identityTypeCode', digitalIdData.identityTypeCode]);
+    if(! identityType) {
+      log.error('getIdentityType Error identityTypeCode', digitalIdData.identityTypeCode);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Wrong identityTypeCode'
+      });
     }
-  }
 
-  resData = Object.assign(resData, data);
-  return res.status(status).json(resData);
+    let student;
+    if(digitalIdData.studentID) {
+      [, student] = await getStudent(accessToken, digitalIdData.studentID);
+    }
+
+    req.session.digitalIdentityData = digitalIdData;
+    req.session.digitalIdentityData.identityTypeLabel = identityType.label;
+    req.session.penRequest = penRequest;
+
+    let resData = {
+      displayName: userInfo._json.displayName,
+      accountType: userInfo._json.accountType,
+      identityTypeLabel: identityType.label,
+      ...(userInfo._json.accountType === 'BCSC' ? getDefaultBcscInput(userInfo) : {}),
+      penRequest,
+      student,
+    };
+
+    return res.status(HttpStatus.OK).json(resData);
+  }).catch(e => {
+    if(lodash.isArray(e)) {
+      const [status, data] = e;
+      return res.status(status).json(data);
+    } else {
+      log.error('getUserInfo Error', e);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Get userInfo error'
+      });
+    }
+  });
 }
 
-async function getIdentityType(accessToken, identityTypeCode) {
+async function getCodes(req, res) {
+  try{
+    const accessToken = getAccessToken(req);
+    if(!accessToken) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        message: 'No access token'
+      });
+    }
+
+    const codeUrls = [
+      `${config.get('codeTable:apiEndpoint')}/gender-codes`, 
+      `${config.get('penRequest:apiEndpoint')}/statuses`,
+    ];
+
+    const [[, genderCodes], [, statusCodes]] = await Promise.all(codeUrls.map(url => getData(accessToken, url)));
+    return res.status(HttpStatus.OK).json({genderCodes, statusCodes});
+  } catch (e) {
+    log.error('getCodes Error', e);
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Get codes error'
+    });
+  }
+}
+
+async function getIdentityTypes(accessToken) {
   if(!identityTypes) {
     const url = `${config.get('digitalID:apiEndpoint')}/identityTypeCodes`;
-    const [status, resData] = await getData(accessToken, url);
+    const [status, data] = await getData(accessToken, url);
     if(status !== HttpStatus.OK) {
       log.error('getIdentityType Error Status', status);
-      return null;
+      data.errorSource = 'getIdentityTypes';
+      throw [status, data];
     }
-    identityTypes = resData;
+    identityTypes = data;
   }
-  return lodash.find(identityTypes, ['identityTypeCode', identityTypeCode]);
+  return [HttpStatus.OK, identityTypes];
 }
 
 async function sendVerificationEmail(accessToken, emailAddress, penRequestId, identityTypeLabel) {
@@ -203,8 +226,7 @@ async function submitPenRequest(req, res) {
 
     const accessToken = userInfo.jwt;
 
-    if(req.session.penRequest && (req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.REJECTED || 
-      req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.UNMATCHED)) {
+    if(req.session.penRequest && req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.REJECTED) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Submit PEN Request not allowed'
       });
@@ -624,6 +646,7 @@ async function downloadFile(req, res) {
 
 module.exports = {
   getUserInfo,
+  getCodes,
   submitPenRequest,
   postComment,
   getComments,
