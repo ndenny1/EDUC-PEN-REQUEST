@@ -93,7 +93,7 @@
         <p class="mb-1">Date of Birth:</p>
       </v-col>
       <v-col cols="12" xl="4" lg="5" md="5" sm="5">
-        <p class="mb-1"><strong>{{ student.dob ? moment(request.dob).format('YYYY-MM-DD'):'' }}</strong></p>
+        <p class="mb-1"><strong>{{ student.dob ? moment(student.dob).format('YYYY-MM-DD'):'' }}</strong></p>
       </v-col>
     </v-row>
     <v-row no-gutters class="py-0 px-2">

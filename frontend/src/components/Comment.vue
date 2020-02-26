@@ -12,7 +12,6 @@
         <div class="bottomBar">
             <hr>
             <div class="reply">
-
                 <v-textarea
                     type="text"
                     rows=1
@@ -22,13 +21,15 @@
                     placeholder="Enter a message and hit the Reply button"
                     maxlength="4000"
                     required
-                    @keyup.enter="submitComment"
+                    :disabled="disabled"
                 />
                 <v-btn 
                     :disabled="replyEmpty"
                     color="#003366"
                     dark
                     class="reply--button" 
+                    @click="submitComment"
+                    :loading="submitting"
                 >
                     Reply
                 </v-btn>
@@ -40,7 +41,39 @@
 <script>
 import singleComment from './Single-comment.vue';
 import {LocalDateTime} from '@js-joda/core';
+
 export default {
+  components: {
+    singleComment
+  },
+  props: {
+    comments_wrapper_classes: {
+      type: Array,
+      required: true
+    }, 
+    myself: {
+      type: Object,
+      required: true
+    }, 
+    messages: {
+      type: Array,
+      required: true
+    },
+    participants: {
+      type: Array,
+      required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+  },
+  data: function() {
+    return {
+      reply: '',
+      submitting: false,
+    };
+  },
   computed: {
     iconSize() {
       switch (this.$vuetify.breakpoint.name) {
@@ -56,15 +89,10 @@ export default {
       return this.reply === '';
     }
   },
-  components: {
-    singleComment
-  },
-  data: function() {
-    return {
-      reply: ''
-    };
-  },
   methods: {
+    replied() {
+      this.submitting = false;
+    },
     //Tell the parent component(main app) that we have a new comment
     submitComment: function() {
       if(this.reply.comment !== '') {
@@ -75,13 +103,15 @@ export default {
           myself: true,
           participantId: 1
         };
-        this.$emit('submit-comment', messageToSend);
+        this.submitting = true;
+        this.$emit('submit-comment', {
+            message: messageToSend,
+            replied: this.replied
+        });
         this.reply = '';
       }
     }
   },
-  //What the component expects as parameters
-  props: ['comments_wrapper_classes', 'myself', 'messages', 'participants']
 };
 </script>
 
@@ -126,7 +156,7 @@ export default {
     position: relative;
     align-items: center;
     background-color: #EBEBEB;
-    border-radius: 30px;
+    /* border-radius: 30px; */
     margin: 1rem;
     padding-right: 1rem;
     padding-left: 1rem;

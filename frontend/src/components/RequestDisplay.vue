@@ -7,6 +7,7 @@
         </v-row>
         <v-row>
             <v-alert
+                id="alert-message"
                 dense
                 text
                 dismissible
@@ -136,6 +137,10 @@ export default {
 .request-display{
   margin: 10px 0 20px;
   padding: 20px 40px;
+}
+
+#alert-message /deep/ .v-icon {
+  padding-left: 1px;
 }
 
 </style>

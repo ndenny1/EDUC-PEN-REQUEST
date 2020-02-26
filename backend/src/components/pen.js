@@ -326,29 +326,30 @@ async function getComments(req, res) {
           response.participants.push(participant);
         }
       }
-      if(element.commentTimestamp.length>23){
-        element.commentTimestamp = element.commentTimestamp.substring(0,23);
-      }
+      // if(element.commentTimestamp.length>23){
+      //   element.commentTimestamp = element.commentTimestamp.substring(0,23);
+      // }
 
-      const retrievedTimestamp = localDateTime.parse(element.commentTimestamp);
-      let minute =  retrievedTimestamp.minute();
-      if(retrievedTimestamp.minute() < 10){
-        minute = '0' + retrievedTimestamp.minute();
-      }
+      // const retrievedTimestamp = localDateTime.parse(element.commentTimestamp);
+      // let minute =  retrievedTimestamp.minute();
+      // if(retrievedTimestamp.minute() < 10){
+      //   minute = '0' + retrievedTimestamp.minute();
+      // }
       response.messages.push({
         content: element.commentContent,
         participantId: (element.staffMemberIDIRGUID ? element.staffMemberIDIRGUID : '1'),
         myself: participant.id.toUpperCase() === response.myself.id.toUpperCase(),
-        timestamp: {
-          year: retrievedTimestamp.year(),
-          month: retrievedTimestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
-          day: retrievedTimestamp.dayOfMonth(),
-          hour: retrievedTimestamp.hour(),
-          minute: minute,
-          second: retrievedTimestamp.second(),
-          millisecond: retrievedTimestamp.nano(),
-          dayOfWeek: retrievedTimestamp.dayOfWeek()
-        }
+        timestamp: element.commentTimestamp
+        // timestamp: {
+        //   year: retrievedTimestamp.year(),
+        //   month: retrievedTimestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
+        //   day: retrievedTimestamp.dayOfMonth(),
+        //   hour: retrievedTimestamp.hour(),
+        //   minute: minute,
+        //   second: retrievedTimestamp.second(),
+        //   millisecond: retrievedTimestamp.nano(),
+        //   dayOfWeek: retrievedTimestamp.dayOfWeek()
+        // }
       });
     });
 

@@ -1,6 +1,13 @@
 <template>
   <v-card height="100%" width="100%">
     <div id="comments-outer" class="comments-outside">
+      <v-progress-linear
+        indeterminate
+        absolute
+        top
+        color="indigo darken-2"
+        v-if="loading"
+      ></v-progress-linear>
       <comments 
           :comments_wrapper_classes="['custom-scrollbar', 'comments-wrapper']"
           :myself="myself"
@@ -8,6 +15,7 @@
           :messages="messages"
           :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
           @submit-comment="submitComment"
+          :disabled="hideInput"
       ></comments>
   </div>
   </v-card>
@@ -31,7 +39,8 @@ export default {
     return {
       participants: [],
       messages: [],
-      toLoad: []
+      toLoad: [],
+      loading: true,
     };
   },
   computed: {
@@ -41,7 +50,7 @@ export default {
       return this.penRequest;
     },
     myself() {
-      return ({name: this.userInfo.displayName, id: '1'});
+      return {name: this.userInfo.displayName, id: '1'};
     },
   },
   created() {
@@ -58,7 +67,9 @@ export default {
     }).catch(error => {
       console.log(error);
       this.alert = true;
-    });
+    }).finally(() => 
+      this.loading = false
+    );
   },
   methods: {
     /*onType: function (event) {
@@ -72,7 +83,7 @@ export default {
         this.toLoad = [];
       }, 1000);
     },
-    submitComment: function (message) {
+    submitComment: function ({message, replied}) {
       // const messageObject = {
       //   content: message,
       //   timestamp: new Date()
@@ -80,25 +91,25 @@ export default {
       // this.messages.push(message);
       ApiService.postComment(this.request.penRequestID, message)
         .then(() => {
-          let minute =  message.timestamp.minute();
-          if(message.timestamp.minute() < 10){
-            minute = '0' + message.timestamp.minute();
-          }
-          message.timestamp = {
-            year: message.timestamp.year(),
-            month: message.timestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
-            day: message.timestamp.dayOfMonth(),
-            hour: message.timestamp.hour(),
-            minute: minute,
-            second: message.timestamp.second(),
-            millisecond: message.timestamp.nano(),
-            dayOfWeek: message.timestamp.dayOfWeek()
-          };
+          // let minute =  message.timestamp.minute();
+          // if(message.timestamp.minute() < 10){
+          //   minute = '0' + message.timestamp.minute();
+          // }
+          // message.timestamp = {
+          //   year: message.timestamp.year(),
+          //   month: message.timestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
+          //   day: message.timestamp.dayOfMonth(),
+          //   hour: message.timestamp.hour(),
+          //   minute: minute,
+          //   second: message.timestamp.second(),
+          //   millisecond: message.timestamp.nano(),
+          //   dayOfWeek: message.timestamp.dayOfWeek()
+          // };
           this.messages.push(message);
         })
         .catch(error => {
           console.log(error);
-        });
+        }).finally(() => replied());
     },
     onClose() {
       this.visible = false;
