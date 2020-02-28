@@ -402,6 +402,7 @@ export default {
     },
   },
   mounted() {
+    this.disableAutoComplete();
     this.genderLabels = this.genders.map(a => a.label);
     //populate form if user is logged in with BCSC
     if (this.userInfo.accountType === 'BCSC') {
@@ -479,7 +480,22 @@ export default {
         this.$router.replace({name: 'home'});
       }
     },
+    disableAutoComplete() {
+      let elements = document.querySelectorAll('[autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"]');
 
+      if (!elements) {
+        return;
+      }
+
+      elements.forEach(element => {
+        element.setAttribute('readonly', 'readonly');
+        element.style.backgroundColor = 'inherit';
+
+        setTimeout(() => {
+          element.removeAttribute('readonly');
+        }, 500);
+      });
+    }
   },
 };
 </script>
