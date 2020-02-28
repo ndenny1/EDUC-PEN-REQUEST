@@ -26,7 +26,7 @@
     <v-card-subtitle><span style="font-size: 1.3rem;font-weight: bolder; color: #333333">Student Information</span>
     </v-card-subtitle>
 
-    <v-form
+    <v-form autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
       ref="form" id="penRequestForm"
       v-model="validForm"
     >
@@ -62,6 +62,7 @@
               width="100%"
               :disabled="enableDisableForm.disabled"
               required
+              autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -74,6 +75,7 @@
               outlined
               label="Legal First Name(s) (optional)"
               :disabled="enableDisableForm.disabled"
+              autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -160,6 +162,7 @@
               v-if="serviceCardBool"
               required
               :disabled="enableDisableForm.disabled"
+              autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
             ></v-text-field>
             <v-menu
               ref="menu"
@@ -182,6 +185,7 @@
                   :rules="requiredRules()"
                   :disabled="enableDisableForm.disabled"
                   required
+                  autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -222,6 +226,7 @@
               label="E-mail Address"
               :disabled="enableDisableForm.disabled"
               required
+              autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -493,7 +498,7 @@ export default {
 
         setTimeout(() => {
           element.removeAttribute('readonly');
-        }, 500);
+        }, 1000);
       });
     }
   },
@@ -501,6 +506,15 @@ export default {
 </script>
 
 <style scoped>
+
+  input[autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"]::-webkit-contacts-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    height: 0;
+    width: 0;
+    margin: 0;
+  }
   .mainCard {
     margin: 20px 0;
     padding: 10px;
