@@ -198,12 +198,6 @@ async function postPenRequest(accessToken, req, userInfo) {
     let reqData = lodash.cloneDeep(req);
     reqData.emailVerified = EmailVerificationStatuses.NOT_VERIFIED;
     reqData.digitalID = userInfo._json.digitalIdentityID;
-    if(userInfo._json.accountType === 'BCEID'){
-      reqData.dataSourceCode = 'DIRECT';
-    } else {
-      reqData.dataSourceCode = userInfo._json.accountType;
-    }
-
     let resData = await postData(accessToken, reqData, url);
     resData.digitalID = null;
 
