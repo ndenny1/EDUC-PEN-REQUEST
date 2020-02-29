@@ -7,6 +7,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const qs = require('querystring');
 const utils = require('./utils');
 const HttpStatus = require('http-status-codes');
+const { ApiError } = require('./error'); 
 
 const auth = {
   // Check if JWT Access Token has expired
@@ -164,11 +165,11 @@ const auth = {
       let result = {};
       result.accessToken = response.data.access_token;
       result.refreshToken = response.data.refresh_token;
-      return [HttpStatus.OK, result];
+      return result;
     } catch (error) {
       log.error('getPenRequestApiCredentials Error', error.response || error.message);
       const status = error.response ? error.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
-      return [status, { message: 'Get PenRequestApiCredentials error'}];
+      throw new ApiError(status, { message: 'Get PenRequestApiCredentials error'}, error);
     }
   } 
 };

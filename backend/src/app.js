@@ -154,8 +154,8 @@ app.use((_req, res) => {
 
 // Prevent unhandled errors from crashing application
 process.on('unhandledRejection', err => {
-  log.error(err.stack);
-  res.redirect(config.get('server:frontend') + '/error?message=unhandled_rejection');
+  log.error('Unhandled Rejection at:', err.stack || err);
+  // res.redirect(config.get('server:frontend') + '/error?message=unhandled_rejection');
 });
 
 module.exports = app;

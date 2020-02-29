@@ -11,6 +11,7 @@
     "issuer": "TEST ISSUER"
   },
   "oidc": {
-    "discovery": "https://c2mvws-test.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration"
+    "discovery": "https://c2mvws-test.pathfinder.gov.bc.ca/auth/realms/master/.well-known/openid-configuration",
+    "clientSecret": "12345"
   }
 }

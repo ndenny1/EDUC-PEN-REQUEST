@@ -105,8 +105,8 @@ export default {
         };
         this.submitting = true;
         this.$emit('submit-comment', {
-            message: messageToSend,
-            replied: this.replied
+          message: messageToSend,
+          replied: this.replied
         });
         this.reply = '';
       }
@@ -160,7 +160,7 @@ export default {
     margin: 1rem;
     padding-right: 1rem;
     padding-left: 1rem;
-    width: 90%;
+    /* width: 90%; */
     overflow: hidden;
 }
 .reply .avatar {

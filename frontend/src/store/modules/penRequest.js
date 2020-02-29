@@ -47,8 +47,9 @@ export default {
       //   legalFirstName: 'James',
       //   legalMiddleNames: 'Wayne',
       //   legalLastName: 'Duke',
-      //   sexCode: 'Male',
-      //   dob: '1998-01-01T00:00:00'
+      //   sexCode: 'M',
+      //   sexLabel: 'Male',
+      //   dob: '1998-01-01'
       // };
       state.student = student;
     },

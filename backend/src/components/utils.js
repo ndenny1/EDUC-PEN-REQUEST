@@ -5,6 +5,7 @@ const config = require('../config/index');
 const log = require('npmlog');
 const HttpStatus = require('http-status-codes');
 const lodash = require('lodash');
+const { ApiError } = require('./error'); 
 
 let discovery = null;
 
@@ -38,11 +39,11 @@ async function deleteData(token, url) {
     log.info('delete Data StatusText', response.statusText);
     log.verbose('delete Data Res', response.data);
 
-    return [HttpStatus.OK, response.data];
+    return response.data;
   } catch (e) {
     log.error('deleteData Error', e.response ? e.response.status : e.message);
     const status = e.response ? e.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
-    return [status, { message: 'API Delete error'}];
+    throw new ApiError(status, { message: 'API Delete error'}, e);
   }
 }
 
@@ -56,11 +57,11 @@ async function forwardGetReq(req, res, url) {
     }
 
     log.info('forwardGetReq Url', url);
-    const [status, data] = await getData(accessToken, url);
-    return res.status(status).json(data);
+    const data = await getData(accessToken, url);
+    return res.status(HttpStatus.OK).json(data);
   } catch (e) {
-    log.error('forwardGetReq Error', e);
-    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+    log.error('forwardGetReq Error', e.stack);
+    return res.status(e.status || HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Forward Get error'
     });
   }
@@ -80,11 +81,11 @@ async function getData(token, url) {
     log.info('get Data StatusText', response.statusText);
     log.verbose('get Data Res', minify(response.data));
 
-    return [HttpStatus.OK, response.data];
+    return response.data;
   } catch (e) {
     log.error('getData Error', e.response ? e.response.status : e.message);
     const status = e.response ? e.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
-    return [status, { message: 'API Get error'}];
+    throw new ApiError(status, { message: 'API Get error'}, e);
   }
 }
 
@@ -97,11 +98,11 @@ async function forwardPostReq(req, res, url) {
       });
     }
 
-    const [status, data] = await postData(accessToken, req.body, url);
-    return res.status(status).json(data);
+    const data = await postData(accessToken, req.body, url);
+    return res.status(HttpStatus.OK).json(data);
   } catch(e) {
-    log.error('forwardPostReq Error', e);
-    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+    log.error('forwardPostReq Error', e.stack);
+    return res.status(e.status || HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Forward Post error'
     });
   }
@@ -125,11 +126,11 @@ async function postData(token, data, url) {
 
     log.verbose('post Data Res', response.data);
 
-    return [HttpStatus.OK, response.data];
+    return response.data;
   } catch(e) {
     log.error('postData Error', e.response ? e.response.status : e.message);
     const status = e.response ? e.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
-    return [status,{ message: 'API Post error'}];
+    throw new ApiError(status, { message: 'API Post error'}, e);
   }
 }
 
@@ -151,11 +152,11 @@ async function putData(token, data, url) {
 
     log.verbose('put Data Res', response.data);
 
-    return [HttpStatus.OK, response.data];
+    return response.data;
   } catch(e) {
     log.error('putData Error',  e.response ? e.response.status : e.message);
     const status = e.response ? e.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
-    return [status,{ message: 'API Put error'}];
+    throw new ApiError(status, { message: 'API Put error'}, e);
   }
 }
 
