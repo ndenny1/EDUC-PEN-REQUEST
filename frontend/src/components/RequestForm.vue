@@ -369,7 +369,6 @@ export default {
         legalMiddleNames: null,
         usualLastName: null,
         usualFirstName: null,
-        dataSourceCode: null,
         usualMiddleName: null,
         maidenName: null,
         pastNames: null,
