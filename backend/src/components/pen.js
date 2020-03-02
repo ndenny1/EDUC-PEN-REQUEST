@@ -146,7 +146,7 @@ async function getCodes(req, res) {
     }
 
     const codeUrls = [
-      `${config.get('codeTable:apiEndpoint')}/gender-codes`, 
+      `${config.get('penRequest:apiEndpoint')}/gender-codes`, 
       `${config.get('penRequest:apiEndpoint')}/statuses`,
     ];
 
@@ -164,7 +164,7 @@ async function getServerSideCodes(accessToken) {
   if(!codes) {
     try{
       const codeUrls = [
-        `${config.get('codeTable:apiEndpoint')}/sex-codes`,
+        `${config.get('penRequest:apiEndpoint')}/sex-codes`,
         `${config.get('digitalID:apiEndpoint')}/identityTypeCodes`
       ];
 
