@@ -150,6 +150,12 @@ export default {
   .bcsc{
     padding-top: 1rem;
   }
+
+  @media screen and (max-width: 801px){
+    .img-holder{
+      height: auto;
+    }
+  }
    @media screen and (max-width: 400px) {
      .login-cards{
        margin-bottom: 7rem;
@@ -157,6 +163,9 @@ export default {
        max-width:80%;
      }
     .v-card__text{
+      height: auto;
+    }
+    .img-holder{
       height: auto;
     }
    }
