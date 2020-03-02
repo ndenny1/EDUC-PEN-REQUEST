@@ -11,6 +11,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const utils = require('./components/utils');
 const auth = require('./components/auth');
+const moment = require('moment-timezone');
 //const cookieSession = require('cookie-session')
 
 dotenv.config();
@@ -37,8 +38,12 @@ app.use(express.urlencoded({
   extended: false
 }));
 
+morgan.token('date', (req, res, tz) => {
+  return moment().tz(tz).format();
+})
+morgan.format('dtFormat', '[:date[America/Vancouver]] ":method :url" :status :res[content-length] - :response-time ms');
 //initialize logging middleware
-app.use(morgan(config.get('server:morganFormat')));
+app.use(morgan('dtFormat'));
 
 //sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
 var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
