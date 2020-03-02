@@ -4,7 +4,8 @@ const apiRoot = baseRoot + '/pen';
 let object;
 
 object = {
-  LOGIN: authRoot + '/login',
+  LOGIN_BCSC: authRoot + '/login_bcsc',
+  LOGIN_BCEID: authRoot + '/login_bceid',
   LOGOUT: authRoot + '/logout',
   REFRESH: authRoot + '/refresh',
   TOKEN: authRoot + '/token'

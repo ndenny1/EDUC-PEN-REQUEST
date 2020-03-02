@@ -91,20 +91,20 @@ export default {
       // this.messages.push(message);
       ApiService.postComment(this.request.penRequestID, message)
         .then(() => {
-          // let minute =  message.timestamp.minute();
-          // if(message.timestamp.minute() < 10){
-          //   minute = '0' + message.timestamp.minute();
-          // }
-          // message.timestamp = {
-          //   year: message.timestamp.year(),
-          //   month: message.timestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
-          //   day: message.timestamp.dayOfMonth(),
-          //   hour: message.timestamp.hour(),
-          //   minute: minute,
-          //   second: message.timestamp.second(),
-          //   millisecond: message.timestamp.nano(),
-          //   dayOfWeek: message.timestamp.dayOfWeek()
-          // };
+          let minute =  message.timestamp.minute();
+          if(message.timestamp.minute() < 10){
+            minute = '0' + message.timestamp.minute();
+          }
+          message.timestamp = {
+            year: message.timestamp.year(),
+            month: message.timestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
+            day: message.timestamp.dayOfMonth(),
+            hour: message.timestamp.hour(),
+            minute: minute,
+            second: message.timestamp.second(),
+            millisecond: message.timestamp.nano(),
+            dayOfWeek: message.timestamp.dayOfWeek()
+          };
           this.messages.push(message);
         })
         .catch(error => {

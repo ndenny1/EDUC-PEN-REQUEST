@@ -1,19 +1,70 @@
 <template>
-    <v-container style="padding-bottom: 1vh">
-            <v-col xs="6" sm="6" md="6" lg="6" xl="6" offset-xs="3" offset-sm="3" offset-md="3" offset-lg="3" offset-xl="3">
-    <v-card class="login-card">
-        <v-card-title class="gov-header">
-          <h4 id="login_text">Log In</h4>
-        </v-card-title>
-        <v-card-text id="login_descriptor">
-          To access the {{ appTitle }} Application, you must have a Basic BCeID or a B.C. Services Card.
-        </v-card-text>
-        <v-card-actions>
-            <v-row align="center" justify="center">
-                <v-btn id="login-button" @click="clearStorage" :href="authRoutes.LOGIN" class="ma-2" dark color='#003366'>Log In <v-icon>$sign_in</v-icon></v-btn>
-            </v-row>
-        </v-card-actions>
-    </v-card></v-col>
+    <v-container class="login-cards" style="padding-bottom: 1vh">
+      <v-row>
+        <v-col cols="12" xl="4" lg="4" md="4" >
+
+          <v-card>
+            <div class="img-holder">
+            <img
+              src="@/assets/images/bceid_logo.jpg"
+              class="img-card"
+              alt="B.C. Government Logo"
+            >
+            </div>
+            <v-card-text>
+              <strong class="card-bold login-card-text">Register for a Basic BCeID</strong>
+              <p class="login-card-text">Online ID for secure access to B.C. government services.</p>
+            </v-card-text>
+            <hr>
+            <v-card-actions>
+              <a class="login-card-text" href="https://www.bceid.ca/os/?4763&SkipTo=Basic#action" target="_blank" rel="noopener noreferrer">Register</a>
+            </v-card-actions>
+          </v-card>
+
+        </v-col>
+        <v-col cols="12" xl="4" lg="4" md="4">
+
+          <v-card>
+            <div class="img-holder">
+            <img
+              src="@/assets/images/bceid_logo.jpg"
+              class="img-card"
+              alt="B.C. Government Logo"
+            >
+            </div>
+            <v-card-text>
+              <strong class="card-bold login-card-text">Log in to GetMyPEN with Basic BCeID</strong>
+              <p class="login-card-text">Blah blah blah blah blah.</p>
+            </v-card-text>
+            <hr>
+            <v-card-actions>
+              <a class="login-card-text" :href="authRoutes.LOGIN_BCEID" target="_blank" rel="noopener noreferrer">Log in</a>
+            </v-card-actions>
+          </v-card>
+
+        </v-col>
+        <v-col cols="12" xl="4" lg="4" md="4">
+
+          <v-card>
+            <div class="img-holder">
+            <img
+              src="@/assets/images/bc_gov_logo.jpg"
+              class="img-card bcsc"
+              alt="B.C. Government Logo"
+            >
+            </div>
+            <v-card-text>
+              <strong class="card-bold login-card-text">Log in to GetMyPEN with BCSC</strong>
+              <p class="login-card-text">Blah blah blah blah blah.</p>
+            </v-card-text>
+            <hr>
+            <v-card-actions>
+              <a class="login-card-text" :href="authRoutes.LOGIN_BCSC" target="_blank" rel="noopener noreferrer">Log in</a>
+            </v-card-actions>
+          </v-card>
+
+        </v-col>
+      </v-row>
     </v-container>
 </template>
 
@@ -45,7 +96,7 @@ export default {
   }
   .login-card{
       padding-left: 5%;
-    max-width: 95%;
+      max-width: 95%;
   }
   .gov-header{
     color: #003366;
@@ -53,4 +104,60 @@ export default {
   .v-btn{
     text-transform: none
   }
+  .banner-image{
+    background-image: url('/assets/bceid_logo.jpg');
+  }
+  .login-cards{
+    max-width:80%;
+    margin: 2rem;
+  }
+  /* .v-card__text{
+    padding-top: 0px; 
+  } */
+  .img-card{
+    height: auto !important;
+    width: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .card-bold{
+    color: #1a5a96;
+  }
+  .login-card-text{
+    font-size: 0.95rem
+  }
+  hr{
+    margin: 0 1rem;
+    color: #ededed
+  }
+  .v-card__actions{
+    padding: 1rem;
+    padding-top: 0.3rem;
+  }
+
+  .v-application a{
+    color: #1a5a96
+  }
+  .v-card__text{
+    height: 9rem;
+  }
+  .img-holder{
+    height: 10rem;
+    margin: auto
+  }
+  .bcsc{
+    padding-top: 1rem;
+  }
+   @media screen and (max-width: 400px) {
+     .login-cards{
+       margin-bottom: 7rem;
+       margin-top: 2rem;
+       max-width:80%;
+     }
+    .v-card__text{
+      height: auto;
+    }
+   }
 </style>
