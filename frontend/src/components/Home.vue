@@ -3,21 +3,11 @@
 
   <v-container fluid v-if="!isAuthenticated && !isLoading">
     <!-- login article -->
-    <article name="login-banner" class="top-banner">
+    <article name="login-banner">
         <v-row align="center" justify="center" style="margin-right: 0;margin-left: 0">
           <Login></Login>
         </v-row>
-    </article>
-    <article id="info-section" class="infoTab">
-        <v-row align="center" justify="center" style="margin-right: 0;margin-left: 0">
-          <Info></Info>
-        </v-row>
-    </article>
-    <article id="info-cards" class="bottomContainer">
-          <v-row style="margin-right: 0;margin-left: 0">
-            <LoginCards></LoginCards>
-          </v-row>
-        </article>
+  </article>
   </v-container>
 
   <v-container fluid class="full-height" v-else-if="isLoading">

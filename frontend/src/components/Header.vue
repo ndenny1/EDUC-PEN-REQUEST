@@ -138,6 +138,7 @@ export default {
   .toolbar_header {
     background-color: rgb(0, 51, 102) !important;
     border-bottom: 2px solid rgb(252, 186, 25) !important;
+    max-height: 3.5rem;
   }
 
   .gov-header .v-btn,

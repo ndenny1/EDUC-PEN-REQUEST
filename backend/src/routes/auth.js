@@ -39,7 +39,11 @@ router.get('/error', (_req, res) => {
 });
 
 //redirects to the SSO login screen
-router.get('/login', passport.authenticate('oidc', {
+router.get('/login_bcsc', passport.authenticate('oidcBcsc', {
+  failureRedirect: 'error'
+}));
+
+router.get('/login_bceid', passport.authenticate('oidcBceid', {
   failureRedirect: 'error'
 }));
 

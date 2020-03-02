@@ -65,7 +65,7 @@ log.addLevel('debug', 1500, {
 //initialize our authentication strategy
 utils.getOidcDiscovery().then(discovery => {
   //OIDC Strategy is used for authorization
-  passport.use('oidc', new OidcStrategy({
+  passport.use('oidcBcsc', new OidcStrategy({
     issuer: discovery.issuer,
     authorizationURL: discovery.authorization_endpoint,
     tokenURL: discovery.token_endpoint,
@@ -74,7 +74,32 @@ utils.getOidcDiscovery().then(discovery => {
     clientSecret: config.get('oidc:clientSecret'),
     callbackURL: config.get('server:frontend') + '/api/auth/callback',
     scope: discovery.scopes_supported,
-    kc_idp_hint: 'keycloak_bcdevexchange'
+    kc_idp_hint: 'keycloak_bcdevexchange_bcsc'
+  }, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
+    if ((typeof (accessToken) === 'undefined') || (accessToken === null) ||
+      (typeof (refreshToken) === 'undefined') || (refreshToken === null)) {
+      return done('No access token', null);
+    }
+
+    var token = auth.generateUiToken();
+
+    //set access and refresh tokens
+    profile.jwtFrontend = token;
+    profile.jwt = accessToken;
+    profile.refreshToken = refreshToken;
+    return done(null, profile);
+  }));
+
+  passport.use('oidcBceid', new OidcStrategy({
+    issuer: discovery.issuer,
+    authorizationURL: discovery.authorization_endpoint,
+    tokenURL: discovery.token_endpoint,
+    userInfoURL: discovery.userinfo_endpoint,
+    clientID: config.get('oidc:clientId'),
+    clientSecret: config.get('oidc:clientSecret'),
+    callbackURL: config.get('server:frontend') + '/api/auth/callback',
+    scope: discovery.scopes_supported,
+    kc_idp_hint: 'keycloak_bcdevexchange_bceid'
   }, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
     if ((typeof (accessToken) === 'undefined') || (accessToken === null) ||
       (typeof (refreshToken) === 'undefined') || (refreshToken === null)) {
