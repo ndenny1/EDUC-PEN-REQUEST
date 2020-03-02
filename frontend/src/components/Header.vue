@@ -7,12 +7,6 @@
               alt="B.C. Government Logo"
       >
     <v-toolbar-title><span class="span-title">{{ appTitle }}</span></v-toolbar-title>
-    <!--
-    <div>
-      <v-btn text id="nav-home" color="text" :to="{ path: '/'}">View Users</v-btn>
-      <v-btn text id="nav-user-form" color="text" :to="{ path: '/add_user'}">Add User</v-btn>
-    </div>
-    -->
 
     <v-spacer></v-spacer>
     <div v-if="isAuthenticated && dataReady">
@@ -26,11 +20,8 @@
           </v-chip>
         </template>
         <v-list dark color="#003366">
-          <!--
-            <v-list-item id="user_info_link" to='/user'><v-list-title>User Info</v-list-title></v-list-item>
-          -->
           <v-list-item style="min-height: 1vh" id="logout_button" @click="clearStorage" :href='authRoutes.LOGOUT'>
-            <v-list-title>Logout</v-list-title>
+            <v-list-item-title>Logout</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -57,7 +48,6 @@ export default {
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
     ...mapGetters('auth', ['userInfo']),
-    ...mapGetters('auth', ['clipboard']),
     dataReady: function () {
       return this.userInfo;
     }
@@ -163,7 +153,7 @@ export default {
   }
 
   .v-alert {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 
 </style>

@@ -8,10 +8,11 @@ const lodash = require('lodash');
 const HttpStatus = require('http-status-codes');
 const jsonwebtoken = require('jsonwebtoken');
 const localDateTime = require('@js-joda/core').LocalDateTime;
-let identityTypes = null;
+const { ServiceError, ConflictStateError } = require('./error'); 
 
+let codes = null;
 
-async function getPenRequest(req, res, next) {
+function getPenRequest(req, res, next) {
   const userInfo = getSessionUser(req);
   if(!userInfo) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
@@ -30,47 +31,59 @@ async function getPenRequest(req, res, next) {
 }
 
 async function getDigitalIdData(token, digitalID) {
-  let [status, data] = await getData(token, config.get('digitalID:apiEndpoint') + `/${digitalID}`);
-  if(status !== HttpStatus.OK) {
-    data.errorSource = 'getDigitalIdData';
+  try {
+    return await getData(token, config.get('digitalID:apiEndpoint') + `/${digitalID}`);
+  } catch (e) {
+    throw new ServiceError('getDigitalIdData error', e);
   }
-  return [status, data];
 }
 
-async function getStudentPen(token, studentID) {
-  let [status, data] = await getData(token, config.get('student:apiEndpoint') + `/${studentID}`);
-  if(status !== HttpStatus.OK) {
-    data.errorSource = 'getStudentPen';
-    return [status, data];
-  } else {
-    const pen = data.pen;
-    return [HttpStatus.OK, {pen}];
+async function getStudent(token, studentID, sexCodes) {
+  try {
+    let student = await getData(token, config.get('student:apiEndpoint') + `/${studentID}`);
+    const sexInfo = lodash.find(sexCodes, ['sexCode', student.sexCode]);
+    if(!sexInfo) {
+      throw new ServiceError(`Wrong sexCode: ${student.sexCode}`);
+    }
+    student.sexLabel = sexInfo.label;
+    return student;
+  } catch (e) {
+    throw new ServiceError('getStudent error', e);
   }
 }
 
 async function getLatestPenRequest(token, digitalID) {
-  let [status, data] = await getData(token, `${config.get('penRequest:apiEndpoint')}/?digitalID=${digitalID}`);
-  if(status !== HttpStatus.OK && status !== HttpStatus.NOT_FOUND) {
-    data.errorSource = 'getLatestPenRequest';
-    return [status, data];
-  } else {
-    let penRequest = (status == HttpStatus.NOT_FOUND || data.length == 0) ? null : lodash.maxBy(data, 'statusUpdateDate');
+  let penRequest = null;
+  try {
+    let data = await getData(token, `${config.get('penRequest:apiEndpoint')}/?digitalID=${digitalID}`);
+    penRequest = lodash.maxBy(data, 'statusUpdateDate') || null;
     if(penRequest) {
       penRequest.digitalID = null;
     }
-
-    return [HttpStatus.OK, {penRequest}];
+  } catch(e) {
+    if(!e.status || e.status !== HttpStatus.NOT_FOUND) {
+      throw new ServiceError('getLatestPenRequest error', e);
+    }
   }
+
+  return penRequest;
+}
+
+function getDefaultBcscInput(userInfo) {
+  let givenArray = (userInfo._json.givenNames).split(' ');
+  givenArray.shift();
+  let middleNames = givenArray.join(' ');
+  return {
+    legalLastName: userInfo._json.surname,
+    legalFirstName: userInfo._json.givenName,
+    legalMiddleNames: middleNames,
+    gender: userInfo._json.gender,
+    email: userInfo._json.email,
+    dob: userInfo._json.birthDate
+  };
 }
 
 async function getUserInfo(req, res) {
-  if (! req.user) {
-    log.verbose('getUserInfo', req.user);
-    return res.status(HttpStatus.UNAUTHORIZED).json({
-      message: 'No session data'
-    });
-  }
-
   const userInfo = getSessionUser(req);
   if(!userInfo) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
@@ -78,73 +91,90 @@ async function getUserInfo(req, res) {
     });
   }
   
-  let resData;
-
-  if(userInfo._json.accountType === 'BCSC'){
-    let givenArray = (userInfo._json.givenNames).split(" ");
-    givenArray.shift();
-    let middleNames = givenArray.join(" ");
-    resData = {
-      displayName: userInfo._json.displayName,
-      accountType: userInfo._json.accountType,
-      legalLastName: userInfo._json.surname,
-      legalFirstName: userInfo._json.givenName,
-      legalMiddleNames: middleNames,
-      gender: userInfo._json.gender,
-      email: userInfo._json.email,
-      dob: userInfo._json.birthDate
-    };
-  } else{
-    resData = {
-      displayName: userInfo._json.displayName,
-      accountType: userInfo._json.accountType,
-    };
-  }
-
   const accessToken = userInfo.jwt;
   const digitalID = userInfo._json.digitalIdentityID;
-  let [status, data] = await getDigitalIdData(accessToken, digitalID);
-  if(status !== HttpStatus.OK) {
-    return res.status(status).json(data);
-  }
 
-  req.session.digitalIdentityData = data;
-
-  const identityType = await getIdentityType(accessToken, data.identityTypeCode);
-  if(! identityType) {
-    log.error('getIdentityType Error identityTypeCode', identityTypeCode);
-    return [HttpStatus.INTERNAL_SERVER_ERROR, {
-      message: 'Wrong identityTypeCode'
-    }];
-  }
-
-  req.session.digitalIdentityData.identityTypeLabel = identityType.label;
-  resData.identityTypeLabel = identityType.label;
-
-  if(data.studentID) {
-    [status, data] = await getStudentPen(accessToken, data.studentID);
-  } else {
-    [status, data] = await getLatestPenRequest(accessToken, digitalID);
-    if(status === HttpStatus.OK) {
-      req.session.penRequest = data.penRequest;
+  Promise.all([
+    getDigitalIdData(accessToken, digitalID), 
+    getServerSideCodes(accessToken), 
+    getLatestPenRequest(accessToken, digitalID)
+  ]).then(async ([digitalIdData, codes, penRequest]) => {
+  
+    const identityType = lodash.find(codes.identityTypes, ['identityTypeCode', digitalIdData.identityTypeCode]);
+    if(! identityType) {
+      log.error('getIdentityType Error identityTypeCode', digitalIdData.identityTypeCode);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Wrong identityTypeCode'
+      });
     }
-  }
 
-  resData = Object.assign(resData, data);
-  return res.status(status).json(resData);
+    let student = null;
+    if(digitalIdData.studentID) {
+      student = await getStudent(accessToken, digitalIdData.studentID, codes.sexCodes);
+    }
+
+    req.session.digitalIdentityData = digitalIdData;
+    req.session.digitalIdentityData.identityTypeLabel = identityType.label;
+    req.session.penRequest = penRequest;
+
+    let resData = {
+      displayName: userInfo._json.displayName,
+      accountType: userInfo._json.accountType,
+      identityTypeLabel: identityType.label,
+      ...(userInfo._json.accountType === 'BCSC' ? getDefaultBcscInput(userInfo) : {}),
+      penRequest,
+      student,
+    };
+
+    return res.status(HttpStatus.OK).json(resData);
+  }).catch(e => {
+    log.error('getUserInfo Error', e.stack);
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Get userInfo error',
+      errorSource: e.errorSource
+    });
+  });
 }
 
-async function getIdentityType(accessToken, identityTypeCode) {
-  if(!identityTypes) {
-    const url = `${config.get('digitalID:apiEndpoint')}/identityTypeCodes`;
-    const [status, resData] = await getData(accessToken, url);
-    if(status !== HttpStatus.OK) {
-      log.error('getIdentityType Error Status', status);
-      return null;
+async function getCodes(req, res) {
+  try{
+    const accessToken = getAccessToken(req);
+    if(!accessToken) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        message: 'No access token'
+      });
     }
-    identityTypes = resData;
+
+    const codeUrls = [
+      `${config.get('codeTable:apiEndpoint')}/gender-codes`, 
+      `${config.get('penRequest:apiEndpoint')}/statuses`,
+    ];
+
+    const [genderCodes, statusCodes] = await Promise.all(codeUrls.map(url => getData(accessToken, url)));
+    return res.status(HttpStatus.OK).json({genderCodes, statusCodes});
+  } catch (e) {
+    log.error('getCodes Error', e.stack);
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Get codes error'
+    });
   }
-  return lodash.find(identityTypes, ['identityTypeCode', identityTypeCode]);
+}
+
+async function getServerSideCodes(accessToken) {
+  if(!codes) {
+    try{
+      const codeUrls = [
+        `${config.get('codeTable:apiEndpoint')}/sex-codes`,
+        `${config.get('digitalID:apiEndpoint')}/identityTypeCodes`
+      ];
+
+      const [sexCodes, identityTypes] = await Promise.all(codeUrls.map(url => getData(accessToken, url)));
+      codes = {sexCodes, identityTypes};
+    } catch(e) {
+      throw new ServiceError('getServerSideCodes error', e);
+    }
+  }
+  return codes;
 }
 
 async function sendVerificationEmail(accessToken, emailAddress, penRequestId, identityTypeLabel) {
@@ -154,15 +184,11 @@ async function sendVerificationEmail(accessToken, emailAddress, penRequestId, id
     identityTypeLabel
   };
   const url = config.get('email:apiEndpoint') + '/verify';
-
-  const [status] = await postData(accessToken, reqData, url);
-  if(status !== HttpStatus.OK) {
-    log.error('sendVerificationEmail Error Status', status);
+  try {
+    return await postData(accessToken, reqData, url);
+  } catch (e) {
+    throw new ServiceError('sendVerificationEmail error', e);
   }
-
-  return [status,  {
-    message: 'Ok'
-  }];
 }
 
 async function postPenRequest(accessToken, req, userInfo) {
@@ -172,23 +198,12 @@ async function postPenRequest(accessToken, req, userInfo) {
     let reqData = lodash.cloneDeep(req);
     reqData.emailVerified = EmailVerificationStatuses.NOT_VERIFIED;
     reqData.digitalID = userInfo._json.digitalIdentityID;
-    if(userInfo._json.accountType === 'BCEID'){
-      reqData.dataSourceCode = 'DIRECT';
-    } else {
-      reqData.dataSourceCode = userInfo._json.accountType;
-    }
+    let resData = await postData(accessToken, reqData, url);
+    resData.digitalID = null;
 
-    let [status, resData] = await postData(accessToken, reqData, url);
-    if(status === HttpStatus.OK) {
-      resData.digitalID = null;
-    }
-
-    return [status, resData];
+    return resData;
   } catch(e) {
-    log.error('postPenRequest Error', e);
-    return [HttpStatus.INTERNAL_SERVER_ERROR, {
-      message: 'Post pen request error'
-    }];
+    throw new ServiceError('postPenRequest error', e);
   }
 }
 
@@ -203,26 +218,25 @@ async function submitPenRequest(req, res) {
 
     const accessToken = userInfo.jwt;
 
-    if(req.session.penRequest && (req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.REJECTED || 
-      req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.UNMATCHED)) {
+    if(req.session.penRequest && req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.REJECTED) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Submit PEN Request not allowed'
       });
     }
 
-    const [status, resData] = await postPenRequest(accessToken, req.body, userInfo);
-    if(status !== HttpStatus.OK) {
-      return res.status(status).json(resData);
-    }
+    const resData = await postPenRequest(accessToken, req.body, userInfo);
 
     req.session.penRequest = resData;
-    sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeLabel);
+    sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeLabel).catch(e => 
+      log.error('sendVerificationEmail Error', e.stack)
+    );
 
-    return res.status(status).json(resData);
+    return res.status(HttpStatus.OK).json(resData);
   } catch(e) {
-    log.error('submitPenRequest Error', e);
+    log.error('submitPenRequest Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      message: 'Submit pen request error'
+      message: 'Submit pen request error',
+      errorSource: e.errorSource
     });
   }
 }
@@ -243,7 +257,7 @@ async function postComment(req, res) {
     }
 
     const url = `${config.get('penRequest:apiEndpoint')}/${req.params.id}/comments`;
-    const commment = {
+    const comment = {
       penRetrievalRequestID: req.params.id,
       staffMemberIDIRGUID: null,
       staffMemberName: null,
@@ -251,13 +265,11 @@ async function postComment(req, res) {
       commentTimestamp: localDateTime.now().toString()
     };
 
-    const [status, data] = await postData(accessToken, commment, url);
-    if(status !== HttpStatus.OK) {
-      return res.status(status).json(data);
-    }
-    return res.status(status).json({penRetrievalReqCommentID: data.penRetrievalReqCommentID});
+    const data = await postData(accessToken, comment, url);
+
+    return res.status(HttpStatus.OK).json({penRetrievalReqCommentID: data.penRetrievalReqCommentID});
   } catch(e) {
-    log.error('postComment Error', e);
+    log.error('postComment Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Post comment error'
     });
@@ -276,10 +288,8 @@ async function getComments(req, res) {
     const accessToken = userInfo.jwt;
     const url = `${config.get('penRequest:apiEndpoint')}/${req.params.id}/comments`;
 
-    const [status, apiResData] = await getData(accessToken, url);
-    if(status !== HttpStatus.OK) {
-      return res.status(status).json(apiResData);
-    }
+    const apiResData = await getData(accessToken, url);
+
     //console.log(apiResData);
     let response = {
       participants: [],
@@ -304,73 +314,62 @@ async function getComments(req, res) {
           response.participants.push(participant);
         }
       }
-      if(element.commentTimestamp.length>23){
-        element.commentTimestamp = element.commentTimestamp.substring(0,23);
-      }
+      // if(element.commentTimestamp.length>23){
+      //   element.commentTimestamp = element.commentTimestamp.substring(0,23);
+      // }
 
-      const retrievedTimestamp = localDateTime.parse(element.commentTimestamp);
-      let minute =  retrievedTimestamp.minute();
-      if(retrievedTimestamp.minute() < 10){
-        minute = "0" + retrievedTimestamp.minute();
-      }
-      console.log(retrievedTimestamp);
+      // const retrievedTimestamp = localDateTime.parse(element.commentTimestamp);
+      // let minute =  retrievedTimestamp.minute();
+      // if(retrievedTimestamp.minute() < 10){
+      //   minute = '0' + retrievedTimestamp.minute();
+      // }
       response.messages.push({
         content: element.commentContent,
         participantId: (element.staffMemberIDIRGUID ? element.staffMemberIDIRGUID : '1'),
         myself: participant.id.toUpperCase() === response.myself.id.toUpperCase(),
-        timestamp: {
-          year: retrievedTimestamp.year(),
-          month: retrievedTimestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
-          day: retrievedTimestamp.dayOfMonth(),
-          hour: retrievedTimestamp.hour(),
-          minute: minute,
-          second: retrievedTimestamp.second(),
-          millisecond: retrievedTimestamp.nano(),
-          dayOfWeek: retrievedTimestamp.dayOfWeek()
-        }
+        timestamp: element.commentTimestamp
+        // timestamp: {
+        //   year: retrievedTimestamp.year(),
+        //   month: retrievedTimestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
+        //   day: retrievedTimestamp.dayOfMonth(),
+        //   hour: retrievedTimestamp.hour(),
+        //   minute: minute,
+        //   second: retrievedTimestamp.second(),
+        //   millisecond: retrievedTimestamp.nano(),
+        //   dayOfWeek: retrievedTimestamp.dayOfWeek()
+        // }
       });
     });
 
-    return res.status(status).json(response);
+    return res.status(HttpStatus.OK).json(response);
   } catch (e) {
-    log.error('forwardGetReq Error', e);
+    log.error('getComments Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      message: 'Forward Get error'
+      message: 'Comments Get error'
     });
   }
 }
 
 function beforeUpdatePenRequestAsInitrev(penRequest) {
   if(penRequest.penRequestStatusCode !== PenRequestStatuses.DRAFT) {
-    return [HttpStatus.CONFLICT, { message: 'Current PEN Request Status: ' + penRequest.penRequestStatusCode}];
+    throw new ConflictStateError('Current PEN Request Status: ' + penRequest.penRequestStatusCode);
   }
 
   if(penRequest.emailVerified !== EmailVerificationStatuses.NOT_VERIFIED) {
-    return [HttpStatus.CONFLICT, { message: 'Current Email Verification Status: ' + penRequest.emailVerified}];
+    throw new ConflictStateError('Current Email Verification Status: ' + penRequest.emailVerified);
   }
   
   penRequest.initialSubmitDate = localDateTime.now().toString();
   penRequest.emailVerified = EmailVerificationStatuses.VERIFIED;
 
-  return [HttpStatus.OK, penRequest];
+  return penRequest;
 }
 
 async function setPenRequestAsInitrev(penRequestID) {
-  let [status, data] = await getPenRequestApiCredentials();
-  if(status !== HttpStatus.OK) {
-    data.errorSource = 'getPenRequestApiCredentials';
-    log.error('setPenRequestAsInitrev Error', data);
-    return [status, data];
-  }
+  let data = await getPenRequestApiCredentials();
   const accessToken = data.accessToken;
 
-  [status, data] = await updatePenRequestStatus(accessToken, penRequestID, PenRequestStatuses.INITREV, beforeUpdatePenRequestAsInitrev);
-  if(status !== HttpStatus.OK) {
-    log.error('setPenRequestAsInitrev Error', data);
-    return [status, data];
-  }
-
-  return [HttpStatus.OK, data];
+  return await updatePenRequestStatus(accessToken, penRequestID, PenRequestStatuses.INITREV, beforeUpdatePenRequestAsInitrev);
 }
 
 function verifyEmailToken(token) {
@@ -388,7 +387,7 @@ function verifyEmailToken(token) {
 
     return [null, tokenPayload.jti];
   }catch(e){
-    log.error('verifyEmailToken Err', e);
+    log.error('verifyEmailToken Err', e.stack);
     return [e, null];
   }
 }
@@ -410,57 +409,47 @@ async function verifyEmail(req, res) {
       return res.redirect(verificationUrl + VerificationResults.TOKEN_ERROR);
     }
 
-    const [status] = await setPenRequestAsInitrev(penRequestID);
-    if(status === HttpStatus.CONFLICT) {
-      return res.redirect(loggedin ? baseUrl : (verificationUrl + VerificationResults.OK));
-    } else if(status !== HttpStatus.OK) {
-      return res.redirect(verificationUrl + VerificationResults.SERVER_ERROR);
-    }
+    const data = await setPenRequestAsInitrev(penRequestID);
+    req.session.penRequest = data;
 
     return res.redirect(loggedin ? baseUrl : (verificationUrl + VerificationResults.OK));
   }catch(e){
-    log.error('verifyEmail Error', e);
-    return res.redirect(verificationUrl + VerificationResults.SERVER_ERROR);
+    if(e instanceof ConflictStateError) {
+      return res.redirect(loggedin ? baseUrl : (verificationUrl + VerificationResults.OK));
+    } else {
+      log.error('verifyEmail Error', e.stack);
+      return res.redirect(verificationUrl + VerificationResults.SERVER_ERROR);
+    }
   }
 }
 
 async function updatePenRequestStatus(accessToken, penRequestID, penRequestStatus, beforeUpdate) {
-  let [status, data] = await getData(accessToken, `${config.get('penRequest:apiEndpoint')}/${penRequestID}`);
-  if(status !== HttpStatus.OK) {
-    data.errorSource = 'getPenRequest';
-    log.error('updatePenRequestStatus Error', data);
-    return [status, data];
+  try {
+    let data = await getData(accessToken, `${config.get('penRequest:apiEndpoint')}/${penRequestID}`);
+
+    let penRequest = beforeUpdate(data);
+    penRequest.penRequestStatusCode = penRequestStatus;
+    penRequest.statusUpdateDate = localDateTime.now().toString();
+
+    data = await putData(accessToken, penRequest, config.get('penRequest:apiEndpoint'));
+    data.digitalID = null;
+
+    return data;
+  } catch (e) {
+    if(e instanceof ConflictStateError) {
+      throw e;
+    } else {
+      throw new ServiceError('updatePenRequestStatus error', e);
+    }
   }
-
-  [status, data] = beforeUpdate(data);
-  if(status !== HttpStatus.OK) {
-    data.errorSource = 'beforeUpdate';
-    log.error('updatePenRequestStatus Error', data);
-    return [status, data];
-  }
-
-  let penRequest = data;
-  penRequest.penRequestStatusCode = penRequestStatus;
-  penRequest.statusUpdateDate = localDateTime.now().toString();
-
-  [status, data] = await putData(accessToken, penRequest, config.get('penRequest:apiEndpoint'));
-  if(status !== HttpStatus.OK) {
-    data.errorSource = 'updatePenRequest';
-    log.error('updatePenRequestStatus Error', data);
-    return [status, data];
-  }
-
-  data.digitalID = null;
-
-  return [HttpStatus.OK, data];
 }
 
 function beforeUpdatePenRequestAsSubsrev(penRequest) {
   if(penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
-    return [HttpStatus.CONFLICT, { message: 'Current PEN Request Status: ' + penRequest.penRequestStatusCode}];
+    throw new ConflictStateError('Current PEN Request Status: ' + penRequest.penRequestStatusCode);
   }
 
-  return [HttpStatus.OK, penRequest];
+  return penRequest;
 }
 
 async function setPenRequestAsSubsrev(req, res) {
@@ -487,17 +476,15 @@ async function setPenRequestAsSubsrev(req, res) {
       });
     }
 
-    let [status, data] = await updatePenRequestStatus(accessToken, penRequestID, penRequestStatus, beforeUpdatePenRequestAsSubsrev);
-    if(status !== HttpStatus.OK) {
-      log.error('setPenRequestAsSubsrev Error', data);
-    }
-    req.session.penRequest = data.penRequest;
+    let data = await updatePenRequestStatus(accessToken, penRequestID, penRequestStatus, beforeUpdatePenRequestAsSubsrev);
+    req.session.penRequest = data;
 
-    return res.status(status).json(data);
+    return res.status(HttpStatus.OK).json(data);
   } catch(e) {
-    log.error('setPenRequestAsSubsrev Error', e);
+    log.error('setPenRequestAsSubsrev Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      message: 'Set pen request as subsrev error'
+      message: 'Set pen request as subsrev error',
+      errorSource: e.errorSource
     });
   }
 }
@@ -517,14 +504,15 @@ async function resendVerificationEmail(req, res) {
       });
     }
 
-    const [status, data] = await sendVerificationEmail(accessToken, req.session.penRequest.email, req.session.penRequest.penRequestID, 
+    const data = await sendVerificationEmail(accessToken, req.session.penRequest.email, req.session.penRequest.penRequestID, 
       req.session.digitalIdentityData.identityTypeLabel);
 
-    return res.status(status).json(data);
+    return res.status(HttpStatus.OK).json(data);
   } catch(e) {
-    log.error('resendVerificationEmail Error', e);
+    log.error('resendVerificationEmail Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      message: 'Resend verification email error'
+      message: 'Resend verification email error',
+      errorSource: e.errorSource
     });
   }
 }
@@ -546,10 +534,10 @@ async function uploadFile(req, res) {
 
     const url = `${config.get('penRequest:apiEndpoint')}/${req.params.id}/documents`;
 
-    const [status, data] = await postData(accessToken, req.body, url);
-    return res.status(status).json(data);
+    const data = await postData(accessToken, req.body, url);
+    return res.status(HttpStatus.OK).json(data);
   } catch(e) {
-    log.error('postComment Error', e);
+    log.error('postComment Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Post comment error'
     });
@@ -557,11 +545,11 @@ async function uploadFile(req, res) {
 }
 
 async function getDocument(token, penRequestID, documentID, includeDocData = 'Y') {
-  let [status, data] = await getData(token, `${config.get('penRequest:apiEndpoint')}/${penRequestID}/documents/${documentID}?includeDocData=${includeDocData}`);
-  if(status !== HttpStatus.OK) {
-    data.errorSource = 'getDocument'; 
+  try {
+    return await getData(token, `${config.get('penRequest:apiEndpoint')}/${penRequestID}/documents/${documentID}?includeDocData=${includeDocData}`);  
+  } catch (e) {
+    throw new ServiceError('getDocument error', e);
   }
-  return [status, data];
 }
 
 async function deleteDocument(req, res) {
@@ -573,10 +561,7 @@ async function deleteDocument(req, res) {
       });
     }
 
-    let [status, resData] = await getDocument(accessToken, req.params.id, req.params.documentId, 'N');
-    if(status !== HttpStatus.OK) {
-      return res.status(status).json(resData);
-    }
+    let resData = await getDocument(accessToken, req.params.id, req.params.documentId, 'N');
 
     if(resData.createDate <= req.session.penRequest.statusUpdateDate || 
       req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
@@ -587,12 +572,13 @@ async function deleteDocument(req, res) {
 
     const url = `${config.get('penRequest:apiEndpoint')}/${req.params.id}/documents/${req.params.documentId}`;
 
-    [status] = await deleteData(accessToken, url);
-    return res.status(status).json();
+    await deleteData(accessToken, url);
+    return res.status(HttpStatus.OK).json();
   } catch (e) {
-    log.error('deleteDocument Error', e);
+    log.error('deleteDocument Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      message: 'Delete document error'
+      message: 'Delete document error',
+      errorSource: e.errorSource
     });
   }
 }
@@ -606,25 +592,24 @@ async function downloadFile(req, res) {
       });
     }
 
-    let [status, resData] = await getDocument(accessToken, req.params.id, req.params.documentId, 'Y');
-    if(status !== HttpStatus.OK) {
-      return res.status(status).json(resData);
-    }
+    let resData = await getDocument(accessToken, req.params.id, req.params.documentId, 'Y');
 
     res.setHeader('Content-disposition', 'attachment; filename=' + resData.fileName);
     res.setHeader('Content-type', resData.fileExtension);
 
-    return res.status(status).send(Buffer.from(resData.documentData, 'base64'));
+    return res.status(HttpStatus.OK).send(Buffer.from(resData.documentData, 'base64'));
   } catch (e) {
-    log.error('deleteDocument Error', e);
+    log.error('downloadFile Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      message: 'Delete document error'
+      message: 'Download file error',
+      errorSource: e.errorSource
     });
   }
 }
 
 module.exports = {
   getUserInfo,
+  getCodes,
   submitPenRequest,
   postComment,
   getComments,

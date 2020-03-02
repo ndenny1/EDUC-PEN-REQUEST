@@ -1,6 +1,13 @@
 <template>
   <v-card height="100%" width="100%">
     <div id="comments-outer" class="comments-outside">
+      <v-progress-linear
+        indeterminate
+        absolute
+        top
+        color="indigo darken-2"
+        v-if="loading"
+      ></v-progress-linear>
       <comments 
           :comments_wrapper_classes="['custom-scrollbar', 'comments-wrapper']"
           :myself="myself"
@@ -8,6 +15,7 @@
           :messages="messages"
           :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
           @submit-comment="submitComment"
+          :disabled="hideInput"
       ></comments>
   </div>
   </v-card>
@@ -31,16 +39,18 @@ export default {
     return {
       participants: [],
       messages: [],
-      toLoad: []
+      toLoad: [],
+      loading: true,
     };
   },
   computed: {
     ...mapGetters('auth', ['userInfo']),
+    ...mapGetters('penRequest', ['penRequest']),
     request() {
-      return this.userInfo.penRequest;
+      return this.penRequest;
     },
     myself() {
-      return ({name: this.userInfo.displayName, id: '1'});
+      return {name: this.userInfo.displayName, id: '1'};
     },
   },
   created() {
@@ -57,7 +67,9 @@ export default {
     }).catch(error => {
       console.log(error);
       this.alert = true;
-    });
+    }).finally(() => 
+      this.loading = false
+    );
   },
   methods: {
     /*onType: function (event) {
@@ -71,7 +83,7 @@ export default {
         this.toLoad = [];
       }, 1000);
     },
-    submitComment: function (message) {
+    submitComment: function ({message, replied}) {
       // const messageObject = {
       //   content: message,
       //   timestamp: new Date()
@@ -97,7 +109,7 @@ export default {
         })
         .catch(error => {
           console.log(error);
-        });
+        }).finally(() => replied());
     },
     onClose() {
       this.visible = false;
@@ -120,12 +132,12 @@ hr {
 }
 .comments-outside {
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-  margin-top: 0p;
+  margin-top: 0;
   max-width: 100%;
   height:100%;
   width: 100%;
   position: relative;
-  overflow-y: hide;
+  overflow-y: hidden;
 
 }
 .comments-header {

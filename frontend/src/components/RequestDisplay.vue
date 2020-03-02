@@ -1,8 +1,13 @@
 <template>
     <v-card class="request-display">  
-        <!-- <v-col class="fill-height pb-5" > -->
+        <v-row class="flex-grow-0 pb-5">
+            <v-card height="100%" width="100%" elevation=0 color="#036" class="white--text">
+                <v-card-title class="py-3 pl-5"><h1>PEN Request Status</h1></v-card-title>
+            </v-card>
+        </v-row>
         <v-row>
             <v-alert
+                id="alert-message"
                 dense
                 text
                 dismissible
@@ -17,16 +22,10 @@
         <v-row class="pb-5">
             <MessageCard></MessageCard>
         </v-row>
-        <v-row class="flex-grow-0 pb-5">
-            <v-card height="100%" width="100%" elevation=0>
-                <v-card-title class="pb-0 px-0">PEN Request Status</v-card-title>
-                <v-divider/>
-            </v-card>
-        </v-row>
         <v-row>
             <StatusCard @success-alert="setSuccessAlert" @error-alert="setErrorAlert"></StatusCard>
         </v-row>
-        <v-row>
+        <v-row v-if="this.status !== this.requestStatuses.DRAFT">
             <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
                 <RequestCard></RequestCard>
             </v-col>
@@ -34,7 +33,12 @@
                 <Chat :hideInput="this.status !== this.requestStatuses.RETURNED"></Chat>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row justify="center" v-else>
+            <v-col cols="12" xl="8" lg="8" md="8" class="px-1 py-3">
+                <RequestCard></RequestCard>
+            </v-col>
+        </v-row>
+        <v-row v-if="this.status !== this.requestStatuses.DRAFT">
             <v-col col="12" class="px-0 py-3">
                 <DocumentList :editable="this.status === this.requestStatuses.RETURNED"></DocumentList>
             </v-col>
@@ -44,7 +48,6 @@
             <v-btn color="#38598a" dark class="ml-2 text-none" :loading="submitting" @click.stop="submitMoreInfo">Submit</v-btn>
           </v-row>
         </v-card>
-    <!-- </v-col> -->
   </v-card>
 </template>
 
@@ -77,12 +80,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('auth', ['userInfo']),
+    ...mapGetters('penRequest', ['penRequest']),
     status() {
-      return this.userInfo.penRequest.penRequestStatusCode;
+      return this.penRequest.penRequestStatusCode;
     },
     request() {
-      return this.userInfo.penRequest;
+      return this.penRequest;
     },
     requestStatuses() {
       return PenRequestStatuses;
@@ -92,7 +95,7 @@ export default {
     window.scrollTo(0,0);
   },
   methods: {
-    ...mapMutations('auth', ['setPenRequest']),
+    ...mapMutations('penRequest', ['setPenRequest']),
     setSuccessAlert(alertMessage) {
       this.alertMessage = alertMessage;
       this.alertType = 'success';
@@ -128,11 +131,16 @@ export default {
 }
 
 .col{
-  padding: 0px 10px;
+  padding: 0 10px;
 }
 
 .request-display{
-  margin: 20px 0px;
-  padding: 40px;
+  margin: 10px 0 20px;
+  padding: 20px 40px;
 }
+
+#alert-message /deep/ .v-icon {
+  padding-left: 1px;
+}
+
 </style>

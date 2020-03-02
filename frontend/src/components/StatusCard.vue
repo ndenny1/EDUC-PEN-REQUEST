@@ -28,7 +28,7 @@
             </v-row>
         </v-card>
     </v-col>
-    <v-col xl="4" lg="4" md="4" sm="4" class="pa-0 align-self-start" v-if="status === requestStatuses.REJECTED || status === requestStatuses.UNMATCHED">
+    <v-col xl="4" lg="4" md="4" sm="4" class="pa-0 align-self-start" v-if="status === requestStatuses.REJECTED">
       <v-card height="100%" width="100%" elevation=0>
         <v-row no-gutters justify="end" class="pb-5">
           <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="$router.push('pen-request')">Create a new PEN Request</v-btn>
@@ -38,7 +38,7 @@
     <v-col xl="4" lg="4" md="4" sm="4" class="pa-0 align-self-start" v-else-if="status === requestStatuses.DRAFT">
       <v-card height="100%" width="100%" elevation=0 min-width="30vw">
         <v-row no-gutters justify="end" class="pb-5">
-          <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="resendVerificationEmail">Resend Verification Email</v-btn>
+          <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="resendVerificationEmail" :loading="sending">Resend Verification Email</v-btn>
         </v-row>
       </v-card>
     </v-col>
@@ -56,28 +56,20 @@ export default {
   name: 'messageCard',
   data() {
     return {
-      statusCodes: [],
+      sending: false,
     };
   },
-  created() {
-    ApiService.getPenRequestStatusCodes().then(response => {
-      this.statusCodes = response.data;
-    }).catch(e => {
-      console.log(e);
-      this.$emit('success-alert', 'Sorry, an unexpected error seems to have occured. You can refresh the page later.');
-    });
-  },
   computed: {
-    ...mapGetters('auth', ['userInfo']),
+    ...mapGetters('penRequest', ['penRequest', 'statuses']),
     status() {
-      return this.userInfo.penRequest.penRequestStatusCode;
+      return this.penRequest.penRequestStatusCode;
     },
     statusLabel() {
-      const statusCode = find(this.statusCodes, ['penRequestStatusCode', this.status]);
+      const statusCode = find(this.statuses, ['penRequestStatusCode', this.status]);
       return statusCode && statusCode.label;
     },
     request() {
-      return this.userInfo.penRequest;
+      return this.penRequest;
     },
     requestStatuses() {
       return PenRequestStatuses;
@@ -89,11 +81,14 @@ export default {
   methods: {
     moment,
     resendVerificationEmail() {
+      this.sending = true;
       ApiService.resendVerificationEmail(this.request.penRequestID).then(() => {
         this.$emit('success-alert', 'Your verification email has been sent successfully.');
       }).catch(() => {
-        this.$emit('error-alert', 'Sorry, an unexpected error seems to have occured. You can click on the resend button again later.');
-      });
+        this.$emit('error-alert', 'Sorry, an unexpected error seems to have occurred. You can click on the resend button again later.');
+      }).finally(() => 
+        this.sending = false
+      );
     },
   }
 };

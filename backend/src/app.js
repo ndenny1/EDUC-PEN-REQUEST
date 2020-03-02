@@ -45,7 +45,7 @@ var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 app.use(session({
   name: 'pen_request_cookie',
   secret: config.get('oidc:clientSecret'),
-  resave: true,
+  resave: false,
   saveUninitialized: true,
   httpOnly: true,
   secure: true,
@@ -179,8 +179,8 @@ app.use((_req, res) => {
 
 // Prevent unhandled errors from crashing application
 process.on('unhandledRejection', err => {
-  log.error(err.stack);
-  res.redirect(config.get('server:frontend') + '/error?message=unhandled_rejection');
+  log.error('Unhandled Rejection at:', err.stack || err);
+  // res.redirect(config.get('server:frontend') + '/error?message=unhandled_rejection');
 });
 
 module.exports = app;

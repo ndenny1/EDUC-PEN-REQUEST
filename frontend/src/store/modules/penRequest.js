@@ -6,31 +6,59 @@ export default {
   namespaced: true,
   state: {
     genders: null,
+    statuses: null,
     penRequest: null,
-    isLoading: true,
+    student: null,
   },
   getters: {
     genders: state => state.genders,
     genderInfo: state => genderCode => find(state.genders, ['genderCode', genderCode]),
+    statuses: state => state.statuses,
     penRequest: state => state.penRequest,
-    isLoading: state => state.isLoading,
+    student: state => state.student,
   },
   mutations: {
     setGenders: (state, genders) => {
       state.genders = genders;
     },
+    setStatuses: (state, statuses) => {
+      state.statuses = statuses;
+    },
     setPenRequest: (state, penRequest) => {
+      // penRequest.penRequestStatusCode = 'REJECTED';
+      // penRequest.failureReason = 'Can not find your record';
+
+      // penRequest.penRequestStatusCode = 'DRAFT';
+      // penRequest.statusUpdateDate = '2020-02-05T22:23:18.000+0000';
+
+      // penRequest.penRequestStatusCode = 'INITREV';
+
+      // penRequest.penRequestStatusCode = 'RETURNED';
+
+      // penRequest.penRequestStatusCode = 'AUTO';
+
+      // penRequest = null;
+
       state.penRequest = penRequest;
     },
-    setLoading: (state, isLoading) => {
-      state.isLoading = isLoading;
-    }
+    setStudent: (state, student) => {
+      // student = {
+      //   pen: '123456',
+      //   legalFirstName: 'James',
+      //   legalMiddleNames: 'Wayne',
+      //   legalLastName: 'Duke',
+      //   sexCode: 'M',
+      //   sexLabel: 'Male',
+      //   dob: '1998-01-01'
+      // };
+      state.student = student;
+    },
   },
   actions: {
     async postRequest(_context, info){
       try {
         const response = await ApiService.postPenRequest(info);
-        if(response.status !== 200){    //todo: need to fix
+        if(response.status !== 200){
           return false;
         }
         return response.data;
@@ -39,13 +67,10 @@ export default {
         return false;
       }
     },
-    async getGenderCodes({commit}) {
-      const response = await ApiService.getGenderCodes();
-      commit('setGenders', response.data);
-    },
-    async getLatestPenRequest({commit, dispatch}){
-      const userInfoRes = await ApiService.getLatestPenRequest();
-      commit('setUserInfo', userInfoRes.data);
+    async getCodes({commit}) {
+      const response = await ApiService.getCodes();
+      commit('setGenders', response.data.genderCodes);
+      commit('setStatuses', response.data.statusCodes);
     },
     getPenRequest: (_context, penRequestId) => getData(ApiService.getPenRequest, penRequestId),
   }

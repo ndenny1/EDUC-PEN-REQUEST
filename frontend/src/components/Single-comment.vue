@@ -25,10 +25,12 @@
 </template>
 
 <script>
+import {LocalDateTime} from '@js-joda/core';
+
 export default {
   computed: {
     commentObject() {
-      const d = this.comment.timestamp;
+      const d = this.toTimeObject(this.comment.timestamp);
       console.log(d);
       let amPm = 'AM';
       let hours = d.hour;
@@ -55,12 +57,12 @@ export default {
           icon: '$info'
         };
       } else {
-        let participantName = 'unknown';
-        (this.participants).forEach(element => {
-          if(this.comment.participantId === element.id){
-            participantName = element.name;
-          }
-        });
+        // let participantName = 'unknown';
+        // (this.participants).forEach(element => {
+        //   if(this.comment.participantId === element.id){
+        //     participantName = element.name;
+        //   }
+        // });
         return {
           name: 'PEN Admin',
           content: this.comment.content,
@@ -87,6 +89,27 @@ export default {
   methods: {
     toPascal(str){
       return str.replace(/\w\S*/g, m => m.charAt(0).toUpperCase() + m.substr(1).toLowerCase());
+    },
+    toTimeObject(timestamp) {
+      if(timestamp.length>23){
+        timestamp = timestamp.substring(0,23);
+      }
+
+      const retrievedTimestamp = LocalDateTime.parse(timestamp);
+      let minute =  retrievedTimestamp.minute();
+      if(retrievedTimestamp.minute() < 10){
+        minute = '0' + retrievedTimestamp.minute();
+      }
+      return {
+        year: retrievedTimestamp.year(),
+        month: retrievedTimestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
+        day: retrievedTimestamp.dayOfMonth(),
+        hour: retrievedTimestamp.hour(),
+        minute: minute,
+        second: retrievedTimestamp.second(),
+        millisecond: retrievedTimestamp.nano(),
+        dayOfWeek: retrievedTimestamp.dayOfWeek()
+      };
     }
   }
 };

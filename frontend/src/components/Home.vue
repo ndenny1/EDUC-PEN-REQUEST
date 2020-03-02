@@ -1,6 +1,5 @@
+<!--suppress ALL -->
 <template>
-
-
   <v-container fluid v-if="!isAuthenticated && !isLoading">
     <!-- login article -->
     <article name="login-banner">
@@ -23,7 +22,7 @@
     </article>
   </v-container>
 
-  <v-container fluid class="full-height" v-else-if="isAuthenticated && hasPen">
+  <!-- <v-container fluid class="full-height" v-else-if="isAuthenticated && hasPen">
     <article id="pen-display-container" class="top-banner full-height">
       <v-row align="center" justify="center" style="width: 1vw;margin-right: 0;margin-left: 0;margin-bottom: 5rem;">
         <v-col xs="6" sm="6" md="6" lg="6" xl="6">
@@ -31,7 +30,7 @@
         </v-col>
       </v-row>
     </article>
-  </v-container>
+  </v-container> -->
 
   <v-container fluid class="full-height" v-else-if="isAuthenticated && hasPenRequest">
     <article id="request-display-container" class="top-banner full-height">
@@ -69,9 +68,9 @@ import Login from './Login';
 import Info from './Info';
 import RequestForm from './RequestForm';
 import LoginCards from './LoginCards';
-import PenDisplay from './PenDisplay';
+// import PenDisplay from './PenDisplay';
 import RequestDisplay from './RequestDisplay';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 export default {
   name: 'home',
   components: {
@@ -79,28 +78,19 @@ export default {
     Info,
     LoginCards,
     RequestForm,
-    PenDisplay,
+    // PenDisplay,
     RequestDisplay,
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated', 'userInfo', 'isLoading']),
+    ...mapGetters('penRequest', ['penRequest', 'student']),
     hasPen() {
-      return !!this.userInfo && !!this.userInfo.pen;
+      return !!this.student && !!this.student.pen;
     },
     hasPenRequest() {
-      return !!this.userInfo && !!this.userInfo.penRequest;
+      return !!this.penRequest;
     },
   },
-  // methods: {
-  //   ...mapActions('penRequest', ['getGenderCodes'])
-  // },
-  // watch: {
-  //   isAuthenticated : function(val) {
-  //     if(val) {
-  //       this.getGenderCodes();
-  //     }
-  //   }
-  // }
 };
 </script>
 

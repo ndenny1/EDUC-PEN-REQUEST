@@ -53,7 +53,7 @@ export default {
 
   .gov-header {
     color: #003366;
-    padding: 10px 0px;
+    padding: 10px 0;
   }
 
 

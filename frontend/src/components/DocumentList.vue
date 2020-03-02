@@ -8,7 +8,7 @@
     <v-data-table
       :headers="headers"
       :items="documents"
-      sort-by="['createDate']"
+      sort-by="['humanCreateDate']"
       :items-per-page="15"
       :loading="loadingDocuments"
       class="fill-height"
@@ -94,7 +94,7 @@ export default {
       headers: [
         { text: 'Type', value: 'documentType',  },
         { text: 'File Name', value: 'fileName' },
-        { text: 'Upload Date/time', value: 'createDate' },
+        { text: 'Upload Date/time', value: 'humanCreateDate' },
         { text: 'Size', value: 'fileSize' },
         { text: '', value: 'action', sortable: false },
       ],
@@ -109,9 +109,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('auth', ['userInfo']),
+    ...mapGetters('penRequest', ['penRequest']),
     request() {
-      return this.userInfo.penRequest;
+      return this.penRequest;
     },
   },
   created() {
@@ -140,7 +140,7 @@ export default {
       const typeCode = find(this.documentTypes, ['documentTypeCode', document.documentTypeCode]);
       document.documentType = typeCode && typeCode.label;
       document.fileSize = humanFileSize(document.fileSize);
-      document.createDate = document.createDate.replace(/T/, ', ').replace(/\..+/, '');
+      document.humanCreateDate = document.createDate.replace(/T/, ', ').replace(/\..+/, '');
       document.deleting = false;
       return document;
     },
@@ -171,5 +171,8 @@ export default {
 <style scoped>
 .v-dialog > .v-card > .v-card__text {
   padding: 24px 24px 20px;
+}
+.v-toolbar /deep/ .v-toolbar__content {
+  padding-left: 20px !important;
 }
 </style>

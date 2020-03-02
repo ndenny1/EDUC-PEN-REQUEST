@@ -2,7 +2,7 @@
 
 const passport = require('passport');
 const express = require('express');
-const { getUserInfo, submitPenRequest, getComments, postComment, verifyEmail, setPenRequestAsSubsrev, resendVerificationEmail, getPenRequest, deleteDocument, downloadFile, uploadFile } = require('../components/pen');
+const { getUserInfo, getCodes, submitPenRequest, getComments, postComment, verifyEmail, setPenRequestAsSubsrev, resendVerificationEmail, getPenRequest, deleteDocument, downloadFile, uploadFile } = require('../components/pen');
 const { forwardGetReq } = require('../components/utils');
 const config = require('../config/index');
 
@@ -20,6 +20,8 @@ router.get('/user', passport.authenticate('jwt', { session: false }), getUserInf
 
 router.post('/request', passport.authenticate('jwt', { session: false }), submitPenRequest);
 
+router.get('/codes', passport.authenticate('jwt', { session: false }), getCodes);
+
 router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
   (req, res) => forwardGetReq(req, res, config.get('codeTable:apiEndpoint') + '/gender-codes')
 );
@@ -32,11 +34,11 @@ router.get('/pen_request_status_codes', passport.authenticate('jwt', { session: 
 //   (req, res) => forwardGetReq(req, res, config.get('penRequest:apiEndpoint') + `/${req.params.id}`)   //todo: check the pen request id
 // );
 
-router.get('/document_type_codes', passport.authenticate('jwt', { session: false }),
+router.get('/document-type-codes', passport.authenticate('jwt', { session: false }),
   (req, res) => forwardGetReq(req, res, config.get('penRequest:apiEndpoint') + '/document-types')
 );
 
-router.get('/file_requirements', passport.authenticate('jwt', { session: false }),
+router.get('/file-requirements', passport.authenticate('jwt', { session: false }),
   (req, res) => forwardGetReq(req, res, config.get('penRequest:apiEndpoint') + '/file-requirements')
 );
 

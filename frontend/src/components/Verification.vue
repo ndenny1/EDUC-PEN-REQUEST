@@ -14,11 +14,11 @@
                     <li>You will receive an email when your request has been processed.</li>
                     <li>Requests are processed during normal business hours.</li>
                     <li>In most cases you'll get a response within one business day.</li>
-                    <li><strong>We recommend that you also check back here after one business day, because email is sometimes delayed.</strong></li>
+                    <li><strong>We recommend that you also check back here after one business day.</strong></li>
                 </ul>
             </v-card>
             <v-card height="100%" width="100%" outlined color="#FFECA9" class="pa-3" v-else-if="this.status === this.verificationResults.EXPIRED">
-                <p class="mb-2"><strong>Your email verification was not completed within the time limited. Repeat the email verification process.</strong></p>
+                <p class="mb-2"><strong>Your email verification was not completed within the 24 hour time limit. Please repeat the email verification process.</strong></p>
                 <ol>
                     <li>Log in and click the "Resend Verification Email" button.</li>
                     <li>Go to your email inbox and check for an email from {{ this.ministry }}. Check your spam folder too.</li>
@@ -27,18 +27,20 @@
             </v-card>
             <v-card height="100%" width="100%" outlined color="#FFECA9" class="pa-3" v-else-if="this.status === this.verificationResults.TOKEN_ERROR">
                 <p class="mb-2"><strong>Your email verification could not be completed, for the following reason:</strong></p>
-                <ul>
-                    <li>The verification link was invalid.</li>
-                </ul>
-                <br/>
+                <p>
+                  <ul>
+                      <li>The verification link was invalid.</li>
+                  </ul>
+                </p>
                 <p>If needed, you can paste the entire verification link into your web browser's address filed.</p>
             </v-card>
             <v-card height="100%" width="100%" outlined color="#FFECA9" class="pa-3" v-else>
                 <p class="mb-2"><strong>Sorry, your email verification could not be completed, for the following reason:</strong></p>
-                <ul>
-                    <li>An unexpected error seems to have occured.</li>
-                </ul>
-                <br/>
+                <p>
+                  <ul>
+                      <li>An unexpected error seems to have occured.</li>
+                  </ul>
+                </p>
                 <p>You can click on the verification link again later. Or you can contact us if the problem persists.</p>
             </v-card>
             <p class="mt-5 mb-0" v-if="this.status === this.verificationResults.OK || this.status === this.verificationResults.EXPIRED">
