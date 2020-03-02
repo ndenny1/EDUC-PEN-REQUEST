@@ -72,7 +72,7 @@ utils.getOidcDiscovery().then(discovery => {
     userInfoURL: discovery.userinfo_endpoint,
     clientID: config.get('oidc:clientId'),
     clientSecret: config.get('oidc:clientSecret'),
-    callbackURL: config.get('server:frontend') + '/api/auth/callback',
+    callbackURL: config.get('server:frontend') + '/api/auth/callback_bcsc',
     scope: discovery.scopes_supported,
     kc_idp_hint: 'keycloak_bcdevexchange_bcsc'
   }, (_issuer, _sub, profile, accessToken, refreshToken, done) => {
@@ -97,7 +97,7 @@ utils.getOidcDiscovery().then(discovery => {
     userInfoURL: discovery.userinfo_endpoint,
     clientID: config.get('oidc:clientId'),
     clientSecret: config.get('oidc:clientSecret'),
-    callbackURL: config.get('server:frontend') + '/api/auth/callback',
+    callbackURL: config.get('server:frontend') + '/api/auth/callback_bceid',
     scope: discovery.scopes_supported,
     kc_idp_hint: 'keycloak_bcdevexchange_bceid'
   }, (_issuer, _sub, profile, accessToken, refreshToken, done) => {

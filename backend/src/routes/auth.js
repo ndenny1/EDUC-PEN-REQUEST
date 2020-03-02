@@ -14,7 +14,8 @@ const router = express.Router();
 router.get('/', (_req, res) => {
   res.status(200).json({
     endpoints: [
-      '/callback',
+      '/callback_bcsc',
+      '/callback_bceid',
       '/login',
       '/logout',
       '/refresh',
@@ -24,8 +25,17 @@ router.get('/', (_req, res) => {
 });
 
 //provides a callback location for the auth service
-router.get('/callback',
-  passport.authenticate('oidc', {
+router.get('/callback_bcsc',
+  passport.authenticate('oidcBcsc', {
+    failureRedirect: 'error'
+  }),
+  (_req, res) => {
+    res.redirect(config.get('server:frontend'));
+  }
+);
+
+router.get('/callback_bceid',
+  passport.authenticate('oidcBceid', {
     failureRedirect: 'error'
   }),
   (_req, res) => {
