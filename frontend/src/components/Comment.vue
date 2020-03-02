@@ -12,6 +12,7 @@
         <div class="bottomBar">
             <hr>
             <div class="reply">
+              <v-col class="justify-start">
                 <v-textarea
                     type="text"
                     rows=1
@@ -23,16 +24,156 @@
                     required
                     :disabled="disabled"
                 />
-                <v-btn 
-                    :disabled="replyEmpty"
-                    color="#003366"
-                    dark
-                    class="reply--button" 
-                    @click="submitComment"
-                    :loading="submitting"
+                <v-chip
+                  class="ma-1"
+                  close
+                  close-icon="fa-chevron-down"
+                  color="indigo darken-3"
+                  label
+                  outlined
                 >
-                    Reply
-                </v-btn>
+                  passport.pdf
+                </v-chip>
+                <v-menu
+                  v-model="menu"
+                  bottom
+                  right
+                  transition="scale-transition"
+                  origin="top left"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-chip
+                      class="ma-1"
+                      close
+                      close-icon="fa-chevron-down"
+                      color="indigo darken-3"
+                      label
+                      outlined
+                      v-on="on"
+                      @click:close="menu = true"
+                    >
+                      driver-license.jpeg
+                    </v-chip>
+                  </template>
+                    <v-card width="350">
+                      <v-list>
+                        <!-- <v-list-item>
+                            <v-row>
+                          <v-col cols="12" xl="4" lg="4" md="4" sm="4">
+                            <p class="mb-1">Type:</p>
+                          </v-col>
+                          <v-col cols="12" xl="8" lg="8" md="8" sm="8">
+                            <p class="mb-1"><strong>Canadian Driver License</strong></p>
+                          </v-col>
+                            </v-row>
+                        </v-list-item>
+                        <v-list-item>
+                            <v-row>
+                          <v-col cols="12" xl="4" lg="4" md="4" sm="4">
+                            <p class="mb-1">File Name:</p>
+                          </v-col>
+                          <v-col cols="12" xl="8" lg="8" md="8" sm="8">
+                            <p class="mb-1"><strong>driver-license.jpeg</strong></p>
+                          </v-col>
+                            </v-row>
+                        </v-list-item>
+                        <v-list-item>
+                            <v-row>
+                          <v-col cols="12" xl="4" lg="4" md="4" sm="4">
+                            <p class="mb-1">Upload Date/time:</p>
+                          </v-col>
+                          <v-col cols="12" xl="8" lg="8" md="8" sm="8">
+                            <p class="mb-1"><strong>2020-03-02 12:23:24</strong></p>
+                          </v-col>
+                            </v-row>
+                        </v-list-item>
+                        <v-list-item>
+                            <v-row>
+                          <v-col cols="12" xl="4" lg="4" md="4" sm="4">
+                            <p class="mb-1">Size:</p>
+                          </v-col>
+                          <v-col cols="12" xl="8" lg="8" md="8" sm="8">
+                            <p class="mb-1"><strong>134 KB</strong></p>
+                          </v-col>
+                            </v-row>
+                        </v-list-item> -->
+
+                        <v-list-item>
+                          <v-list-item-avatar>
+                            <v-icon>fa-id-card</v-icon>
+                          </v-list-item-avatar>
+
+                          <v-list-item-content>
+                            <v-list-item-title>Canadian Driver License</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item>
+                          <v-list-item-avatar>
+                            <v-icon>fa-file</v-icon>
+                          </v-list-item-avatar>
+
+                          <v-list-item-content>
+                            <v-list-item-title>driver-license.jpeg</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item>
+                          <v-list-item-avatar>
+                            <v-icon>fa-hdd</v-icon>
+                          </v-list-item-avatar>
+
+                          <v-list-item-content>
+                            <v-list-item-title>134 KB</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item>
+                          <v-list-item-avatar>
+                            <v-icon>fa-clock</v-icon>
+                          </v-list-item-avatar>
+
+                          <v-list-item-content>
+                            <v-list-item-title>2020-03-02 12:23:24</v-list-item-title>
+                          </v-list-item-content>
+                        </v-list-item>
+
+                        <!-- <v-list-item>
+                          <v-list-item-avatar>
+                            <v-icon>fa-id-card</v-icon>
+                          </v-list-item-avatar>
+
+                          <v-list-item-content>
+                            <v-list-item-title>Canadian Driver License</v-list-item-title>
+                            <v-list-item-subtitle class="mt-2">driver-license.jpeg</v-list-item-subtitle>
+                            <v-list-item-subtitle class="mt-2">134 KB</v-list-item-subtitle>
+                            <v-list-item-subtitle class="mt-2">2020-03-02 12:23:24</v-list-item-subtitle>
+                          </v-list-item-content>
+                        </v-list-item> -->
+                      </v-list>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                          <v-btn color="#003366" @click="menu = false" class="white--text">Delete</v-btn>
+                          <v-btn color="#003366" @click="menu = false" class="white--text">Cancel</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                  </v-menu>
+                <v-chip 
+                  class="ma-1"
+                  color="#003366"
+                  label
+                  outlined
+                >
+                  <v-icon left>fa-paperclip</v-icon>
+                </v-chip>
+              </v-col>
+              <v-btn 
+                  :disabled="replyEmpty"
+                  color="#003366"
+                  dark
+                  class="reply--button" 
+                  @click="submitComment"
+                  :loading="submitting"
+              >
+                  Reply
+              </v-btn>
             </div>
         </div>
     </div>
@@ -43,20 +184,6 @@ import singleComment from './Single-comment.vue';
 import {LocalDateTime} from '@js-joda/core';
 
 export default {
-  computed: {
-    iconSize() {
-      switch (this.$vuetify.breakpoint.name) {
-      case 'xs': return '30px';
-      case 'sm': return '35px';
-      case 'md': return '37px';
-      case 'lg': return '40px';
-      case 'xl': return '50px';
-      }
-    },
-    replyEmpty(){
-      return this.reply === '';
-    }
-  },
   components: {
     singleComment
   },
@@ -86,6 +213,7 @@ export default {
     return {
       reply: '',
       submitting: false,
+      menu: false,
     };
   },
   computed: {
@@ -124,7 +252,7 @@ export default {
         });
         this.reply = '';
       }
-    }
+    },
   },
 };
 </script>
@@ -182,7 +310,7 @@ export default {
 }
 .reply .reply--text {
     min-height: 40px;
-    padding: 0.3rem 0.7rem;
+    padding: 0.3rem 0;
     border: 0;
     color: #333;
     width: 100%;
@@ -249,6 +377,25 @@ hr {
 }
 .v-text-field__details{
     min-height: 0 !important;
+}
+
+.v-textarea /deep/ .v-messages {
+  min-height: fit-content !important;
+}
+
+.v-textarea /deep/ .v-text-field__details {
+  min-height: fit-content !important;
+}
+
+.v-list-item__avatar:first-child
+
+.document-label {
+  margin-right: 10px;
+}
+
+.document-label h3 {
+  line-height: 1.2;
+  font-size: 0.875rem;
 }
 
 </style>

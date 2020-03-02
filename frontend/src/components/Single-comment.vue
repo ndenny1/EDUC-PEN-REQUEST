@@ -79,6 +79,7 @@ export default {
       case 'md': return '37px';
       case 'lg': return '40px';
       case 'xl': return '50px';
+      default: return '50px';
       }
     }
   },

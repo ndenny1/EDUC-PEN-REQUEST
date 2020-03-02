@@ -22,14 +22,6 @@ router.post('/request', passport.authenticate('jwt', { session: false }), submit
 
 router.get('/codes', passport.authenticate('jwt', { session: false }), getCodes);
 
-router.get('/gender_codes', passport.authenticate('jwt', { session: false }),
-  (req, res) => forwardGetReq(req, res, config.get('codeTable:apiEndpoint') + '/gender-codes')
-);
-
-router.get('/pen_request_status_codes', passport.authenticate('jwt', { session: false }),
-  (req, res) => forwardGetReq(req, res, config.get('penRequest:apiEndpoint') + '/statuses')
-);
-
 // router.get('/request/:id', passport.authenticate('jwt', { session: false }),
 //   (req, res) => forwardGetReq(req, res, config.get('penRequest:apiEndpoint') + `/${req.params.id}`)   //todo: check the pen request id
 // );

@@ -47,9 +47,6 @@ nconf.defaults({
     clientId: process.env.PEN_REQUEST_CLIENT_ID,
     clientSecret: process.env.PEN_REQUEST_CLIENT_SECRET,
   },
-  codeTable: {
-    apiEndpoint: process.env.CODE_TABLE_ENDPOINT,
-  },
   document: {
     apiEndpoint: process.env.DOCUMENT_API_ENDPOINT,
   },

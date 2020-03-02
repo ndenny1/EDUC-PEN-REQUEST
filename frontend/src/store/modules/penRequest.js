@@ -33,7 +33,7 @@ export default {
 
       // penRequest.penRequestStatusCode = 'INITREV';
 
-      // penRequest.penRequestStatusCode = 'RETURNED';
+      penRequest.penRequestStatusCode = 'RETURNED';
 
       // penRequest.penRequestStatusCode = 'AUTO';
 
