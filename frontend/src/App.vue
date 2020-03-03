@@ -1,6 +1,7 @@
 <template>
   <v-app id="app">
     <Header/>
+    <ModalIdle v-if="isAuthenticated && isIdle"/>
     <router-view/>
     <Footer/>
   </v-app>
@@ -11,15 +12,20 @@ import { mapActions, mapMutations, mapGetters } from 'vuex';
 import HttpStatus from 'http-status-codes';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ModalIdle from './components/ModalIdle';
 
 export default {
   name: 'app',
   components: {
     Header,
-    Footer
+    Footer,
+    ModalIdle
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
+    isIdle(){
+      return this.$store.state.idleVue.isIdle;
+    }
   },
   methods: {
     ...mapMutations('auth', ['setLoading']),
