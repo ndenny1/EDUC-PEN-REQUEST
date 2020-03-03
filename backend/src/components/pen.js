@@ -164,7 +164,7 @@ async function getServerSideCodes(accessToken) {
   if(!codes) {
     try{
       const codeUrls = [
-        `${config.get('penRequest:apiEndpoint')}/sex-codes`,
+        `${config.get('student:apiEndpoint')}/sex-codes`,
         `${config.get('digitalID:apiEndpoint')}/identityTypeCodes`
       ];
 
