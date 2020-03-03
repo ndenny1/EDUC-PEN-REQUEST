@@ -38,7 +38,7 @@
             </v-card-text>
             <hr>
             <v-card-actions>
-              <a class="login-card-text" :href="authRoutes.LOGIN_BCEID" target="_blank" rel="noopener noreferrer">Log in</a>
+              <a class="login-card-text" :href="authRoutes.LOGIN_BCEID" rel="noopener noreferrer">Log in</a>
             </v-card-actions>
           </v-card>
 
@@ -59,7 +59,7 @@
             </v-card-text>
             <hr>
             <v-card-actions>
-              <a class="login-card-text" :href="authRoutes.LOGIN_BCSC" target="_blank" rel="noopener noreferrer">Log in</a>
+              <a class="login-card-text" :href="authRoutes.LOGIN_BCSC"  rel="noopener noreferrer">Log in</a>
             </v-card-actions>
           </v-card>
 
