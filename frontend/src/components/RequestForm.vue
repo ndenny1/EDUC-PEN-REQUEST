@@ -52,7 +52,8 @@
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='legalLastName'
-              :readonly="serviceCardBool"
+              @focus="setReadOnly('legalLastName')"
+              readonly
               v-model="userPost.legalLastName"
               color="#003366"
               outlined
@@ -68,7 +69,8 @@
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='legalFirstName'
-              :readonly="serviceCardBool"
+              @focus="setReadOnly('legalFirstName')"
+              readonly
               v-model="userPost.legalFirstName"
               color="#003366"
               hint="As shown on current Government Photo ID. Note, If you have ONE name only – enter it into the Legal Last Name field and leave Legal First Name blank"
@@ -81,7 +83,8 @@
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='legalMiddleNames'
-              :readonly="serviceCardBool"
+              @focus="setReadOnly('legalMiddleNames')"
+              readonly
               v-model="userPost.legalMiddleNames"
               color="#003366"
               hint="As shown on current Government Photo ID"
@@ -94,6 +97,7 @@
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='usualLastName'
+              @focus="setReadOnly('usualLastName')"
               v-model="userPost.usualLastName"
               color="#003366"
               outlined
@@ -101,11 +105,13 @@
               label="Usual Last Name (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              readonly
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='usualFirstName'
+              @focus="setReadOnly('usualFirstName')"
               v-model="userPost.usualFirstName"
               color="#003366"
               outlined
@@ -113,11 +119,13 @@
               label="Usual First Name(s) (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              readonly
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='usualMiddleNames'
+              @focus="setReadOnly('usualMiddleNames')"
               v-model="userPost.usualMiddleName"
               color="#003366"
               outlined
@@ -125,11 +133,13 @@
               label="Usual Middle Name(s) (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              readonly
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='maidenName'
+              @focus="setReadOnly('maidenName')"
               v-model="userPost.maidenName"
               color="#003366"
               hint="List all previous Last names used separated with spaces"
@@ -137,11 +147,13 @@
               label="Maiden Name (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              readonly
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='pastNames'
+              @focus="setReadOnly('pastNames')"
               v-model="userPost.pastNames"
               color="#003366"
               hint="List all previous names used separated with spaces"
@@ -149,6 +161,7 @@
               label="Past Name(s) (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              readonly
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -218,6 +231,7 @@
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='email'
+              @focus="setReadOnly('email')"
               v-model="userPost.email"
               :rules="emailRules"
               color="#003366"
@@ -227,11 +241,13 @@
               :disabled="enableDisableForm.disabled"
               required
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              readonly
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='lastBCSchool'
+              @focus="setReadOnly('lastBCSchool')"
               v-model="userPost.lastBCSchool"
               color="#003366"
               hint="Last BC K-12 school or Post Secondary Institute attended"
@@ -239,11 +255,13 @@
               label="Last B.C. School Attended (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              readonly
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='lastBCStudentNumber'
+              @focus="setReadOnly('lastBCStudentNumber')"
               v-model="userPost.lastBCSchoolStudentNumber"
               color="#003366"
               hint="School Issued Local ID"
@@ -251,11 +269,13 @@
               label="School Student ID Number (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              readonly
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='currentSchool'
+              @focus="setReadOnly('currentSchool')"
               v-model="userPost.currentSchool"
               color="#003366"
               hint="Current BC K-12 school or Post Secondary Institute"
@@ -263,6 +283,7 @@
               label="Current B.C. School Attending (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              readonly
             ></v-text-field>
           </v-col>
         </v-row>
@@ -381,7 +402,13 @@ export default {
       },
       enableDisableForm: {
         disabled: true
-      }
+      },
+      serviceCardReadOnlyFields:[
+        'legalLastName',
+        'legalFirstName',
+        'legalMiddleNames',
+        'gender',
+      ],
     };
   },
   computed: {
@@ -406,7 +433,7 @@ export default {
     },
   },
   mounted() {
-    this.disableAutoComplete();
+
     this.genderLabels = this.genders.map(a => a.label);
     //populate form if user is logged in with BCSC
     if (this.userInfo.accountType === 'BCSC') {
@@ -424,8 +451,9 @@ export default {
       this.userPost.usualMiddleName = this.userInfo.usualMiddleNames;
       this.userPost.usualLastName = this.userInfo.usualLastName;
       this.userPost.usualFirstName = this.userInfo.usualFirstName;
-      this.userPost.dob = (this.userInfo.dob).substr(0, 10);
+      this.userPost.dob = this.userInfo.dob?(this.userInfo.dob).substr(0, 10):'';
     }
+    this.removeReadonlyForIE();
   },
   methods: {
     ...mapMutations('penRequest', ['setPenRequest']),
@@ -478,27 +506,32 @@ export default {
         }
       }
     },
+    setReadOnly(field){
+      const input = document.querySelector('#'+field);
+      if(!(this.serviceCardReadOnlyFields.includes(field) && this.userInfo && this.userInfo.accountType === 'BCSC')){
+        input.removeAttribute('readonly');
+      }
+    },
     closeDialog() {
       this.dialog = false;
       if (this.isSubmitted && this.$route.name !== 'home') {
         this.$router.replace({name: 'home'});
       }
     },
-    disableAutoComplete() {
-      let elements = document.querySelectorAll('[autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"]');
+    removeReadonlyForIE() {
+      const IE = /*@cc_on!@*/!!document.documentMode;
+      if (IE) {
+        const elements = document.querySelectorAll('[autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"]');
 
-      if (!elements) {
-        return;
+        if (!elements) {
+          return;
+        }
+        for(let i=0; i< elements.length;i++ ){
+          if(!(this.serviceCardReadOnlyFields.includes(elements[i].id) && this.userInfo && this.userInfo.accountType === 'BCSC')) {
+            elements[i].removeAttribute('readonly');
+          }
+        }
       }
-
-      elements.forEach(element => {
-        element.setAttribute('readonly', 'readonly');
-        element.style.backgroundColor = 'inherit';
-
-        setTimeout(() => {
-          element.removeAttribute('readonly');
-        }, 1000);
-      });
     }
   },
 };
