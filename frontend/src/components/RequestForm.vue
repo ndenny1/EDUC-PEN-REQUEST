@@ -433,10 +433,9 @@ export default {
     },
   },
   mounted() {
-    this.removeReadonlyForIE();
+
     this.genderLabels = this.genders.map(a => a.label);
     //populate form if user is logged in with BCSC
-    console.log(this.userInfo.accountType);
     if (this.userInfo.accountType === 'BCSC') {
       this.userPost.legalLastName = this.userInfo.legalLastName;
       this.userPost.legalFirstName = this.userInfo.legalFirstName;
@@ -454,6 +453,7 @@ export default {
       this.userPost.usualFirstName = this.userInfo.usualFirstName;
       this.userPost.dob = this.userInfo.dob?(this.userInfo.dob).substr(0, 10):'';
     }
+    this.removeReadonlyForIE();
   },
   methods: {
     ...mapMutations('penRequest', ['setPenRequest']),
@@ -509,9 +509,7 @@ export default {
     setReadOnly(field){
       const input = document.querySelector('#'+field);
       if(!(this.serviceCardReadOnlyFields.includes(field) && this.userInfo && this.userInfo.accountType === 'BCSC')){
-        console.log(input);
         input.removeAttribute('readonly');
-        console.log(input);
       }
     },
     closeDialog() {
@@ -521,8 +519,7 @@ export default {
       }
     },
     removeReadonlyForIE() {
-      const IE = /*@cc_on!@*/false || !!document.documentMode;
-      console.log(IE);
+      const IE = /*@cc_on!@*/!!document.documentMode;
       if (IE) {
         const elements = document.querySelectorAll('[autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"]');
 
@@ -530,8 +527,9 @@ export default {
           return;
         }
         for(let i=0; i< elements.length;i++ ){
-          console.log(elements[i]);
-          elements[i].removeAttribute('readonly');
+          if(!(this.serviceCardReadOnlyFields.includes(elements[i].id) && this.userInfo && this.userInfo.accountType === 'BCSC')) {
+            elements[i].removeAttribute('readonly');
+          }
         }
       }
     }
