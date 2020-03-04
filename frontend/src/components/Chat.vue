@@ -13,6 +13,7 @@
           :myself="myself"
           :participants="participants"
           :messages="messages"
+          :unsubmittedDocuments="unsubmittedDocuments"
           :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
           @submit-comment="submitComment"
           :disabled="hideInput"
@@ -23,7 +24,9 @@
 <script>
 import comments from './Comment.vue';
 import ApiService from '@/common/apiService';
-import {mapGetters} from 'vuex'; 
+import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { groupBy, sortBy } from 'lodash';
+import { PenRequestStatuses } from '@/utils/constants';
 
 export default {
   components: {
@@ -46,6 +49,7 @@ export default {
   computed: {
     ...mapGetters('auth', ['userInfo']),
     ...mapGetters('penRequest', ['penRequest']),
+    ...mapGetters('document', ['unsubmittedDocuments']),
     request() {
       return this.penRequest;
     },
@@ -54,16 +58,27 @@ export default {
     },
   },
   created() {
-    ApiService.getCommentList(this.request.penRequestID).then(response => {
-      this.participants = response.data.participants;
-      this.messages = response.data.messages;
-      /*this.messages.forEach(element => {
-        const dateObj = new Date(element.timestamp.year, element.timestamp.month - 1, element.timestamp.day, element.timestamp.hour, element.timestamp.minute, element.timestamp.second);
-        element.timestamp = dateObj;
-      });*/
-      // this.messages.sort(function(a,b){
-      //   return a.timestamp.compareTo(b.timestamp);
-      // });
+    Promise.all([
+      ApiService.getDocumentList(this.request.penRequestID),
+      ApiService.getCommentList(this.request.penRequestID),
+      this.getDocumentTypeCodes()
+    ]).then(([documentRes, commentRes]) => {
+      this.participants = commentRes.data.participants;
+      this.messages = commentRes.data.messages;
+      const myMessages = this.messages.filter(message => message.myself);
+      const documents = sortBy(documentRes.data, ['createDate']);
+
+      const documentGroup = groupBy(documents, document => {
+        const dates = myMessages.map(message => message.timestamp);
+        return dates.findIndex(date => date >= document.createDate);
+      });
+
+      myMessages.forEach((message, i) => {
+        message.documents = documentGroup[i];
+      });
+
+      this.setUnsubmittedDocuments(documentGroup[-1]);
+
     }).catch(error => {
       console.log(error);
       this.alert = true;
@@ -72,6 +87,9 @@ export default {
     );
   },
   methods: {
+    ...mapActions('document', ['getDocumentTypeCodes']),
+    ...mapMutations('document', ['setUnsubmittedDocuments']),
+    ...mapMutations('penRequest', ['setPenRequest']),
     /*onType: function (event) {
       //here you can set any behavior
     },*/
@@ -84,32 +102,21 @@ export default {
       }, 1000);
     },
     submitComment: function ({message, replied}) {
-      // const messageObject = {
-      //   content: message,
-      //   timestamp: new Date()
-      // };
-      // this.messages.push(message);
-      ApiService.postComment(this.request.penRequestID, message)
-        .then(() => {
-          let minute =  message.timestamp.minute();
-          if(message.timestamp.minute() < 10){
-            minute = '0' + message.timestamp.minute();
-          }
-          message.timestamp = {
-            year: message.timestamp.year(),
-            month: message.timestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
-            day: message.timestamp.dayOfMonth(),
-            hour: message.timestamp.hour(),
-            minute: minute,
-            second: message.timestamp.second(),
-            millisecond: message.timestamp.nano(),
-            dayOfWeek: message.timestamp.dayOfWeek()
-          };
-          this.messages.push(message);
-        })
-        .catch(error => {
-          console.log(error);
-        }).finally(() => replied());
+      ApiService.postComment(this.request.penRequestID, message).then( messageRes => {
+        const postedMessage = messageRes.data;
+        return ApiService.updatePenRequestStatus(this.request.penRequestID, PenRequestStatuses.SUBSREV).then(statusRes => {
+          postedMessage.documents = this.unsubmittedDocuments
+          this.messages = [...this.messages, postedMessage];
+          this.setUnsubmittedDocuments();
+          this.setPenRequest(statusRes.data);
+        }).then(() => {
+          this.$emit('success-alert', 'Your PEN request has been submitted successfully.');
+          window.scrollTo(0,0);
+        });
+      }).catch(error => {
+        console.log(error);
+        this.$emit('error-alert', 'Sorry, an unexpected error seems to have occurred. You can click on the resend button again later.');
+      }).finally(() => replied());
     },
     onClose() {
       this.visible = false;

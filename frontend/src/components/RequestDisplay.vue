@@ -30,7 +30,11 @@
                 <RequestCard></RequestCard>
             </v-col>
             <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
-                <Chat :hideInput="this.status !== this.requestStatuses.RETURNED"></Chat>
+                <Chat 
+                  @success-alert="setSuccessAlert" 
+                  @error-alert="setErrorAlert" 
+                  :hideInput="this.status !== this.requestStatuses.RETURNED"
+                ></Chat>
             </v-col>
         </v-row>
         <v-row justify="center" v-else>
@@ -38,7 +42,7 @@
                 <RequestCard></RequestCard>
             </v-col>
         </v-row>
-        <v-row v-if="this.status !== this.requestStatuses.DRAFT">
+        <!-- <v-row v-if="this.status !== this.requestStatuses.DRAFT">
             <v-col col="12" class="px-0 py-3">
                 <DocumentList :editable="this.status === this.requestStatuses.RETURNED"></DocumentList>
             </v-col>
@@ -47,7 +51,7 @@
           <v-row no-gutters justify="end" class="py-3">
             <v-btn color="#38598a" dark class="ml-2 text-none" :loading="submitting" @click.stop="submitMoreInfo">Submit</v-btn>
           </v-row>
-        </v-card>
+        </v-card> -->
   </v-card>
 </template>
 
@@ -56,7 +60,7 @@ import { mapGetters, mapMutations } from 'vuex';
 import { PenRequestStatuses } from '@/utils/constants';
 import ApiService from '@/common/apiService';
 import Chat from './Chat';
-import DocumentList from './DocumentList';
+// import DocumentList from './DocumentList';
 import RequestCard from './RequestCard';
 import MessageCard from './MessageCard';
 import StatusCard from './StatusCard';
@@ -65,7 +69,7 @@ export default {
   name: 'requestDisplay',
   components: {
     Chat,
-    DocumentList,
+    // DocumentList,
     RequestCard,
     MessageCard,
     StatusCard

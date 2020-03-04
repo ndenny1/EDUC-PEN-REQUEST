@@ -15,6 +15,7 @@ export default {
     genderInfo: state => genderCode => find(state.genders, ['genderCode', genderCode]),
     statuses: state => state.statuses,
     penRequest: state => state.penRequest,
+    penRequestID: state => state.penRequest.penRequestID,
     student: state => state.student,
   },
   mutations: {
@@ -33,7 +34,7 @@ export default {
 
       // penRequest.penRequestStatusCode = 'INITREV';
 
-      penRequest.penRequestStatusCode = 'RETURNED';
+      // penRequest.penRequestStatusCode = 'RETURNED';
 
       // penRequest.penRequestStatusCode = 'AUTO';
 

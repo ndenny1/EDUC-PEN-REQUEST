@@ -24,145 +24,33 @@
                     required
                     :disabled="disabled"
                 />
-                <v-chip
-                  class="ma-1"
-                  close
-                  close-icon="fa-chevron-down"
-                  color="indigo darken-3"
-                  label
-                  outlined
-                >
-                  passport.pdf
-                </v-chip>
-                <v-menu
-                  v-model="menu"
-                  bottom
-                  right
-                  transition="scale-transition"
-                  origin="top left"
+                <DocumentChip
+                  v-for="document in unsubmittedDocuments"
+                  :document="document"
+                  :key="document.documentID"
+                ></DocumentChip>
+                <v-dialog  
+                  max-width="30rem" 
+                  max-height="50rem"
+                  v-model="dialog"
+                  xl="2" lg="2" md="2" xs="2" sm="2"
+                  v-if="!disabled"
                 >
                   <template v-slot:activator="{ on }">
-                    <v-chip
+                    <v-chip 
                       class="ma-1"
-                      close
-                      close-icon="fa-chevron-down"
-                      color="indigo darken-3"
+                      color="#003366"
                       label
                       outlined
                       v-on="on"
-                      @click:close="menu = true"
                     >
-                      driver-license.jpeg
+                      <v-icon left>fa-paperclip</v-icon>
                     </v-chip>
                   </template>
-                    <v-card width="350">
-                      <v-list>
-                        <!-- <v-list-item>
-                            <v-row>
-                          <v-col cols="12" xl="4" lg="4" md="4" sm="4">
-                            <p class="mb-1">Type:</p>
-                          </v-col>
-                          <v-col cols="12" xl="8" lg="8" md="8" sm="8">
-                            <p class="mb-1"><strong>Canadian Driver License</strong></p>
-                          </v-col>
-                            </v-row>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-row>
-                          <v-col cols="12" xl="4" lg="4" md="4" sm="4">
-                            <p class="mb-1">File Name:</p>
-                          </v-col>
-                          <v-col cols="12" xl="8" lg="8" md="8" sm="8">
-                            <p class="mb-1"><strong>driver-license.jpeg</strong></p>
-                          </v-col>
-                            </v-row>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-row>
-                          <v-col cols="12" xl="4" lg="4" md="4" sm="4">
-                            <p class="mb-1">Upload Date/time:</p>
-                          </v-col>
-                          <v-col cols="12" xl="8" lg="8" md="8" sm="8">
-                            <p class="mb-1"><strong>2020-03-02 12:23:24</strong></p>
-                          </v-col>
-                            </v-row>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-row>
-                          <v-col cols="12" xl="4" lg="4" md="4" sm="4">
-                            <p class="mb-1">Size:</p>
-                          </v-col>
-                          <v-col cols="12" xl="8" lg="8" md="8" sm="8">
-                            <p class="mb-1"><strong>134 KB</strong></p>
-                          </v-col>
-                            </v-row>
-                        </v-list-item> -->
-
-                        <v-list-item>
-                          <v-list-item-avatar>
-                            <v-icon>fa-id-card</v-icon>
-                          </v-list-item-avatar>
-
-                          <v-list-item-content>
-                            <v-list-item-title>Canadian Driver License</v-list-item-title>
-                          </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item>
-                          <v-list-item-avatar>
-                            <v-icon>fa-file</v-icon>
-                          </v-list-item-avatar>
-
-                          <v-list-item-content>
-                            <v-list-item-title>driver-license.jpeg</v-list-item-title>
-                          </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item>
-                          <v-list-item-avatar>
-                            <v-icon>fa-hdd</v-icon>
-                          </v-list-item-avatar>
-
-                          <v-list-item-content>
-                            <v-list-item-title>134 KB</v-list-item-title>
-                          </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item>
-                          <v-list-item-avatar>
-                            <v-icon>fa-clock</v-icon>
-                          </v-list-item-avatar>
-
-                          <v-list-item-content>
-                            <v-list-item-title>2020-03-02 12:23:24</v-list-item-title>
-                          </v-list-item-content>
-                        </v-list-item>
-
-                        <!-- <v-list-item>
-                          <v-list-item-avatar>
-                            <v-icon>fa-id-card</v-icon>
-                          </v-list-item-avatar>
-
-                          <v-list-item-content>
-                            <v-list-item-title>Canadian Driver License</v-list-item-title>
-                            <v-list-item-subtitle class="mt-2">driver-license.jpeg</v-list-item-subtitle>
-                            <v-list-item-subtitle class="mt-2">134 KB</v-list-item-subtitle>
-                            <v-list-item-subtitle class="mt-2">2020-03-02 12:23:24</v-list-item-subtitle>
-                          </v-list-item-content>
-                        </v-list-item> -->
-                      </v-list>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                          <v-btn color="#003366" @click="menu = false" class="white--text">Delete</v-btn>
-                          <v-btn color="#003366" @click="menu = false" class="white--text">Cancel</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                  </v-menu>
-                <v-chip 
-                  class="ma-1"
-                  color="#003366"
-                  label
-                  outlined
-                >
-                  <v-icon left>fa-paperclip</v-icon>
-                </v-chip>
+                  <DocumentUpload 
+                    @close:form="() => dialog = false"
+                  ></DocumentUpload>
+                </v-dialog>
               </v-col>
               <v-btn 
                   :disabled="replyEmpty"
@@ -181,11 +69,15 @@
 
 <script>
 import singleComment from './Single-comment.vue';
+import DocumentChip from './DocumentChip.vue';
+import DocumentUpload from './DocumentUpload';
 import {LocalDateTime} from '@js-joda/core';
 
 export default {
   components: {
-    singleComment
+    singleComment,
+    DocumentChip,
+    DocumentUpload
   },
   props: {
     comments_wrapper_classes: {
@@ -204,16 +96,21 @@ export default {
       type: Array,
       required: true
     },
+    unsubmittedDocuments: {
+      type: Array,
+      required: true
+    },
     disabled: {
       type: Boolean,
       default: false
     },
   },
-  data: function() {
+  data() {
     return {
       reply: '',
       submitting: false,
       menu: false,
+      dialog: false,
     };
   },
   computed: {
@@ -387,15 +284,7 @@ hr {
   min-height: fit-content !important;
 }
 
-.v-list-item__avatar:first-child
-
-.document-label {
-  margin-right: 10px;
+.v-dialog > .v-card > .v-card__text {
+  padding: 24px 24px 20px;
 }
-
-.document-label h3 {
-  line-height: 1.2;
-  font-size: 0.875rem;
-}
-
 </style>

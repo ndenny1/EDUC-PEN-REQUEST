@@ -267,7 +267,13 @@ async function postComment(req, res) {
 
     const data = await postData(accessToken, comment, url);
 
-    return res.status(HttpStatus.OK).json({penRetrievalReqCommentID: data.penRetrievalReqCommentID});
+    const message = {
+      content: data.commentContent,
+      participantId: '1',
+      myself: true,
+      timestamp: data.commentTimestamp
+    };
+    return res.status(HttpStatus.OK).json(message);
   } catch(e) {
     log.error('postComment Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -537,9 +543,9 @@ async function uploadFile(req, res) {
     const data = await postData(accessToken, req.body, url);
     return res.status(HttpStatus.OK).json(data);
   } catch(e) {
-    log.error('postComment Error', e.stack);
+    log.error('uploadFile Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      message: 'Post comment error'
+      message: 'Upload file error'
     });
   }
 }

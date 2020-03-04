@@ -102,7 +102,6 @@ export default {
       commit('penRequest/setPenRequest', userInfoRes.data.penRequest, { root: true });
       commit('penRequest/setStudent', userInfoRes.data.student, { root: true });
     },
-
     //retrieves the json web token from local storage. If not in local storage, retrieves it from API
     async getJwtToken(context) {
       context.commit('setError', false);
