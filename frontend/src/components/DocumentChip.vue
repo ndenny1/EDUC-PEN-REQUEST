@@ -113,7 +113,7 @@ export default {
       return humanFileSize(this.document.fileSize);
     },
     humanCreateDate() {
-      return this.document.createDate.replace(/T/, ', ').replace(/\..+/, '')
+      return this.document.createDate.replace(/T/, ', ').replace(/\..+/, '');
     },
     documentUrl() {
       return `${ApiRoutes.PEN_REQUEST}/${this.penRequestID}/documents/${this.document.documentID}/download/${this.document.fileName}`;

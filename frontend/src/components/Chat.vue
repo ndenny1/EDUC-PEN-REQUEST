@@ -105,7 +105,7 @@ export default {
       ApiService.postComment(this.request.penRequestID, message).then( messageRes => {
         const postedMessage = messageRes.data;
         return ApiService.updatePenRequestStatus(this.request.penRequestID, PenRequestStatuses.SUBSREV).then(statusRes => {
-          postedMessage.documents = this.unsubmittedDocuments
+          postedMessage.documents = this.unsubmittedDocuments;
           this.messages = [...this.messages, postedMessage];
           this.setUnsubmittedDocuments();
           this.setPenRequest(statusRes.data);
@@ -115,7 +115,8 @@ export default {
         });
       }).catch(error => {
         console.log(error);
-        this.$emit('error-alert', 'Sorry, an unexpected error seems to have occurred. You can click on the resend button again later.');
+        this.$emit('error-alert', 'Sorry, an unexpected error seems to have occurred. You can click on the reply button again later.');
+        window.scrollTo(0,0);
       }).finally(() => replied());
     },
     onClose() {
