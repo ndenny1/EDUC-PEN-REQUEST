@@ -34,7 +34,7 @@
             </div>
             <v-card-text>
               <strong class="card-bold login-card-text">Log in to GetMyPEN with Basic BCeID</strong>
-              <p class="login-card-text">Blah blah blah blah blah.</p>
+              <p class="login-card-text"></p>
             </v-card-text>
             <hr>
             <v-card-actions>
@@ -54,8 +54,8 @@
             >
             </div>
             <v-card-text>
-              <strong class="card-bold login-card-text">Log in to GetMyPEN with BCSC</strong>
-              <p class="login-card-text">Blah blah blah blah blah.</p>
+              <strong class="card-bold login-card-text">Log in to GetMyPEN with BCServices Card</strong>
+              <p class="login-card-text"></p>
             </v-card-text>
             <hr>
             <v-card-actions>
