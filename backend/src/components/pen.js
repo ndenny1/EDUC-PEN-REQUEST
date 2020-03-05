@@ -269,6 +269,8 @@ async function submitPenRequest(req, res) {
       const autoMatchResults = await getAutoMatchResults(accessToken, userInfo._json);
       reqData.bcscAutoMatchOutcome = autoMatchResults.bcscAutoMatchOutcome;
       reqData.bcscAutoMatchDetails = autoMatchResults.bcscAutoMatchDetails;
+    } else {
+      reqData.bcscAutoMatchDetails = 'No auto-match performed for Basic BCeID';
     }
 
     const resData = await postPenRequest(accessToken, reqData, userInfo);
