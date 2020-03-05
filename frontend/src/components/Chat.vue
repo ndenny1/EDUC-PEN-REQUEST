@@ -14,7 +14,6 @@
           :participants="participants"
           :messages="messages"
           :unsubmittedDocuments="unsubmittedDocuments"
-          :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
           @submit-comment="submitComment"
           :disabled="hideInput"
       ></comments>

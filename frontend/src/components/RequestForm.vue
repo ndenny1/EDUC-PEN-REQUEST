@@ -33,7 +33,7 @@
 
       <v-container fluid>
         <v-row>
-          <v-col id="personal_declaration"  cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
+          <v-col cols="12" class="declaration py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-checkbox
               v-model="declared"
               color="green"
@@ -268,7 +268,7 @@
       </v-container>
       <v-container fluid noPadding>
         <v-row>
-          <v-col id="declaration" cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
+          <v-col cols="12" class="declaration py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-checkbox id="acceptance_chk"
               v-model="acceptance"
               color="green"
@@ -519,7 +519,7 @@ export default {
     max-width: 1vw;
   }
 
-  #declaration /deep/ .v-icon {
+  .declaration /deep/ .v-icon {
     padding-left: 2px;
   }
 

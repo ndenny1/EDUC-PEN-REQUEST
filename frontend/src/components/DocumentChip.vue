@@ -21,9 +21,9 @@
       </v-chip>
     </template>
 
-    <v-card width="380" class="pa-2">
+    <v-card width="380px" class="pa-1 pa-sm-2">
       <v-list>
-        <v-list-item>
+        <v-list-item class="px-1 pa-sm-2">
           <v-list-item-avatar>
             <v-icon>fa-id-card</v-icon>
           </v-list-item-avatar>
@@ -32,7 +32,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item class="px-1 pa-sm-2">
           <v-list-item-avatar>
             <v-icon>fa-file</v-icon>
           </v-list-item-avatar>
@@ -43,7 +43,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item class="px-1 pa-sm-2">
           <v-list-item-avatar>
             <v-icon>fa-hdd</v-icon>
           </v-list-item-avatar>
@@ -52,7 +52,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item class="px-1 pa-sm-2">
           <v-list-item-avatar>
             <v-icon>fa-clock</v-icon>
           </v-list-item-avatar>
@@ -149,5 +149,34 @@ export default {
 </script>
 
 <style scoped>
+
+@media screen and (max-width: 320px) {
+  .v-list-item /deep/ .v-list-item__title {
+    font-size: 0.85rem;
+  }
+
+  .v-avatar {
+    margin-right: 0 !important;
+  }
+
+  .v-icon {
+    padding-left: 0 !important;
+    font-size: 1.2rem;
+  }
+}
+
+@media screen and (min-width: 321px) and (max-width: 410px) {
+  .v-list-item /deep/ .v-list-item__title {
+    font-size: 0.9rem;
+  }
+
+  .v-avatar {
+    margin-right: 4px !important;
+  }
+
+  .v-icon {
+    padding-left: 4px !important;
+  }
+}
 
 </style>

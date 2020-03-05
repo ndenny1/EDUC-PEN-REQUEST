@@ -12,7 +12,9 @@
         <div class="bottomBar">
             <hr>
             <div class="reply">
-              <v-col class="justify-start">
+              <v-col>
+                <v-row>
+                <v-col cols="12" sm="" class="pa-0">
                 <v-textarea
                     type="text"
                     rows=1
@@ -24,6 +26,21 @@
                     required
                     :disabled="disabled"
                 />
+                </v-col>
+                <v-col class="flex-grow-0 flex-shrink-1 align-self-center pa-0">
+                <v-btn 
+                  :disabled="replyEmpty"
+                  color="#003366"
+                  dark
+                  class="reply--button" 
+                  @click="submitComment"
+                  :loading="submitting"
+                >
+                  Reply
+                </v-btn>
+                </v-col>
+              </v-row>
+              <v-row>
                 <DocumentChip
                   v-for="document in unsubmittedDocuments"
                   :document="document"
@@ -38,7 +55,7 @@
                 >
                   <template v-slot:activator="{ on }">
                     <v-chip 
-                      class="ma-1"
+                      class="mx-1 my-3 order-last"
                       color="#003366"
                       label
                       outlined
@@ -51,17 +68,8 @@
                     @close:form="() => dialog = false"
                   ></DocumentUpload>
                 </v-dialog>
+              </v-row>
               </v-col>
-              <v-btn 
-                  :disabled="replyEmpty"
-                  color="#003366"
-                  dark
-                  class="reply--button" 
-                  @click="submitComment"
-                  :loading="submitting"
-              >
-                  Reply
-              </v-btn>
             </div>
         </div>
     </div>
