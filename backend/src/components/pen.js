@@ -1,6 +1,6 @@
 'use strict';
 
-const { getSessionUser, getAccessToken, deleteData, getData, postData, putData, PenRequestStatuses, VerificationResults, EmailVerificationStatuses } = require('./utils');
+const { getSessionUser, getAccessToken, deleteData, getDataWithParams, getData, postData, putData, PenRequestStatuses, VerificationResults, EmailVerificationStatuses } = require('./utils');
 const { getPenRequestApiCredentials } = require('./auth');
 const config = require('../config/index');
 const log = require('npmlog');
@@ -191,6 +191,45 @@ async function sendVerificationEmail(accessToken, emailAddress, penRequestId, id
   }
 }
 
+async function getAutoMatchResults(accessToken, userInfo) {
+  try {
+    const url = config.get('demographics:apiEndpoint');
+
+    let params = {
+      params: {
+        studSurName: userInfo['surname'],
+        studGiven: userInfo['givenName'],
+        studMiddle: userInfo['givenNames'].replace(userInfo['givenName'],'').trim(),
+        studBirth: userInfo['birthDate'].split('-').join(''),
+        studSex: userInfo['gender'].charAt(0)
+      }
+    };
+
+    const autoMatchResults = await getDataWithParams(accessToken, url, params);
+    let bcscAutoMatchOutcome;
+    let bcscAutoMatchDetails;
+    if(autoMatchResults.length < 1) {
+      bcscAutoMatchOutcome = 'NOMATCH';
+      bcscAutoMatchDetails = 'Zero PEN records found by BCSC auto-match';
+    }
+    else if(autoMatchResults.length > 1) {
+      bcscAutoMatchOutcome = 'MANYMATCHES';
+      bcscAutoMatchDetails = autoMatchResults.length + ' PEN records found by BCSC auto-match';
+    }
+    else {
+      bcscAutoMatchOutcome = 'ONEMATCH';
+      bcscAutoMatchDetails = `${autoMatchResults.pen} ${autoMatchResults['studSurname']}, ${autoMatchResults['studGiven']}, ${autoMatchResults['studMiddle']}`;
+    }
+
+    return {
+      bcscAutoMatchOutcome: bcscAutoMatchOutcome,
+      bcscAutoMatchDetails: bcscAutoMatchDetails
+    };
+  } catch(e) {
+    throw new ServiceError('getAutoMatchResults error', e);
+  }
+}
+
 async function postPenRequest(accessToken, req, userInfo) {
   try{
     const url = config.get('penRequest:apiEndpoint') + '/';
@@ -224,7 +263,15 @@ async function submitPenRequest(req, res) {
       });
     }
 
-    const resData = await postPenRequest(accessToken, req.body, userInfo);
+    let reqData = req.body;
+
+    if(userInfo._json.accountType === 'BCSC') {
+      const autoMatchResults = await getAutoMatchResults(accessToken, userInfo._json);
+      reqData.bcscAutoMatchOutcome = autoMatchResults.bcscAutoMatchOutcome;
+      reqData.bcscAutoMatchDetails = autoMatchResults.bcscAutoMatchDetails;
+    }
+
+    const resData = await postPenRequest(accessToken, reqData, userInfo);
 
     req.session.penRequest = resData;
     sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeLabel).catch(e => 
