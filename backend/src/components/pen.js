@@ -16,7 +16,8 @@ function getPenRequest(req, res, next) {
   const userInfo = getSessionUser(req);
   if(!userInfo) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
-      message: 'No session data'
+      status: 401,
+      message: 'you are not authorized to access this page'
     });
   }
 

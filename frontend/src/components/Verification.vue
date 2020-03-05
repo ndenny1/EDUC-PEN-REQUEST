@@ -32,7 +32,7 @@
                       <li>The verification link was invalid.</li>
                   </ul>
                 </p>
-                <p>If needed, you can paste the entire verification link into your web browser's address filed.</p>
+                <p>If needed, you can paste the entire verification link into your web browser's address field.</p>
             </v-card>
             <v-card height="100%" width="100%" outlined color="#FFECA9" class="pa-3" v-else>
                 <p class="mb-2"><strong>Sorry, your email verification could not be completed, for the following reason:</strong></p>
