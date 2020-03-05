@@ -66,6 +66,9 @@ nconf.defaults({
     apiEndpoint: process.env.PEN_REQUEST_EMAIL_API_ENDPOINT,
     secretKey: process.env.PEN_REQUEST_EMAIL_SECRET_KEY,
   },
+  demographics: {
+    apiEndpoint: process.env.STUDENT_DEMOG_API_ENDPOINT,
+  },
 });
 console.log(nconf.get('logoutEndpoint'));
 console.log(nconf.get('siteMinder_logout_endpoint'));

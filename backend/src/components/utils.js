@@ -89,6 +89,26 @@ async function getData(token, url) {
   }
 }
 
+async function getDataWithParams(token, url, params) {
+  try{
+    params.headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    log.info('get Data Url', url);
+    const response = await axios.get(url, params);
+    log.info('get Data Status', response.status);
+    log.info('get Data StatusText', response.statusText);
+    log.verbose('get Data Res', minify(response.data));
+
+    return response.data;
+  } catch (e) {
+    log.error('getDataWithParams Error', e.response ? e.response.status : e.message);
+    const status = e.response ? e.response.status : HttpStatus.INTERNAL_SERVER_ERROR;
+    throw new ApiError(status, { message: 'API Get error'}, e);
+  }
+}
+
 async function forwardPostReq(req, res, url) {
   try{
     const accessToken = getAccessToken(req);
@@ -201,6 +221,7 @@ const utils = {
   getAccessToken,
   deleteData,
   forwardGetReq,
+  getDataWithParams,
   getData,
   forwardPostReq,
   postData,
