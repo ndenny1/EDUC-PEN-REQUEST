@@ -9,8 +9,7 @@ import {AuthRoutes} from '../utils/constants';
 export default {
   data() {
     return {
-      routes: AuthRoutes,
-      idleTime:process.env.VUE_APP_IDLE_TIMEOUT
+      routes: AuthRoutes
     };
   },
   mounted() {

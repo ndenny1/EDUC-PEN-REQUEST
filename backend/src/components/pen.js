@@ -152,6 +152,10 @@ async function getCodes(req, res) {
     ];
 
     const [genderCodes, statusCodes] = await Promise.all(codeUrls.map(url => getData(accessToken, url)));
+    if(genderCodes){
+      // forcing sort if API did not return in sorted order.
+      genderCodes.sort((a,b)=> a.displayOrder - b.displayOrder);
+    }
     return res.status(HttpStatus.OK).json({genderCodes, statusCodes});
   } catch (e) {
     log.error('getCodes Error', e.stack);

@@ -192,9 +192,10 @@
                 ref="picker"
                 v-model="userPost.dob"
                 show-current
-                :max="new Date().toISOString().substr(0, 10)"
+                :max="new Date(this.localDate.now().minusYears(5).toString()).toISOString().substr(0, 10)"
                 min="1903-01-01"
                 @change="save"
+                :reactive="true"
               ></v-date-picker>
             </v-menu>
           </v-col>
@@ -336,10 +337,12 @@
 
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
+import {LocalDate} from '@js-joda/core';
 
 export default {
   data() {
     return {
+      localDate:LocalDate,
       genderLabels: [],
       genderHint: 'As listed on current Government Photo ID',
       legalLastNameHint: 'As shown on current Government Photo ID. Note, If you have ONE name only – enter it in Legal Last Name field and leave Legal First Name blank',
@@ -488,6 +491,9 @@ export default {
         this.$router.replace({name: 'home'});
       }
     },
+    maxSelectableDate(){
+      return new Date(LocalDate.now().minusYears(5).toString()).toISOString().substr(0, 10);
+    }
   },
 };
 </script>
