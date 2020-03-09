@@ -46,10 +46,10 @@ export default {
     commentObject() {
       const d = this.toTimeObject(this.comment.timestamp);
       let amPm = 'am';
-      let hours = d.hour;
+      //let hours = d.hour;
       if(d.hour > 12){
         amPm = 'pm';
-        hours = d.hour - 12;
+        //hours = d.hour - 12;
       }
       // if(d.minute < 10){
       //   d.minute = "0" + d.minute;
@@ -168,7 +168,7 @@ export default {
   padding: 0.2rem 1rem;
 }
 .studentGreen{
-  background-color: #e2efd9;
+  background-color: #E9F2DF;
   padding: 0.5rem;
   align-items: center;
   color: #333;
@@ -176,7 +176,7 @@ export default {
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 .adminBlue{
-  background-color: #deeaf6;
+  background-color: #F2F2F2;
   padding: 0.5rem;
 
   align-items: center;
