@@ -1,5 +1,5 @@
 <template>
-  <div id="status-card" class="d-flex flex-wrap">
+  <div id="status-card" class="d-flex flex-wrap px-1">
     <v-col xl="auto" lg="auto" md="auto" sm="auto" class="py-0 pl-0">
         <v-card height="100%" width="100%" elevation=0>
             <v-row no-gutters>

@@ -1,42 +1,42 @@
 <template>
     <div :class="commentObject.color">
-          <v-row class="header-row">
-            <!-- <v-col class="header-col iconCol" md="auto">
-              <v-avatar size="48">
+      <v-row>
+          <v-col class="pa-0 iconCol" md="auto">
+              <!-- <v-avatar> -->
                   <v-icon :size="iconSize">{{ commentObject.icon }}</v-icon>
-              </v-avatar>
-            </v-col> -->
-            <v-col class="header-col">
-              <p class="username" href="#">
-                  <!-- {{ commentObject.name }} on -->
-              <!-- </p>
-              <p class="timestamp"> -->
-                On {{ commentObject.timestamp}},
-                <strong>{{ commentObject.name }}</strong> said:
-              </p>
-            </v-col>
-        </v-row>
-        <v-row>
-          <v-col class="content-col">
-              <span>{{ commentObject.content }}</span>
+              <!-- </v-avatar> -->
           </v-col>
+          <v-col class="pa-0 header-col">
+            <p class="username mb-0" href="#">
+                <strong>{{ commentObject.name }}</strong> at {{ commentObject.timestamp}}
+            </p>
+            <!-- <p class="timestamp"> 
+              On {{ commentObject.timestamp}},
+              <strong>{{ commentObject.name }}</strong> said:
+            </p> -->
+          </v-col>
+      </v-row>
+      <v-row class="pl-9 pl-sm-10">
+        <v-col class="content-col">
+        <v-row>
+              <span>{{ commentObject.content }}</span>
         </v-row>
         <v-row>
-          <v-col class="content-col">
             <DocumentChip
               v-for="document in comment.documents"
               :document="document"
               :key="document.documentID"
-              :disabled="true"
+              :undeletable="true"
             ></DocumentChip>
-          </v-col>
         </v-row>
+        </v-col>
+      </v-row>
     </div>
 </template>
 
 <script>
 import DocumentChip from './DocumentChip.vue';
-import {LocalDateTime} from '@js-joda/core';
+import {LocalDateTime, DateTimeFormatter} from '@js-joda/core';
 
 export default {
   components: {
@@ -45,11 +45,10 @@ export default {
   computed: {
     commentObject() {
       const d = this.toTimeObject(this.comment.timestamp);
-      console.log(d);
-      let amPm = 'AM';
+      let amPm = 'am';
       let hours = d.hour;
       if(d.hour > 12){
-        amPm = 'PM';
+        amPm = 'pm';
         hours = d.hour - 12;
       }
       // if(d.minute < 10){
@@ -60,25 +59,21 @@ export default {
 
 
       // d.month = d.month.pascalCase();
-      d.month = d.month.substring(0, 3);
-      const readableTime = d.month + ' ' + d.day + ', ' + d.year + ' ' + hours + ':' + d.minute + ' ' + amPm;
+      //d.month = d.month.substring(0, 3);
+      //const readableTime = d.month + ' ' + d.day + ', ' + d.year + ' ' + hours + ':' + d.minute + ' ' + amPm;
+      const readableTime = d.dateTime + amPm; //d.year + '-' + d.month + '-' + d.day + ' ' + hours + ':' + d.minute + ' ' + amPm;
       if(this.comment.myself){
         return {
-          name: 'You',
+          name: this.myself.name,
           content: this.comment.content,
           timestamp: readableTime,
           color: 'studentGreen',
           icon: '$info'
         };
       } else {
-        // let participantName = 'unknown';
-        // (this.participants).forEach(element => {
-        //   if(this.comment.participantId === element.id){
-        //     participantName = element.name;
-        //   }
-        // });
+        const participant = this.participants.find(element => this.comment.participantId === element.id);
         return {
-          name: 'PEN Admin',
+          name: participant ? participant.name : 'PEN Admin',
           content: this.comment.content,
           timestamp: readableTime,
           color: 'adminBlue',
@@ -88,12 +83,12 @@ export default {
     },
     iconSize() {
       switch (this.$vuetify.breakpoint.name) {
-      case 'xs': return '30px';
-      case 'sm': return '35px';
-      case 'md': return '37px';
-      case 'lg': return '40px';
-      case 'xl': return '50px';
-      default: return '50px';
+      case 'xs': return '22px';
+      case 'sm': return '25px';
+      case 'md': return '25px';
+      case 'lg': return '28px';
+      case 'xl': return '28px';
+      default: return '25px';
       }
     }
   },
@@ -118,12 +113,14 @@ export default {
       return {
         year: retrievedTimestamp.year(),
         month: retrievedTimestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
+        monthValue: retrievedTimestamp.monthValue(),
         day: retrievedTimestamp.dayOfMonth(),
         hour: retrievedTimestamp.hour(),
         minute: minute,
         second: retrievedTimestamp.second(),
         millisecond: retrievedTimestamp.nano(),
-        dayOfWeek: retrievedTimestamp.dayOfWeek()
+        dayOfWeek: retrievedTimestamp.dayOfWeek(),
+        dateTime: retrievedTimestamp.format(DateTimeFormatter.ofPattern('yyyy-MM-dd h:m')) 
       };
     }
   }
@@ -153,7 +150,8 @@ export default {
 }
 .username{
   padding-left: 0.5rem;
-  font-size: 0.7rem;
+  padding-right: 0.1rem;
+  font-size: 0.85rem;
 }
 .timestamp{
   font-size: 0.72rem;
@@ -167,13 +165,11 @@ export default {
   padding-bottom: 0;
 }
 .content-col{
-  padding-left: 2rem;
-  padding-bottom: 0.5rem;
-  padding-top: 0.5rem;
+  padding: 0.2rem 1rem;
 }
 .studentGreen{
   background-color: #e2efd9;
-  padding: 0.7rem;
+  padding: 0.5rem;
   align-items: center;
   color: #333;
   border-bottom: 1px solid #97888e;
@@ -181,7 +177,7 @@ export default {
 }
 .adminBlue{
   background-color: #deeaf6;
-  padding: 0.7rem;
+  padding: 0.5rem;
 
   align-items: center;
   color: #333;

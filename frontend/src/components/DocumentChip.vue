@@ -8,10 +8,11 @@
   >
     <template v-slot:activator="{ on }">
       <v-chip
-        class="ma-1"
+        class="chip-overflow ma-1 align-self-center"
         close
         close-icon="fa-chevron-down"
-        color="indigo darken-3"
+        color="#0C7CBA"
+        :disabled="disabled"
         label
         outlined
         v-on="on"
@@ -68,7 +69,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-          <v-btn color="#003366" @click.stop="deleteDocument()" class="white--text" :loading="deleting" v-if="!disabled">Delete</v-btn>
+          <v-btn color="#003366" @click.stop="deleteDocument()" class="white--text" :loading="deleting" v-if="!undeletable">Delete</v-btn>
           <v-btn color="#003366" @click="menu = false" class="white--text">Cancel</v-btn>
         </v-card-actions>
     </v-card>
@@ -88,6 +89,10 @@ export default {
       required: true
     },
     disabled: {
+      type: Boolean,
+      default: false
+    },
+    undeletable: {
       type: Boolean,
       default: false
     },
@@ -149,6 +154,23 @@ export default {
 </script>
 
 <style scoped>
+
+.chip-overflow /deep/ .v-chip__content {
+  line-height: 28px;
+  display: inline-block !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 28px !important;
+  position: relative;
+}
+
+.chip-overflow /deep/ .v-chip__close {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  width: 24px;
+}
 
 @media screen and (max-width: 320px) {
   .v-list-item /deep/ .v-list-item__title {

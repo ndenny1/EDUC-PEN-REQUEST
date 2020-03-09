@@ -1,8 +1,8 @@
 <template>
-    <v-card class="request-display">  
+    <v-card class="mx-0 mt-2 mb-5 px-6 py-2 px-sm-10 py-sm-5">  
         <v-row class="flex-grow-0 pb-5">
             <v-card height="100%" width="100%" elevation=0 color="#036" class="white--text">
-                <v-card-title class="py-3 pl-5"><h1>PEN Request Status</h1></v-card-title>
+                <v-card-title class="py-3 pl-5"><h1>{{status === requestStatuses.RETURNED ? 'Provide More Info for PEN Request' : 'PEN Request Status'}}</h1></v-card-title>
             </v-card>
         </v-row>
         <v-row>
@@ -25,22 +25,16 @@
         <v-row>
             <StatusCard @success-alert="setSuccessAlert" @error-alert="setErrorAlert"></StatusCard>
         </v-row>
-        <v-row v-if="this.status !== this.requestStatuses.DRAFT">
-            <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
-                <RequestCard></RequestCard>
-            </v-col>
-            <v-col cols="12" xl="6" lg="6" md="6" class="px-1 py-3">
-                <Chat 
-                  @success-alert="setSuccessAlert" 
-                  @error-alert="setErrorAlert" 
-                  :hideInput="this.status !== this.requestStatuses.RETURNED"
-                ></Chat>
-            </v-col>
+        <v-row class="pb-5">
+          <Chat 
+            @success-alert="setSuccessAlert" 
+            @error-alert="setErrorAlert" 
+            :hideInput="status !== requestStatuses.RETURNED"
+            v-if="status !== requestStatuses.DRAFT || status !== requestStatuses.INITREV"
+          ></Chat>
         </v-row>
-        <v-row justify="center" v-else>
-            <v-col cols="12" xl="8" lg="8" md="8" class="px-1 py-3">
-                <RequestCard></RequestCard>
-            </v-col>
+        <v-row>
+          <RequestCard></RequestCard>
         </v-row>
         <!-- <v-row v-if="this.status !== this.requestStatuses.DRAFT">
             <v-col col="12" class="px-0 py-3">
@@ -140,7 +134,7 @@ export default {
 
 .request-display{
   margin: 10px 0 20px;
-  padding: 20px 40px;
+  
 }
 
 #alert-message /deep/ .v-icon {
