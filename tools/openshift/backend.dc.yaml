@@ -33,7 +33,7 @@ objects:
           deploymentconfig: "${APP_NAME}-backend-${JOB_NAME}"
       spec:
         containers:
-        - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-backend:${JOB_NAME}
+        - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-backend:latest
           imagePullPolicy: IfNotPresent
           volumeMounts:
           - name: tls-certs
@@ -80,7 +80,7 @@ objects:
         - "${APP_NAME}-backend-${JOB_NAME}"
         from:
           kind: ImageStreamTag
-          name: "${REPO_NAME}-backend:${JOB_NAME}"
+          name: "${REPO_NAME}-backend:latest"
           namespace: "${NAMESPACE}"
       type: ImageChange
 - apiVersion: v1
