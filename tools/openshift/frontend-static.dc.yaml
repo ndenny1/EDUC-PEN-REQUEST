@@ -34,7 +34,7 @@
             deploymentconfig: "${APP_NAME}-frontend-${JOB_NAME}"
         spec:
           containers:
-          - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-frontend-static:${JOB_NAME}
+          - image: docker-registry.default.svc:5000/${NAMESPACE}/${REPO_NAME}-frontend-static:latest
             imagePullPolicy: IfNotPresent
             volumeMounts:
             - name: tls-certs
@@ -79,7 +79,7 @@
           - "${APP_NAME}-frontend-${JOB_NAME}"
           from:
             kind: ImageStreamTag
-            name: "${REPO_NAME}-frontend-static:${JOB_NAME}"
+            name: "${REPO_NAME}-frontend-static:latest"
             namespace: "${NAMESPACE}"
         type: ImageChange
   - apiVersion: v1

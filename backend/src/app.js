@@ -37,8 +37,12 @@ app.use(bodyParser.urlencoded({
   limit: '50mb'
 }));
 
+morgan.token('date', (req, res, tz) => {
+  return moment().tz(tz).format();
+})
+morgan.format('dtFormat', '[:date[America/Vancouver]] ":method :url" :status :res[content-length] - :response-time ms');
 //initialize logging middleware
-app.use(morgan(config.get('server:morganFormat')));
+app.use(morgan('dtFormat'));
 
 //sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
 const expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
