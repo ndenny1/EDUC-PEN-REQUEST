@@ -2,22 +2,21 @@
   <v-card class="document-upload">
 
     <v-card-title><h3>Document Upload</h3></v-card-title>
-
+    <!-- <v-card-text> -->
     <v-form
       ref="form"
       v-model="validForm"
-    >
+    > 
       <v-select 
         color="#003366" 
         v-model="documentTypeCode" 
         required 
         :rules="requiredRules" 
         outlined 
-        attach
         :eager="eager"
         :items="documentTypes" 
-        label="Document Type">
-      </v-select>
+        label="Document Type"
+      ></v-select>
       <v-file-input
         color="#003366"
         :rules="fileRules"
@@ -27,6 +26,8 @@
         :error-messages="fileInputError"
         @change="selectFile"
       ></v-file-input>
+      </v-form>
+      <!-- </v-card-text> -->
       <v-alert
         dense
         text
@@ -63,7 +64,7 @@
           Close
         </v-btn>
       </v-card-actions>
-    </v-form>
+    
 
   </v-card>
 </template>
@@ -71,18 +72,11 @@
 <script>
 import { humanFileSize } from '@/utils/file';
 import ApiService from '@/common/apiService';
+import { mapGetters, mapMutations } from 'vuex';
 import { sortBy } from 'lodash';
 
 export default {
   props: {
-    penRequestID: {
-      type: String,
-      required: true
-    },
-    documentTypeCodes: {
-      type: Array,
-      required: true
-    },
     eager: {
       type: Boolean,
       default: false
@@ -112,6 +106,8 @@ export default {
     });
   },
   computed: {
+    ...mapGetters('document', ['documentTypeCodes']),
+    ...mapGetters('penRequest', ['penRequestID']),
     dataReady () {
       return this.validForm && this.file && !this.active;
     },
@@ -121,6 +117,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('document', ['setUploadedDocument']),
     closeForm() {
       this.resetForm();
       this.$emit('close:form');
@@ -181,7 +178,7 @@ export default {
       };
 
       return ApiService.uploadFile(this.penRequestID, document).then(response => {
-        this.$emit('uploaded', response.data);
+        this.setUploadedDocument(response.data);
         this.resetForm();
         this.setSuccessAlert();
       }).catch(() => {
@@ -203,10 +200,9 @@ export default {
 
 <style scoped>
 .document-upload{
-  padding: 1rem;
+  padding: 1.1rem;
   max-width: 50rem;
   min-width: 10rem;
-  ;
 }
 
 .v-dialog > .v-card > .v-card__text {

@@ -59,7 +59,6 @@
               :rules="requiredRules(legalLastNameHint)"
               :hint="legalLastNameHint"
               label="Legal Last Name"
-              width="100%"
               :disabled="enableDisableForm.disabled"
               required
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
@@ -81,7 +80,6 @@
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='legalMiddleNames'
-              :readonly="serviceCardBool"
               v-model="userPost.legalMiddleNames"
               color="#003366"
               hint="As shown on current Government Photo ID"
@@ -194,9 +192,10 @@
                 ref="picker"
                 v-model="userPost.dob"
                 show-current
-                :max="new Date().toISOString().substr(0, 10)"
+                :max="new Date(this.localDate.now().minusYears(5).toString()).toISOString().substr(0, 10)"
                 min="1903-01-01"
                 @change="save"
+                :reactive="true"
               ></v-date-picker>
             </v-menu>
           </v-col>
@@ -338,10 +337,12 @@
 
 <script>
 import {mapGetters, mapMutations, mapActions} from 'vuex';
+import {LocalDate} from '@js-joda/core';
 
 export default {
   data() {
     return {
+      localDate:LocalDate,
       genderLabels: [],
       genderHint: 'As listed on current Government Photo ID',
       legalLastNameHint: 'As shown on current Government Photo ID. Note, If you have ONE name only – enter it in Legal Last Name field and leave Legal First Name blank',
@@ -381,7 +382,13 @@ export default {
       },
       enableDisableForm: {
         disabled: true
-      }
+      },
+      serviceCardReadOnlyFields:[
+        'legalLastName',
+        'legalFirstName',
+        'legalMiddleNames',
+        'gender',
+      ],
     };
   },
   computed: {
@@ -406,7 +413,7 @@ export default {
     },
   },
   mounted() {
-    this.disableAutoComplete();
+
     this.genderLabels = this.genders.map(a => a.label);
     //populate form if user is logged in with BCSC
     if (this.userInfo.accountType === 'BCSC') {
@@ -424,7 +431,7 @@ export default {
       this.userPost.usualMiddleName = this.userInfo.usualMiddleNames;
       this.userPost.usualLastName = this.userInfo.usualLastName;
       this.userPost.usualFirstName = this.userInfo.usualFirstName;
-      this.userPost.dob = (this.userInfo.dob).substr(0, 10);
+      this.userPost.dob = this.userInfo.dob?(this.userInfo.dob).substr(0, 10):'';
     }
   },
   methods: {
@@ -484,21 +491,8 @@ export default {
         this.$router.replace({name: 'home'});
       }
     },
-    disableAutoComplete() {
-      let elements = document.querySelectorAll('[autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"]');
-
-      if (!elements) {
-        return;
-      }
-
-      elements.forEach(element => {
-        element.setAttribute('readonly', 'readonly');
-        element.style.backgroundColor = 'inherit';
-
-        setTimeout(() => {
-          element.removeAttribute('readonly');
-        }, 1000);
-      });
+    maxSelectableDate(){
+      return new Date(LocalDate.now().minusYears(5).toString()).toISOString().substr(0, 10);
     }
   },
 };

@@ -2,8 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import Home from '@/components/Home.vue';
-//import User from '@/components/UserInfo.vue';
-//import store from '@/store/index.js';
+import Logout from './components/Logout';
+import SessionExpired from './components/SessionExpired';
 import RequestPage from '@/components/RequestPage.vue';
 import Verification from '@/components/Verification.vue';
 import ErrorPage from '@/components/ErrorPage.vue';
@@ -34,17 +34,16 @@ const router = new VueRouter({
       name: 'error',
       component: ErrorPage
     },
-    /*
     {
-      path: '/user',
-      name: 'user',
-      component: User,
-      meta: {
-        requiresAuth: true,
-        name: 'User Info'
-      }
+      path: '/logout',
+      name: 'logout',
+      component: Logout
     },
-    */
+    {
+      path: '/session-expired',
+      name: 'session-expired',
+      component: SessionExpired
+    },
     {
       path: '*',
       name: 'notfound',
@@ -52,16 +51,5 @@ const router = new VueRouter({
     }
   ]
 });
-
-/*router.beforeEach((to, _from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!store.getters.isAuthenticated) {
-      next('home');
-    }
-  }
-  else{
-    next();
-  }
-});*/
 
 export default router;

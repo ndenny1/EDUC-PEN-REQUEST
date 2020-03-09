@@ -34,11 +34,11 @@
             </div>
             <v-card-text>
               <strong class="card-bold login-card-text">Log in to GetMyPEN with Basic BCeID</strong>
-              <p class="login-card-text">Blah blah blah blah blah.</p>
+              <p class="login-card-text"></p>
             </v-card-text>
             <hr>
             <v-card-actions>
-              <a class="login-card-text" :href="authRoutes.LOGIN_BCEID" target="_blank" rel="noopener noreferrer">Log in</a>
+              <a class="login-card-text" :href="authRoutes.LOGIN_BCEID" rel="noopener noreferrer">Log in</a>
             </v-card-actions>
           </v-card>
 
@@ -54,12 +54,12 @@
             >
             </div>
             <v-card-text>
-              <strong class="card-bold login-card-text">Log in to GetMyPEN with BCSC</strong>
-              <p class="login-card-text">Blah blah blah blah blah.</p>
+              <strong class="card-bold login-card-text">Log in to GetMyPEN with BCServices Card</strong>
+              <p class="login-card-text"></p>
             </v-card-text>
             <hr>
             <v-card-actions>
-              <a class="login-card-text" :href="authRoutes.LOGIN_BCSC" target="_blank" rel="noopener noreferrer">Log in</a>
+              <a class="login-card-text" :href="authRoutes.LOGIN_BCSC"  rel="noopener noreferrer">Log in</a>
             </v-card-actions>
           </v-card>
 

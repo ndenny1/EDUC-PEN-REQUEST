@@ -1,6 +1,6 @@
 'use strict';
 
-const { getSessionUser, getAccessToken, deleteData, getData, postData, putData, PenRequestStatuses, VerificationResults, EmailVerificationStatuses } = require('./utils');
+const { getSessionUser, getAccessToken, deleteData, getDataWithParams, getData, postData, putData, PenRequestStatuses, VerificationResults, EmailVerificationStatuses } = require('./utils');
 const { getPenRequestApiCredentials } = require('./auth');
 const config = require('../config/index');
 const log = require('npmlog');
@@ -16,7 +16,8 @@ function getPenRequest(req, res, next) {
   const userInfo = getSessionUser(req);
   if(!userInfo) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
-      message: 'No session data'
+      status: 401,
+      message: 'you are not authorized to access this page'
     });
   }
 
@@ -151,6 +152,10 @@ async function getCodes(req, res) {
     ];
 
     const [genderCodes, statusCodes] = await Promise.all(codeUrls.map(url => getData(accessToken, url)));
+    if(genderCodes){
+      // forcing sort if API did not return in sorted order.
+      genderCodes.sort((a,b)=> a.displayOrder - b.displayOrder);
+    }
     return res.status(HttpStatus.OK).json({genderCodes, statusCodes});
   } catch (e) {
     log.error('getCodes Error', e.stack);
@@ -164,7 +169,7 @@ async function getServerSideCodes(accessToken) {
   if(!codes) {
     try{
       const codeUrls = [
-        `${config.get('penRequest:apiEndpoint')}/sex-codes`,
+        `${config.get('student:apiEndpoint')}/sex-codes`,
         `${config.get('digitalID:apiEndpoint')}/identityTypeCodes`
       ];
 
@@ -188,6 +193,45 @@ async function sendVerificationEmail(accessToken, emailAddress, penRequestId, id
     return await postData(accessToken, reqData, url);
   } catch (e) {
     throw new ServiceError('sendVerificationEmail error', e);
+  }
+}
+
+async function getAutoMatchResults(accessToken, userInfo) {
+  try {
+    const url = config.get('demographics:apiEndpoint');
+
+    let params = {
+      params: {
+        studSurName: userInfo['surname'],
+        studGiven: userInfo['givenName'],
+        studMiddle: userInfo['givenNames'].replace(userInfo['givenName'],'').trim(),
+        studBirth: userInfo['birthDate'].split('-').join(''),
+        studSex: userInfo['gender'].charAt(0)
+      }
+    };
+
+    const autoMatchResults = await getDataWithParams(accessToken, url, params);
+    let bcscAutoMatchOutcome;
+    let bcscAutoMatchDetails;
+    if(autoMatchResults.length < 1) {
+      bcscAutoMatchOutcome = 'NOMATCH';
+      bcscAutoMatchDetails = 'Zero PEN records found by BCSC auto-match';
+    }
+    else if(autoMatchResults.length > 1) {
+      bcscAutoMatchOutcome = 'MANYMATCHES';
+      bcscAutoMatchDetails = autoMatchResults.length + ' PEN records found by BCSC auto-match';
+    }
+    else {
+      bcscAutoMatchOutcome = 'ONEMATCH';
+      bcscAutoMatchDetails = `${autoMatchResults.pen} ${autoMatchResults['studSurname']}, ${autoMatchResults['studGiven']}, ${autoMatchResults['studMiddle']}`;
+    }
+
+    return {
+      bcscAutoMatchOutcome: bcscAutoMatchOutcome,
+      bcscAutoMatchDetails: bcscAutoMatchDetails
+    };
+  } catch(e) {
+    throw new ServiceError('getAutoMatchResults error', e);
   }
 }
 
@@ -224,7 +268,17 @@ async function submitPenRequest(req, res) {
       });
     }
 
-    const resData = await postPenRequest(accessToken, req.body, userInfo);
+    let reqData = req.body;
+
+    if(userInfo._json.accountType === 'BCSC') {
+      const autoMatchResults = await getAutoMatchResults(accessToken, userInfo._json);
+      reqData.bcscAutoMatchOutcome = autoMatchResults.bcscAutoMatchOutcome;
+      reqData.bcscAutoMatchDetails = autoMatchResults.bcscAutoMatchDetails;
+    } else {
+      reqData.bcscAutoMatchDetails = 'No auto-match performed for Basic BCeID';
+    }
+
+    const resData = await postPenRequest(accessToken, reqData, userInfo);
 
     req.session.penRequest = resData;
     sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeLabel).catch(e => 
@@ -267,7 +321,13 @@ async function postComment(req, res) {
 
     const data = await postData(accessToken, comment, url);
 
-    return res.status(HttpStatus.OK).json({penRetrievalReqCommentID: data.penRetrievalReqCommentID});
+    const message = {
+      content: data.commentContent,
+      participantId: '1',
+      myself: true,
+      timestamp: data.commentTimestamp
+    };
+    return res.status(HttpStatus.OK).json(message);
   } catch(e) {
     log.error('postComment Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -537,9 +597,9 @@ async function uploadFile(req, res) {
     const data = await postData(accessToken, req.body, url);
     return res.status(HttpStatus.OK).json(data);
   } catch(e) {
-    log.error('postComment Error', e.stack);
+    log.error('uploadFile Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      message: 'Post comment error'
+      message: 'Upload file error'
     });
   }
 }

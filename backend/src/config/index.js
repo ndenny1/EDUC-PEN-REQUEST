@@ -8,10 +8,15 @@ const env = process.env.NODE_ENV;
 // Setlocal environment to "local" to run locally (duh)
 // $env:NODE_ENV="local"
 
+nconf.argv()
+  .env()
+  .file({ file: path.join(__dirname, `${env}.json`) });
+
 //injects environment variables into the json file
 nconf.overrides({
   environment: env,
   logoutEndpoint: process.env.SOAM_URL + '/auth/realms/master/protocol/openid-connect/logout',
+  siteMinder_logout_endpoint: process.env.SITEMINDER_LOGOUT_ENDPOINT,
   server: {
     logLevel: 'verbose',
     morganFormat: 'dev',
@@ -20,13 +25,11 @@ nconf.overrides({
 });
 
 
-nconf.argv()
-  .env()
-  .file({ file: path.join(__dirname, `${env}.json`) });
 
 nconf.defaults({
   environment: env,
   logoutEndpoint: process.env.SOAM_URL + '/auth/realms/master/protocol/openid-connect/logout',
+  siteMinder_logout_endpoint: process.env.SITEMINDER_LOGOUT_ENDPOINT,
   server: {
     frontend: process.env.SERVER_FRONTEND,
     logLevel: 'verbose',
@@ -43,9 +46,6 @@ nconf.defaults({
     apiEndpoint: process.env.PEN_REQUEST_API_ENDPOINT,
     clientId: process.env.PEN_REQUEST_CLIENT_ID,
     clientSecret: process.env.PEN_REQUEST_CLIENT_SECRET,
-  },
-  codeTable: {
-    apiEndpoint: process.env.CODE_TABLE_ENDPOINT,
   },
   document: {
     apiEndpoint: process.env.DOCUMENT_API_ENDPOINT,
@@ -66,6 +66,10 @@ nconf.defaults({
     apiEndpoint: process.env.PEN_REQUEST_EMAIL_API_ENDPOINT,
     secretKey: process.env.PEN_REQUEST_EMAIL_SECRET_KEY,
   },
+  demographics: {
+    apiEndpoint: process.env.STUDENT_DEMOG_API_ENDPOINT,
+  },
 });
-
+console.log(nconf.get('logoutEndpoint'));
+console.log(nconf.get('siteMinder_logout_endpoint'));
 module.exports = nconf;

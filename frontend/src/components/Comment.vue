@@ -12,6 +12,7 @@
         <div class="bottomBar">
             <hr>
             <div class="reply">
+              <v-col class="justify-start">
                 <v-textarea
                     type="text"
                     rows=1
@@ -23,16 +24,44 @@
                     required
                     :disabled="disabled"
                 />
-                <v-btn 
-                    :disabled="replyEmpty"
-                    color="#003366"
-                    dark
-                    class="reply--button" 
-                    @click="submitComment"
-                    :loading="submitting"
+                <DocumentChip
+                  v-for="document in unsubmittedDocuments"
+                  :document="document"
+                  :key="document.documentID"
+                ></DocumentChip>
+                <v-dialog  
+                  max-width="30rem" 
+                  max-height="50rem"
+                  v-model="dialog"
+                  xl="2" lg="2" md="2" xs="2" sm="2"
+                  v-if="!disabled"
                 >
-                    Reply
-                </v-btn>
+                  <template v-slot:activator="{ on }">
+                    <v-chip 
+                      class="ma-1"
+                      color="#003366"
+                      label
+                      outlined
+                      v-on="on"
+                    >
+                      <v-icon left>fa-paperclip</v-icon>
+                    </v-chip>
+                  </template>
+                  <DocumentUpload 
+                    @close:form="() => dialog = false"
+                  ></DocumentUpload>
+                </v-dialog>
+              </v-col>
+              <v-btn 
+                  :disabled="replyEmpty"
+                  color="#003366"
+                  dark
+                  class="reply--button" 
+                  @click="submitComment"
+                  :loading="submitting"
+              >
+                  Reply
+              </v-btn>
             </div>
         </div>
     </div>
@@ -40,25 +69,15 @@
 
 <script>
 import singleComment from './Single-comment.vue';
+import DocumentChip from './DocumentChip.vue';
+import DocumentUpload from './DocumentUpload';
 import {LocalDateTime} from '@js-joda/core';
 
 export default {
-  computed: {
-    iconSize() {
-      switch (this.$vuetify.breakpoint.name) {
-      case 'xs': return '30px';
-      case 'sm': return '35px';
-      case 'md': return '37px';
-      case 'lg': return '40px';
-      case 'xl': return '50px';
-      }
-    },
-    replyEmpty(){
-      return this.reply === '';
-    }
-  },
   components: {
-    singleComment
+    singleComment,
+    DocumentChip,
+    DocumentUpload
   },
   props: {
     comments_wrapper_classes: {
@@ -77,15 +96,21 @@ export default {
       type: Array,
       required: true
     },
+    unsubmittedDocuments: {
+      type: Array,
+      required: true
+    },
     disabled: {
       type: Boolean,
       default: false
     },
   },
-  data: function() {
+  data() {
     return {
       reply: '',
       submitting: false,
+      menu: false,
+      dialog: false,
     };
   },
   computed: {
@@ -124,7 +149,7 @@ export default {
         });
         this.reply = '';
       }
-    }
+    },
   },
 };
 </script>
@@ -182,7 +207,7 @@ export default {
 }
 .reply .reply--text {
     min-height: 40px;
-    padding: 0.3rem 0.7rem;
+    padding: 0.3rem 0;
     border: 0;
     color: #333;
     width: 100%;
@@ -251,4 +276,15 @@ hr {
     min-height: 0 !important;
 }
 
+.v-textarea /deep/ .v-messages {
+  min-height: fit-content !important;
+}
+
+.v-textarea /deep/ .v-text-field__details {
+  min-height: fit-content !important;
+}
+
+.v-dialog > .v-card > .v-card__text {
+  padding: 24px 24px 20px;
+}
 </style>

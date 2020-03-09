@@ -21,13 +21,27 @@
               <span>{{ commentObject.content }}</span>
           </v-col>
         </v-row>
+        <v-row>
+          <v-col class="content-col">
+            <DocumentChip
+              v-for="document in comment.documents"
+              :document="document"
+              :key="document.documentID"
+              :disabled="true"
+            ></DocumentChip>
+          </v-col>
+        </v-row>
     </div>
 </template>
 
 <script>
+import DocumentChip from './DocumentChip.vue';
 import {LocalDateTime} from '@js-joda/core';
 
 export default {
+  components: {
+    DocumentChip
+  },
   computed: {
     commentObject() {
       const d = this.toTimeObject(this.comment.timestamp);
@@ -79,6 +93,7 @@ export default {
       case 'md': return '37px';
       case 'lg': return '40px';
       case 'xl': return '50px';
+      default: return '50px';
       }
     }
   },
