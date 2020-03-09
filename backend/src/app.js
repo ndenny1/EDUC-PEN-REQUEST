@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 
-app.use(morgan(congfig.get('server:morganFormat')));
+app.use(morgan(config.get('server:morganFormat')));
 
 //sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
 const expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
