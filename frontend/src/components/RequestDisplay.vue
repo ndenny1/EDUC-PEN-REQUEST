@@ -2,7 +2,9 @@
     <v-card class="mx-0 mt-2 mb-5 px-6 py-2 px-sm-10 py-sm-5">  
         <v-row class="flex-grow-0 pb-5">
             <v-card height="100%" width="100%" elevation=0 color="#036" class="white--text">
-                <v-card-title class="py-3 pl-5"><h1>{{status === requestStatuses.RETURNED ? 'Provide More Info for PEN Request' : 'PEN Request Status'}}</h1></v-card-title>
+                <v-card-title class="request-display-header px-1 px-sm-5">
+                  <h1>{{status === requestStatuses.RETURNED ? 'Provide More Info for PEN Request' : 'PEN Request Status'}}</h1>
+                </v-card-title>
             </v-card>
         </v-row>
         <v-row>
@@ -25,7 +27,7 @@
         <v-row>
             <StatusCard @success-alert="setSuccessAlert" @error-alert="setErrorAlert"></StatusCard>
         </v-row>
-        <v-row class="pb-5">
+        <v-row>
           <Chat 
             @success-alert="setSuccessAlert" 
             @error-alert="setErrorAlert" 
@@ -124,21 +126,23 @@ export default {
 </script>
 
 <style scoped>
-.full-height{
-  height: 100%;
-}
-
-.col{
-  padding: 0 10px;
-}
-
-.request-display{
-  margin: 10px 0 20px;
-  
-}
 
 #alert-message /deep/ .v-icon {
   padding-left: 1px;
+}
+
+@media screen and (max-width: 600px) {
+
+  .request-display-header {
+    display: flex;
+    justify-content: center;
+  }
+
+  .request-display-header h1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 </style>

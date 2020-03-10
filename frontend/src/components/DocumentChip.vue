@@ -8,7 +8,7 @@
   >
     <template v-slot:activator="{ on }">
       <v-chip
-        class="chip-overflow ma-1 align-self-center"
+        class="chip-overflow ma-1 px-2 align-self-center"
         close
         close-icon="fa-chevron-down"
         color="#0C7CBA"
@@ -24,7 +24,7 @@
 
     <v-card width="380px" class="pa-1 pa-sm-2">
       <v-list>
-        <v-list-item class="px-1 pa-sm-2">
+        <v-list-item class="pa-0 pa-sm-0">
           <v-list-item-avatar>
             <v-icon>fa-id-card</v-icon>
           </v-list-item-avatar>
@@ -33,7 +33,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item class="px-1 pa-sm-2">
+        <v-list-item class="px-0 pa-sm-0">
           <v-list-item-avatar>
             <v-icon>fa-file</v-icon>
           </v-list-item-avatar>
@@ -44,7 +44,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item class="px-1 pa-sm-2">
+        <v-list-item class="px-0 pa-sm-0">
           <v-list-item-avatar>
             <v-icon>fa-hdd</v-icon>
           </v-list-item-avatar>
@@ -53,7 +53,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item class="px-1 pa-sm-2">
+        <v-list-item class="px-0 pa-sm-0">
           <v-list-item-avatar>
             <v-icon>fa-clock</v-icon>
           </v-list-item-avatar>
@@ -161,15 +161,30 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-right: 28px !important;
+  padding-right: 32px !important;
   position: relative;
 }
 
 .chip-overflow /deep/ .v-chip__close {
+  border-left: 1px solid #0C7CBA;
   position: absolute;
   top: 5px;
   right: 8px;
   width: 24px;
+}
+
+.v-list-item {
+  min-height: 0;
+}
+.v-list-item__content {
+  padding: 8px 0;
+}
+
+.v-avatar {
+  margin: 4px 16px 4px 0 !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  width: 36px !important;
 }
 
 @media screen and (max-width: 320px) {
@@ -193,11 +208,11 @@ export default {
   }
 
   .v-avatar {
-    margin-right: 4px !important;
+    margin-right: 12px !important;
   }
 
   .v-icon {
-    padding-left: 4px !important;
+    padding-left: 10px !important;
   }
 }
 

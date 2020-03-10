@@ -13,7 +13,7 @@
     <article id="pen-display-container" class="top-banner full-height">
       <v-row align="center" justify="center">
         <v-progress-circular
-                :size="70"
+                :size="60"
                 :width="7"
                 color="primary"
                 indeterminate

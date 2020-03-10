@@ -75,27 +75,29 @@
         :class="`slider ${showConfirm ? 'open' : 'closed'}`"
         color="#FFECA9"
       >
-        <div class="pa-2">
-        <span class="mx-1 mx-sm-3">
-          <strong>Are you sure you are done?</strong>
-        </span>
-        <v-btn
-          rounded
-          color="#0C7CBA"
-          class="ma-1 white--text"
-          @click="reenter"
-        >
-          No
-        </v-btn>
-        <v-btn
-          rounded
-          color="#0C7CBA"
-          class="ma-1 white--text"
-          :loading="submitting"
-          @click="submitComment"
-        >
-          Yes, Submit
-        </v-btn>
+        <div class="pa-2 d-flex flex-wrap">
+          <span class="mx-1 mx-sm-3 align-self-center">
+            <strong>Are you sure you are done?</strong>
+          </span>
+          <div class="d-flex flex-nowrap">
+            <v-btn
+              rounded
+              color="#0C7CBA"
+              class="ma-1 white--text"
+              @click="reenter"
+            >
+              No
+            </v-btn>
+            <v-btn
+              rounded
+              color="#0C7CBA"
+              class="ma-1 white--text"
+              :loading="submitting"
+              @click="submitComment"
+            >
+              Yes, Submit
+            </v-btn>
+          </div>
         </div>
       </v-card>
     <!-- </div> -->

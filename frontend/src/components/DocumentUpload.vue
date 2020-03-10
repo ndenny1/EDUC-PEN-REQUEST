@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { humanFileSize } from '@/utils/file';
+import { humanFileSize, getFileNameWithMaxNameLength } from '@/utils/file';
 import ApiService from '@/common/apiService';
 import { mapGetters, mapMutations } from 'vuex';
 import { sortBy } from 'lodash';
@@ -171,7 +171,7 @@ export default {
     uploadFile(env) {
       let document = {
         documentTypeCode: this.documentTypeCode,
-        fileName: this.file.name,
+        fileName: getFileNameWithMaxNameLength(this.file.name),
         fileExtension: this.file.type,
         fileSize: this.file.size,
         documentData: btoa(env.target.result)
@@ -214,5 +214,9 @@ p{
 }
 ul{
   width: 100%
+}
+
+h3 {
+  font-size: 1.2rem
 }
 </style>
