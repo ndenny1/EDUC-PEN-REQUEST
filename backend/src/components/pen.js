@@ -214,7 +214,7 @@ async function getAutoMatchResults(accessToken, userInfo) {
     let bcscAutoMatchOutcome;
     let bcscAutoMatchDetails;
     if(autoMatchResults.length < 1) {
-      bcscAutoMatchOutcome = 'NOMATCH';
+      bcscAutoMatchOutcome = 'ZEROMATCHES';
       bcscAutoMatchDetails = 'Zero PEN records found by BCSC auto-match';
     }
     else if(autoMatchResults.length > 1) {
@@ -274,8 +274,6 @@ async function submitPenRequest(req, res) {
       const autoMatchResults = await getAutoMatchResults(accessToken, userInfo._json);
       reqData.bcscAutoMatchOutcome = autoMatchResults.bcscAutoMatchOutcome;
       reqData.bcscAutoMatchDetails = autoMatchResults.bcscAutoMatchDetails;
-    } else {
-      reqData.bcscAutoMatchDetails = 'No auto-match performed for Basic BCeID';
     }
 
     const resData = await postPenRequest(accessToken, reqData, userInfo);
