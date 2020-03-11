@@ -223,7 +223,10 @@ async function getAutoMatchResults(accessToken, userInfo) {
     }
     else {
       bcscAutoMatchOutcome = 'ONEMATCH';
-      bcscAutoMatchDetails = `${autoMatchResults.pen} ${autoMatchResults['studSurname']}, ${autoMatchResults['studGiven']}, ${autoMatchResults['studMiddle']}`;
+      const lastName = autoMatchResults[0]['studSurname'] ? autoMatchResults[0]['studSurname'] : '(none)';
+      const firstName = autoMatchResults[0]['studGiven'] ? autoMatchResults[0]['studGiven'] : '(none)';
+      const middleName = autoMatchResults[0]['studMiddle'] ? autoMatchResults[0]['studMiddle'] : '(none)';
+      bcscAutoMatchDetails = `${autoMatchResults[0].pen} ${lastName}, ${firstName}, ${middleName}`;
     }
 
     return {
