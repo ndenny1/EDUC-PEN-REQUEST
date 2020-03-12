@@ -95,7 +95,7 @@ async function getUserInfo(req, res) {
   const accessToken = userInfo.jwt;
   const digitalID = userInfo._json.digitalIdentityID;
 
-  Promise.all([
+  return Promise.all([
     getDigitalIdData(accessToken, digitalID), 
     getServerSideCodes(accessToken), 
     getLatestPenRequest(accessToken, digitalID)
