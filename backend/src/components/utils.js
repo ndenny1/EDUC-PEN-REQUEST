@@ -9,13 +9,26 @@ const { ApiError } = require('./error');
 
 let discovery = null;
 
+// Returns OIDC Discovery values
+async function getOidcDiscovery() {
+  if (!discovery) {
+    try {
+      const response = await axios.get(config.get('oidc:discovery'));
+      discovery = response.data;
+    } catch (error) {
+      log.error('getOidcDiscovery', `OIDC Discovery failed - ${error.message}`);
+    }
+  }
+  return discovery;
+}
+
 function minify(obj, keys=['documentData']) {
   return lodash.transform(obj, (result, value, key) => 
     result[key] = keys.includes(key) && lodash.isString(value) ? value.substring(0,1) + ' ...' : value );
 }
 
 function getSessionUser(req) {
-  log.verbose('getSessionUser', req.session);
+  log.silly('getSessionUser', req.session);
   const session = req.session;
   return session && session.passport && session.passport.user;
 }
@@ -203,19 +216,7 @@ const VerificationResults = Object.freeze({
 });
 
 const utils = {
-  // Returns OIDC Discovery values
-  async getOidcDiscovery() {
-    if (!discovery) {
-      try {
-        const response = await axios.get(config.get('oidc:discovery'));
-        discovery = response.data;
-      } catch (error) {
-        log.error('getOidcDiscovery', `OIDC Discovery failed - ${error.message}`);
-      }
-    }
-    return discovery;
-  },
-
+  getOidcDiscovery,
   prettyStringify: (obj, indent = 2) => JSON.stringify(obj, null, indent),
   getSessionUser,
   getAccessToken,

@@ -35,7 +35,7 @@
   <v-container fluid class="full-height" v-else-if="isAuthenticated && hasPenRequest">
     <article id="request-display-container" class="top-banner full-height">
         <v-row align="center" justify="center" style="width: 1vw;margin-right: 0;margin-left: 0;margin-bottom: 5rem;">
-          <v-col class="pt-1 pt-sm-3" xs="10" sm="10" md="10" lg="8" xl="6">
+          <v-col class="pt-1 pt-sm-3" xs="11" sm="11" md="10" lg="8" xl="6">
             <RequestDisplay></RequestDisplay>
           </v-col>
         </v-row>

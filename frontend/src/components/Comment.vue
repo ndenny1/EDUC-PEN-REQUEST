@@ -107,7 +107,6 @@
 <script>
 import DocumentChip from './DocumentChip.vue';
 import DocumentUpload from './DocumentUpload';
-import {LocalDateTime} from '@js-joda/core';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
 import { PenRequestStatuses } from '@/utils/constants';
 import ApiService from '@/common/apiService';
@@ -196,9 +195,7 @@ export default {
         this.alert = false;
         this.submitting = true;
         if(!this.partialSubmitted) {
-          const timestamp = LocalDateTime.now().toString();
           const messageToSend = {
-            timestamp: timestamp,
             content: this.reply,
             myself: true,
             participantId: 1

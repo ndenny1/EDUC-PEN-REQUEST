@@ -70,6 +70,4 @@ nconf.defaults({
     apiEndpoint: process.env.STUDENT_DEMOG_API_ENDPOINT,
   },
 });
-console.log(nconf.get('logoutEndpoint'));
-console.log(nconf.get('siteMinder_logout_endpoint'));
 module.exports = nconf;

@@ -65,6 +65,10 @@ h1 {
   font-size: 1rem;
 }
 
+.v-btn {
+    text-transform: none !important;
+}
+
 @media screen and (max-width: 370px) {
 
   .v-toolbar__title{

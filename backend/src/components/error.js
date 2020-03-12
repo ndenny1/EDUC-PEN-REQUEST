@@ -15,7 +15,7 @@ class ApiError extends Error {
     this.status = status;
     this.data = data;
     if(reason) {
-      this.stack += `\nCaused By:\n` + reason.stack;
+      this.stack += '\nCaused By:\n' + reason.stack;
     }
   }
 }
@@ -28,7 +28,7 @@ class ServiceError extends Error {
     this.errorSource = errorSource;
 
     if(reason) {
-      this.stack += `\nCaused By:\n` + reason.stack;
+      this.stack += '\nCaused By:\n' + reason.stack;
     }
   }
 }
