@@ -22,5 +22,8 @@
   },
   "penRequest": {
     "apiEndpoint": "http://localhost"
+  },
+  "email": {
+    "apiEndpoint": "http://localhost"
   }
 }

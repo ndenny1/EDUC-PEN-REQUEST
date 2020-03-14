@@ -7,9 +7,15 @@ const mockRequest = (session = {}) => {
 };
 
 const mockResponse = () => {
-  const res = {};
-  res.status = jest.fn().mockReturnValue(res);
-  res.json = jest.fn().mockReturnValue(res);
+  const res = {data: {}};
+  res.status = jest.fn().mockImplementation((v) => {
+    res.data.status = v;
+    return res;
+  });
+  res.json = jest.fn().mockImplementation((v) => {
+    res.data.json = v;
+    return res; 
+  });
   return res;
 };
 

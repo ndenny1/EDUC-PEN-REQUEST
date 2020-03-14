@@ -279,37 +279,38 @@ describe('getUserInfo', () => {
     ]
   };
 
+  let req;
+  let res;
+
   jest.spyOn(utils, 'getSessionUser');
+
+  beforeEach(() => {
+    utils.getSessionUser.mockReturnValue(sessionUser);
+    req = mockRequest();
+    res = mockResponse();
+    rewirePen.__Rewire__('getDigitalIdData', () => Promise.resolve(digitalIdData));
+    rewirePen.__Rewire__('getServerSideCodes', () => Promise.resolve(codes));
+    rewirePen.__Rewire__('getLatestPenRequest', () => Promise.resolve(penRequest));
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
     rewirePen.__ResetDependency__('getDigitalIdData');
     rewirePen.__ResetDependency__('getServerSideCodes');
     rewirePen.__ResetDependency__('getLatestPenRequest');
+    rewirePen.__ResetDependency__('getStudent');
+    rewirePen.__ResetDependency__('getDefaultBcscInput');
   });
 
-  it('should return UNAUTHORIZED when no student info and accountType is BCEID', async () => {
-
+  it('should return UNAUTHORIZED if no session', async () => {
     utils.getSessionUser.mockReturnValue(null);
-
-    let req = mockRequest();
-    let res = mockResponse();
 
     await pen.getUserInfo(req, res);
 
     expect(res.status).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED);
   });
 
-  it('should return user info when no student info and accountType is BCEID', async () => {
-
-    utils.getSessionUser.mockReturnValue(sessionUser);
-    rewirePen.__Rewire__('getDigitalIdData', () => Promise.resolve(digitalIdData));
-    rewirePen.__Rewire__('getServerSideCodes', () => Promise.resolve(codes));
-    rewirePen.__Rewire__('getLatestPenRequest', () => Promise.resolve(penRequest));
-
-    let req = mockRequest();
-    let res = mockResponse();
-
+  it('should return user info without student info if no student info', async () => {
     await pen.getUserInfo(req, res);
 
     expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
@@ -320,5 +321,147 @@ describe('getUserInfo', () => {
       penRequest,
       student: null,
     });
+  });
+
+  it('should return user info with student info if there is student info', async () => {
+    const studentID = 'ac337def-704b-169f-8170-653e2f7c090';
+    const digitalIdData = {
+      identityTypeCode: 'BASIC',
+      studentID
+    };
+
+    const student = {
+      pen: '123456',
+      studentID
+    };
+
+    rewirePen.__Rewire__('getDigitalIdData', () => Promise.resolve(digitalIdData));
+    rewirePen.__Rewire__('getStudent', () => Promise.resolve(student));
+
+    await pen.getUserInfo(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
+    expect(res.json).toHaveBeenCalledWith({
+      displayName: sessionUser._json.displayName,
+      accountType: sessionUser._json.accountType,
+      identityTypeLabel: lodash.find(codes.identityTypes, ['identityTypeCode', digitalIdData.identityTypeCode]).label,
+      penRequest,
+      student,
+    });
+  });
+
+  it('should return user info with BCSC info if accountType is BCSC', async () => {
+    const bcscUser = {
+      jwt: 'token',
+      _json: {
+        digitalIdentityID: digitalID,
+        displayName: 'Firstname Lastname',
+        accountType: 'BCSC',
+      }
+    };
+
+    const bcscInfo = { legalLastName: 'LegalName' };
+
+    utils.getSessionUser.mockReturnValue(bcscUser);
+    rewirePen.__Rewire__('getDefaultBcscInput', () => bcscInfo);
+
+    await pen.getUserInfo(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
+    expect(res.json).toHaveBeenCalledWith({
+      displayName: bcscUser._json.displayName,
+      accountType: bcscUser._json.accountType,
+      ...bcscInfo,
+      identityTypeLabel: lodash.find(codes.identityTypes, ['identityTypeCode', digitalIdData.identityTypeCode]).label,
+      penRequest,
+      student: null,
+    });
+  });
+
+  it('should return INTERNAL_SERVER_ERROR if invalid identityTypeCode', async () => {
+    const digitalIdData = {
+      identityTypeCode: 'INVALID',
+      studentID: null
+    };
+
+    rewirePen.__Rewire__('getDigitalIdData', () => Promise.resolve(digitalIdData));
+
+    await pen.getUserInfo(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
+  });
+
+  it('should return INTERNAL_SERVER_ERROR if exceptions thrown', async () => {
+    rewirePen.__Rewire__('getDigitalIdData', () => Promise.reject(new ServiceError('error')));
+
+    await pen.getUserInfo(req, res);
+    
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
+  });
+});
+
+describe('getCodes', () => {
+  const codes =[
+    {
+      code: 'Code1',
+      label: 'Label1',
+      displayOrder: 2
+    },
+    {
+      code: 'Code3',
+      label: 'Label3',
+      displayOrder: 3
+    },
+    {
+      code: 'Code2',
+      label: 'Label2',
+      displayOrder: 1
+    }
+  ];
+
+  let req;
+  let res;
+
+  jest.spyOn(utils, 'getAccessToken');
+  jest.spyOn(utils, 'getData');
+
+  beforeEach(() => {
+    utils.getAccessToken.mockReturnValue('token');
+    utils.getData.mockResolvedValue(codes);
+    req = mockRequest();
+    res = mockResponse();
+  });
+
+  const spy = jest.spyOn(utils, 'getData');
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  it('should return codes', async () => {
+    const response = await pen.getCodes(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
+    expect(res.json).toHaveBeenCalledWith({
+      genderCodes: codes,
+      statusCodes: codes,
+    });
+    expect(response.data.json.genderCodes[0].displayOrder).toBe(1);
+  });
+
+  it('should return UNAUTHORIZED if no access token', async () => {
+    utils.getAccessToken.mockReturnValue(null);
+
+    await pen.getCodes(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED);
+  });
+
+  it('should return INTERNAL_SERVER_ERROR if exceptions thrown', async () => {
+    utils.getData.mockRejectedValue(new Error('test error'));
+
+    await pen.getCodes(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
   });
 });

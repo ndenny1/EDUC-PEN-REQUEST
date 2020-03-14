@@ -26,22 +26,23 @@
                 </ol>
             </v-card>
             <v-card height="100%" width="100%" outlined color="#FFECA9" class="pa-3" v-else-if="this.status === this.verificationResults.TOKEN_ERROR">
-                <p class="mb-2"><strong>Your email verification could not be completed, for the following reason:</strong></p>
-                <p>
-                  <ul>
-                      <li>The verification link was invalid.</li>
-                  </ul>
-                </p>
-                <p>If needed, you can paste the entire verification link into your web browser's address field.</p>
-            </v-card>
-            <v-card height="100%" width="100%" outlined color="#FFECA9" class="pa-3" v-else>
                 <p class="mb-2"><strong>Sorry, your email verification could not be completed, for the following reason:</strong></p>
                 <p>
                   <ul>
-                      <li>An unexpected error seems to have occured.</li>
+                      <li>The verification link is not valid</li>
                   </ul>
                 </p>
-                <p>You can click on the verification link again later. Or you can contact us if the problem persists.</p>
+                <p>Likely the link used is not complete. You can copy/paste the verification link from the email you receive into your web browser's address field. You must use the entire link.</p>
+                <p>If this does not work, login to the GetMyPEN application again and use the Resend Email Verification action to get a new verification link.</p>
+            </v-card>
+            <v-card height="100%" width="100%" outlined color="#FFECA9" class="pa-3" v-else>
+                <p class="mb-2"><strong>Sorry, Your email verification could not be completed, for the following reason:</strong></p>
+                <p>
+                  <ul>
+                      <li>The verification service is not available</li>
+                  </ul>
+                </p>
+                <p>Retry email verification again later. If this issue persists for more than one business day, please contact pens.coordinator@gov.bc.ca.</p>
             </v-card>
             <p class="mt-5 mb-0" v-if="this.status === this.verificationResults.OK || this.status === this.verificationResults.EXPIRED">
               To log back in to {{ appTitle }}, click the log in button.
