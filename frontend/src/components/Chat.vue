@@ -1,36 +1,84 @@
 <template>
-  <v-card height="100%" width="100%">
-    <div id="comments-outer" class="comments-outside">
-      <v-progress-linear
-        indeterminate
-        absolute
-        top
-        color="indigo darken-2"
-        v-if="loading"
-      ></v-progress-linear>
-      <comments 
-          :comments_wrapper_classes="['custom-scrollbar', 'comments-wrapper']"
-          :myself="myself"
-          :participants="participants"
-          :messages="messages"
-          :unsubmittedDocuments="unsubmittedDocuments"
-          :load-more-messages="toLoad.length > 0 ? loadMoreMessages : null"
-          @submit-comment="submitComment"
-          :disabled="hideInput"
-      ></comments>
-  </div>
-  </v-card>
+  <v-container class="pa-0">
+    <!-- <v-row class="pb-5" v-if="requestComment"> -->
+      <v-card class="mb-5" v-if="status === requestStatuses.RETURNED">
+        <v-toolbar flat color="#036" class="white--text" height="45rem">
+          <v-toolbar-title>Request</v-toolbar-title>
+        </v-toolbar>
+        <div>
+          <v-progress-linear
+            indeterminate
+            absolute
+            top
+            color="indigo darken-2"
+            v-if="loading"
+          ></v-progress-linear>
+          <SingleComment
+            v-for="comment in requestComments"
+            :comment="comment"
+            :myself="myself"
+            :participants="participants"
+            :key="comment.id"
+          ></SingleComment>
+        </div>
+      </v-card>
+    <!-- </v-row> -->
+    <!-- <v-row class="pb-5"> -->
+      <v-card class="mb-5" v-if="status === requestStatuses.RETURNED">
+        <v-toolbar flat color="#036" class="white--text" height="45rem">
+          <v-toolbar-title>Respond Here</v-toolbar-title>
+        </v-toolbar>
+        <div id="comments-outer" class="comments-outside">
+          <v-progress-linear
+            indeterminate
+            absolute
+            top
+            color="indigo darken-2"
+            v-if="loading"
+          ></v-progress-linear>
+          <Comments 
+            :unsubmittedDocuments="unsubmittedDocuments"
+          ></Comments>
+        </div>
+      </v-card>
+    <!-- </v-row> -->
+    <!-- <v-row class="pb-5"> -->
+      <v-card class="mb-5" v-if="hasHistory">
+        <v-toolbar flat color="#036" class="white--text" height="45rem">
+          <v-toolbar-title>Discussion History</v-toolbar-title>
+        </v-toolbar>
+        <div>
+          <v-progress-linear
+            indeterminate
+            absolute
+            top
+            color="indigo darken-2"
+            v-if="loading"
+          ></v-progress-linear>
+          <SingleComment 
+            v-for="comment in commentHistory"
+            :comment="comment"
+            :myself="myself"
+            :participants="participants"
+            :key="comment.id"
+          ></SingleComment>
+        </div>
+      </v-card>
+    <!-- </v-row> -->
+  </v-container>
 </template>
 <script>
-import comments from './Comment.vue';
+import SingleComment from './Single-comment.vue';
+import Comments from './Comment.vue';
 import ApiService from '@/common/apiService';
 import { mapGetters, mapActions, mapMutations } from 'vuex';
-import { groupBy, sortBy } from 'lodash';
+import { groupBy, sortBy, findLastIndex } from 'lodash';
 import { PenRequestStatuses } from '@/utils/constants';
 
 export default {
   components: {
-    comments
+    Comments,
+    SingleComment,
   },
   props: {
     hideInput: {
@@ -41,7 +89,6 @@ export default {
   data() {
     return {
       participants: [],
-      messages: [],
       toLoad: [],
       loading: true,
     };
@@ -50,11 +97,21 @@ export default {
     ...mapGetters('auth', ['userInfo']),
     ...mapGetters('penRequest', ['penRequest']),
     ...mapGetters('document', ['unsubmittedDocuments']),
+    ...mapGetters('comment', ['commentHistory', 'requestComments']),
     request() {
       return this.penRequest;
     },
     myself() {
-      return {name: this.userInfo.displayName, id: '1'};
+      return { name: this.userInfo.displayName, id: '1' };
+    },
+    hasHistory() {
+      return this.commentHistory && this.commentHistory.length > 0;
+    },
+    status() {
+      return this.penRequest.penRequestStatusCode;
+    },
+    requestStatuses() {
+      return PenRequestStatuses;
     },
   },
   created() {
@@ -64,21 +121,9 @@ export default {
       this.getDocumentTypeCodes()
     ]).then(([documentRes, commentRes]) => {
       this.participants = commentRes.data.participants;
-      this.messages = commentRes.data.messages;
-      const myMessages = this.messages.filter(message => message.myself);
-      const documents = sortBy(documentRes.data, ['createDate']);
 
-      const documentGroup = groupBy(documents, document => {
-        const dates = myMessages.map(message => message.timestamp);
-        return dates.findIndex(date => date >= document.createDate);
-      });
-
-      myMessages.forEach((message, i) => {
-        message.documents = documentGroup[i];
-      });
-
-      this.setUnsubmittedDocuments(documentGroup[-1]);
-
+      let [messages, unsubmittedDocuments] = this.linkDocumentsToComments(commentRes.data.messages, documentRes.data);
+      this.splitComments(messages, unsubmittedDocuments);
     }).catch(error => {
       console.log(error);
       this.alert = true;
@@ -90,37 +135,39 @@ export default {
     ...mapActions('document', ['getDocumentTypeCodes']),
     ...mapMutations('document', ['setUnsubmittedDocuments']),
     ...mapMutations('penRequest', ['setPenRequest']),
-    /*onType: function (event) {
-      //here you can set any behavior
-    },*/
-    loadMoreMessages(resolve) {
-      setTimeout(() => {
-        resolve(this.toLoad); //We end the loading state and add the messages
-        //Make sure the loaded messages are also added to our local messages copy or they will be lost
-        this.messages.unshift(...this.toLoad);
-        this.toLoad = [];
-      }, 1000);
+    ...mapMutations('comment', ['setCommentHistory', 'setUnsubmittedComment', 'setRequestComments']),
+    linkDocumentsToComments(messages, documents) {
+      const myMessages = messages.filter(message => message.myself);
+      documents = sortBy(documents, ['createDate']);
+
+      const documentGroup = groupBy(documents, document => {
+        const dates = myMessages.map(message => message.timestamp);
+        return dates.findIndex(date => date >= document.createDate);
+      });
+
+      myMessages.forEach((message, i) => {
+        message.documents = documentGroup[i];
+      });
+
+      return [messages, documentGroup[-1]];
     },
-    submitComment: function ({message, replied}) {
-      ApiService.postComment(this.request.penRequestID, message).then( messageRes => {
-        const postedMessage = messageRes.data;
-        return ApiService.updatePenRequestStatus(this.request.penRequestID, PenRequestStatuses.SUBSREV).then(statusRes => {
-          postedMessage.documents = this.unsubmittedDocuments;
-          this.messages = [...this.messages, postedMessage];
-          this.setUnsubmittedDocuments();
-          this.setPenRequest(statusRes.data);
-        }).then(() => {
-          this.$emit('success-alert', 'Your PEN request has been submitted successfully.');
-          window.scrollTo(0,0);
-        });
-      }).catch(error => {
-        console.log(error);
-        this.$emit('error-alert', 'Sorry, an unexpected error seems to have occurred. You can click on the reply button again later.');
-        window.scrollTo(0,0);
-      }).finally(() => replied());
-    },
-    onClose() {
-      this.visible = false;
+    splitComments(messages, unsubmittedDocuments) {
+      const lastMessage = messages[messages.length - 1];
+      let requestIndex = messages.length;
+      if(this.status === this.requestStatuses.RETURNED && lastMessage) {
+        if(lastMessage.myself) {
+          this.setUnsubmittedComment(lastMessage);
+          unsubmittedDocuments = lastMessage.documents;
+          messages = messages.slice(0, messages.length - 1);          
+        }
+        
+        const historyIndex = findLastIndex(messages, ['myself', true]);
+        requestIndex = historyIndex + 1;
+        this.setRequestComments(messages.slice(requestIndex));
+      }
+
+      this.setCommentHistory(messages.slice(0, requestIndex));
+      this.setUnsubmittedDocuments(unsubmittedDocuments);
     }
   }
 };
@@ -139,7 +186,7 @@ hr {
   padding: 0;
 }
 .comments-outside {
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); */
   margin-top: 0;
   max-width: 100%;
   height:100%;
@@ -190,5 +237,9 @@ hr {
     -moz-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #555;
+}
+
+.v-toolbar /deep/ .v-toolbar__content {
+  padding-left: 20px !important;
 }
 </style>

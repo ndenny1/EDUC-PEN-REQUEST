@@ -1,6 +1,6 @@
 <template>
-  <div id="status-card" class="d-flex flex-wrap">
-    <v-col xl="auto" lg="auto" md="auto" sm="auto" class="py-0 pl-0">
+  <div id="status-card" class="d-flex flex-wrap justify-space-between px-1">
+    <div class="py-0 pl-0">
         <v-card height="100%" width="100%" elevation=0>
             <v-row no-gutters>
                 <v-col xl="auto" lg="auto" md="auto" sm="auto">
@@ -27,21 +27,21 @@
                 </v-col>
             </v-row>
         </v-card>
-    </v-col>
-    <v-col xl="4" lg="4" md="4" sm="4" class="pa-0 align-self-start" v-if="status === requestStatuses.REJECTED">
+    </div>
+    <div class="pa-0 align-self-start" v-if="status === requestStatuses.REJECTED">
       <v-card height="100%" width="100%" elevation=0>
         <v-row no-gutters justify="end" class="pb-5">
           <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="$router.push('pen-request')">Create a new PEN Request</v-btn>
         </v-row>
       </v-card>
-    </v-col>
-    <v-col xl="4" lg="4" md="4" sm="4" class="pa-0 align-self-start" v-else-if="status === requestStatuses.DRAFT">
-      <v-card height="100%" width="100%" elevation=0 min-width="30vw">
+    </div>
+    <div class="pa-0 align-self-start" v-else-if="status === requestStatuses.DRAFT">
+      <v-card height="100%" width="100%" elevation=0>
         <v-row no-gutters justify="end" class="pb-5">
           <v-btn color="#38598a" dark class="ml-2 text-none" @click.stop="resendVerificationEmail" :loading="sending">Resend Verification Email</v-btn>
         </v-row>
       </v-card>
-    </v-col>
+    </div>
   </div>
 </template>
 

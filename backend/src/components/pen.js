@@ -95,7 +95,7 @@ async function getUserInfo(req, res) {
   const accessToken = userInfo.jwt;
   const digitalID = userInfo._json.digitalIdentityID;
 
-  Promise.all([
+  return Promise.all([
     getDigitalIdData(accessToken, digitalID), 
     getServerSideCodes(accessToken), 
     getLatestPenRequest(accessToken, digitalID)
@@ -214,7 +214,7 @@ async function getAutoMatchResults(accessToken, userInfo) {
     let bcscAutoMatchOutcome;
     let bcscAutoMatchDetails;
     if(autoMatchResults.length < 1) {
-      bcscAutoMatchOutcome = 'NOMATCH';
+      bcscAutoMatchOutcome = 'ZEROMATCHES';
       bcscAutoMatchDetails = 'Zero PEN records found by BCSC auto-match';
     }
     else if(autoMatchResults.length > 1) {
@@ -223,7 +223,10 @@ async function getAutoMatchResults(accessToken, userInfo) {
     }
     else {
       bcscAutoMatchOutcome = 'ONEMATCH';
-      bcscAutoMatchDetails = `${autoMatchResults.pen} ${autoMatchResults['studSurname']}, ${autoMatchResults['studGiven']}, ${autoMatchResults['studMiddle']}`;
+      const lastName = autoMatchResults[0]['studSurname'] ? autoMatchResults[0]['studSurname'] : '(none)';
+      const firstName = autoMatchResults[0]['studGiven'] ? autoMatchResults[0]['studGiven'] : '(none)';
+      const middleName = autoMatchResults[0]['studMiddle'] ? autoMatchResults[0]['studMiddle'] : '(none)';
+      bcscAutoMatchDetails = `${autoMatchResults[0].pen} ${lastName}, ${firstName}, ${middleName}`;
     }
 
     return {
@@ -274,8 +277,6 @@ async function submitPenRequest(req, res) {
       const autoMatchResults = await getAutoMatchResults(accessToken, userInfo._json);
       reqData.bcscAutoMatchOutcome = autoMatchResults.bcscAutoMatchOutcome;
       reqData.bcscAutoMatchDetails = autoMatchResults.bcscAutoMatchDetails;
-    } else {
-      reqData.bcscAutoMatchDetails = 'No auto-match performed for Basic BCeID';
     }
 
     const resData = await postPenRequest(accessToken, reqData, userInfo);

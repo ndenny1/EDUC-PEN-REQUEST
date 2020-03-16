@@ -8,10 +8,11 @@
   >
     <template v-slot:activator="{ on }">
       <v-chip
-        class="ma-1"
+        class="chip-overflow ma-1 px-2 align-self-center"
         close
         close-icon="fa-chevron-down"
-        color="indigo darken-3"
+        color="#0C7CBA"
+        :disabled="disabled"
         label
         outlined
         v-on="on"
@@ -21,9 +22,9 @@
       </v-chip>
     </template>
 
-    <v-card width="380" class="pa-2">
+    <v-card width="380px" class="pa-1 pa-sm-2">
       <v-list>
-        <v-list-item>
+        <v-list-item class="pa-0 pa-sm-0">
           <v-list-item-avatar>
             <v-icon>fa-id-card</v-icon>
           </v-list-item-avatar>
@@ -32,7 +33,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item class="px-0 pa-sm-0">
           <v-list-item-avatar>
             <v-icon>fa-file</v-icon>
           </v-list-item-avatar>
@@ -43,7 +44,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item class="px-0 pa-sm-0">
           <v-list-item-avatar>
             <v-icon>fa-hdd</v-icon>
           </v-list-item-avatar>
@@ -52,7 +53,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item>
+        <v-list-item class="px-0 pa-sm-0">
           <v-list-item-avatar>
             <v-icon>fa-clock</v-icon>
           </v-list-item-avatar>
@@ -68,7 +69,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-          <v-btn color="#003366" @click.stop="deleteDocument()" class="white--text" :loading="deleting" v-if="!disabled">Delete</v-btn>
+          <v-btn color="#003366" @click.stop="deleteDocument()" class="white--text" :loading="deleting" v-if="!undeletable">Delete</v-btn>
           <v-btn color="#003366" @click="menu = false" class="white--text">Cancel</v-btn>
         </v-card-actions>
     </v-card>
@@ -88,6 +89,10 @@ export default {
       required: true
     },
     disabled: {
+      type: Boolean,
+      default: false
+    },
+    undeletable: {
       type: Boolean,
       default: false
     },
@@ -149,5 +154,66 @@ export default {
 </script>
 
 <style scoped>
+
+.chip-overflow /deep/ .v-chip__content {
+  line-height: 28px;
+  display: inline-block !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 32px !important;
+  position: relative;
+}
+
+.chip-overflow /deep/ .v-chip__close {
+  border-left: 1px solid #0C7CBA;
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  width: 24px;
+}
+
+.v-list-item {
+  min-height: 0;
+}
+.v-list-item__content {
+  padding: 8px 0;
+}
+
+.v-avatar {
+  margin: 4px 16px 4px 0 !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  width: 36px !important;
+}
+
+@media screen and (max-width: 320px) {
+  .v-list-item /deep/ .v-list-item__title {
+    font-size: 0.85rem;
+  }
+
+  .v-avatar {
+    margin-right: 0 !important;
+  }
+
+  .v-icon {
+    padding-left: 0 !important;
+    font-size: 1.2rem;
+  }
+}
+
+@media screen and (min-width: 321px) and (max-width: 410px) {
+  .v-list-item /deep/ .v-list-item__title {
+    font-size: 0.9rem;
+  }
+
+  .v-avatar {
+    margin-right: 12px !important;
+  }
+
+  .v-icon {
+    padding-left: 10px !important;
+  }
+}
 
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <v-card height="100%" width="99%">
+  <v-card height="100%" width="100%">
     <v-toolbar flat color="#036" class="white--text">
-      <v-toolbar-title>Original PEN Request Data</v-toolbar-title>
+      <v-toolbar-title>Data Submitted</v-toolbar-title>
     </v-toolbar>
     <v-row no-gutters class="pt-2 px-2">
       <v-col cols="12" xl="5" lg="5" md="5" sm="5">

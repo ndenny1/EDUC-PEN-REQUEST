@@ -62,12 +62,17 @@ h1 {
   font-size: 1.25rem;
 }
 .v-toolbar__title{
-  font-size: 1rem
+  font-size: 1rem;
 }
-@media screen and (max-width: 300px) {
+
+.v-btn {
+    text-transform: none !important;
+}
+
+@media screen and (max-width: 370px) {
 
   .v-toolbar__title{
-    font-size: 1rem;
+    font-size: 0.9rem;
     line-height: 1;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -75,11 +80,11 @@ h1 {
   }
 
   h1 {
-    font-size: 1.3rem;
+    font-size: 0.9rem;
   }
 }
 
-@media screen and (min-width: 301px) and (max-width: 600px) {
+@media screen and (min-width: 371px) and (max-width: 600px) {
   .v-toolbar__title{
     font-size: 0.9rem;
     line-height: 1.5;

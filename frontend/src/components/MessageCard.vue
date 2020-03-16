@@ -39,16 +39,7 @@
     <p>The details of your request are shown below.</p>
   </v-card>
   <v-card height="100%" width="100%" color="#FFECA9" class="pa-3" v-else-if="status === requestStatuses.RETURNED">
-    <p class="mb-2"><strong>Additional information is required to complete your request. Follow these steps:</strong></p>
-    <p>
-      <ol>
-        <li>Read the comments from the PEN Administrator in the "Discussion with PEN Administrator" panel.</li>
-        <li>Provide the requested information by typing text into the bottom of the discussion panel.</li>
-        <li>If documents were requested, upload scanned copies of the documents using the "Upload Document" button.</li>
-        <li>When finished, click the "Submit" button to send your request back. Complete steps 2 and 3 fully before you Submit.</li>
-      </ol>
-    </p>
-    <p>No further work can be done on your request until you complete all these steps.</p>
+    <p class="mb-2"><strong>Additional information is required.</strong> See the Request below.</p>
   </v-card>
   <v-card height="100%" width="100%" color="#FFECA9" class="pa-3" v-else-if="status === requestStatuses.REJECTED">
     <p class="mb-2"><strong>Your request to get your PEN could not be completed, for the following reason:</strong></p>

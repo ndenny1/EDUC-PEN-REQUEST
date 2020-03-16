@@ -33,7 +33,7 @@
 
       <v-container fluid>
         <v-row>
-          <v-col id="personal_declaration"  cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
+          <v-col cols="12" class="declaration py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-checkbox
               v-model="declared"
               color="green"
@@ -62,6 +62,7 @@
               :disabled="enableDisableForm.disabled"
               required
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="40"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -75,6 +76,7 @@
               label="Legal First Name(s) (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="40"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -87,6 +89,7 @@
               label="Legal Middle Name(s) (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="255"
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -99,6 +102,7 @@
               label="Usual Last Name (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="40"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -111,6 +115,7 @@
               label="Usual First Name(s) (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="40"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -123,6 +128,7 @@
               label="Usual Middle Name(s) (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="255"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -135,6 +141,7 @@
               label="Maiden Name (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="40"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -147,6 +154,7 @@
               label="Past Name(s) (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="255"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -226,6 +234,7 @@
               :disabled="enableDisableForm.disabled"
               required
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="255"
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -238,6 +247,7 @@
               label="Last B.C. School Attended (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="255"
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -250,6 +260,7 @@
               label="School Student ID Number (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="12"
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -262,13 +273,14 @@
               label="Current B.C. School Attending (optional)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              maxlength="255"
             ></v-text-field>
           </v-col>
         </v-row>
       </v-container>
       <v-container fluid noPadding>
         <v-row>
-          <v-col id="declaration" cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
+          <v-col cols="12" class="declaration py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-checkbox id="acceptance_chk"
               v-model="acceptance"
               color="green"
@@ -519,7 +531,7 @@ export default {
     max-width: 1vw;
   }
 
-  #declaration /deep/ .v-icon {
+  .declaration /deep/ .v-icon {
     padding-left: 2px;
   }
 

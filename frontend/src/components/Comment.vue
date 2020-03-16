@@ -1,119 +1,144 @@
 <template>
-    <div class="comments">
-        <div :class="comments_wrapper_classes">
-            <singleComment 
-                v-for="comment in messages"
-                :comment="comment"
-                :myself="myself"
-                :participants="participants"
-                :key="comment.id"
-            ></singleComment>
-        </div>
-        <div class="bottomBar">
-            <hr>
-            <div class="reply">
-              <v-col class="justify-start">
-                <v-textarea
-                    type="text"
-                    rows=1
-                    auto-grow
-                    v-model.trim="reply" 
-                    class="reply--text" 
-                    placeholder="Enter a message and hit the Reply button"
-                    maxlength="4000"
-                    required
-                    :disabled="disabled"
-                />
-                <DocumentChip
-                  v-for="document in unsubmittedDocuments"
-                  :document="document"
-                  :key="document.documentID"
-                ></DocumentChip>
-                <v-dialog  
-                  max-width="30rem" 
-                  max-height="50rem"
-                  v-model="dialog"
-                  xl="2" lg="2" md="2" xs="2" sm="2"
-                  v-if="!disabled"
+  <div class="comments">
+    <!-- <div> -->
+      <div class="reply px-1">
+        <v-col class="pa-2">
+        <v-textarea
+          type="text"
+          rows=3
+          solo
+          flat
+          auto-grow
+          v-model.trim="reply" 
+          class="reply--text" 
+          :placeholder="`${(unsubmittedComment && unsubmittedComment.content) || 'Enter text here. Attach document(s). Click Done'}`"
+          maxlength="4000"
+          required
+          :disabled="partialSubmitted || submitted"
+        />
+        <v-row>
+          <v-col class="d-flex align-start flex-wrap py-0">
+            <DocumentChip
+              v-for="document in unsubmittedDocuments"
+              :document="document"
+              :disabled="partialSubmitted || submitted"
+              :key="document.documentID"
+            ></DocumentChip>
+            <v-dialog  
+              max-width="30rem" 
+              max-height="50rem"
+              v-model="dialog"
+              xl="2" lg="2" md="2" xs="2" sm="2"
+            >
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  rounded
+                  :disabled="showConfirm || partialSubmitted || submitted"
+                  class="ma-1 white--text order-first"
+                  color="#0C7CBA"
+                  v-on="on"
                 >
-                  <template v-slot:activator="{ on }">
-                    <v-chip 
-                      class="ma-1"
-                      color="#003366"
-                      label
-                      outlined
-                      v-on="on"
-                    >
-                      <v-icon left>fa-paperclip</v-icon>
-                    </v-chip>
-                  </template>
-                  <DocumentUpload 
-                    @close:form="() => dialog = false"
-                  ></DocumentUpload>
-                </v-dialog>
-              </v-col>
-              <v-btn 
-                  :disabled="replyEmpty"
-                  color="#003366"
-                  dark
-                  class="reply--button" 
-                  @click="submitComment"
-                  :loading="submitting"
-              >
-                  Reply
-              </v-btn>
-            </div>
+                  <v-icon left>fa-paperclip</v-icon>
+                  Upload
+                </v-btn>
+              </template>
+              <DocumentUpload 
+                @close:form="() => dialog = false"
+              ></DocumentUpload>
+            </v-dialog>
+          </v-col>
+          <v-col class="d-flex flex-grow-0 justify-end py-0">
+            <v-btn 
+              rounded
+              :disabled="replyEmpty || showConfirm || submitted"
+              color="#0C7CBA"
+              class="ma-1 white--text" 
+              @click="showConfirm=true"
+            >
+              Done
+            </v-btn>
+          </v-col>
+        </v-row>
+        </v-col>
+      </div>
+      <v-alert
+        dense
+        text
+        dismissible
+        v-model="alert"
+        :type="alertType"
+        @input="dismissAlert"
+      >
+         {{ alertMessage }}
+      </v-alert>
+      <v-card
+        :class="`slider ${showConfirm ? 'open' : 'closed'}`"
+        color="#FFECA9"
+      >
+        <div class="pa-2 d-flex flex-wrap">
+          <span class="mx-1 mx-sm-3 align-self-center">
+            <strong>Are you sure you are done?</strong>
+          </span>
+          <div class="d-flex flex-nowrap">
+            <v-btn
+              rounded
+              color="#0C7CBA"
+              class="ma-1 white--text"
+              @click="reenter"
+            >
+              No
+            </v-btn>
+            <v-btn
+              rounded
+              color="#0C7CBA"
+              class="ma-1 white--text"
+              :loading="submitting"
+              @click="submitComment"
+            >
+              Yes, Submit
+            </v-btn>
+          </div>
         </div>
-    </div>
+      </v-card>
+    <!-- </div> -->
+  </div>
 </template>
 
 <script>
-import singleComment from './Single-comment.vue';
 import DocumentChip from './DocumentChip.vue';
 import DocumentUpload from './DocumentUpload';
-import {LocalDateTime} from '@js-joda/core';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { PenRequestStatuses } from '@/utils/constants';
+import ApiService from '@/common/apiService';
 
 export default {
   components: {
-    singleComment,
     DocumentChip,
     DocumentUpload
   },
   props: {
-    comments_wrapper_classes: {
-      type: Array,
-      required: true
-    }, 
-    myself: {
-      type: Object,
-      required: true
-    }, 
-    messages: {
-      type: Array,
-      required: true
-    },
-    participants: {
-      type: Array,
-      required: true
-    },
     unsubmittedDocuments: {
       type: Array,
       required: true
-    },
-    disabled: {
-      type: Boolean,
-      default: false
     },
   },
   data() {
     return {
       reply: '',
       submitting: false,
-      menu: false,
       dialog: false,
+      showConfirm: false,
+      postedMessage: null,
+      updatedPenRequest: null,
+
+      alert: false,
+      alertMessage: null,
+      alertType: null
     };
   },
   computed: {
+    ...mapGetters('penRequest', ['penRequestID']),
+    ...mapGetters('comment', ['unsubmittedComment']),
     iconSize() {
       switch (this.$vuetify.breakpoint.name) {
       case 'xs': return '30px';
@@ -124,30 +149,78 @@ export default {
       default: return '50px';
       }
     },
-    replyEmpty(){
-      return this.reply === '';
+    replyEmpty() {
+      return this.reply === '' && !this.hasUnsubmittedDocuments && !this.partialSubmitted;
+    },
+    partialSubmitted() {
+      return !!this.unsubmittedComment;
+    },
+    submitted() {
+      return this.alertType && this.alertType === 'success';
+    },
+    hasUnsubmittedDocuments() {
+      return this.unsubmittedDocuments.length > 0;
     }
   },
   methods: {
-    replied() {
-      this.submitting = false;
+    ...mapActions('comment', ['postComment']),
+    ...mapMutations('document', ['setUnsubmittedDocuments']),
+    ...mapMutations('comment', ['setCommentSubmitted']),
+    ...mapMutations('penRequest', ['setPenRequest']),
+    setSuccessAlert() {
+      this.alertMessage = 'Your request has been submitted. It will be reviewed during business hours in the order received.';
+      this.alertType = 'success';
+      this.alert = true;
     },
-    //Tell the parent component(main app) that we have a new comment
-    submitComment: function() {
-      if(this.reply.comment !== '') {
-        const timestamp = LocalDateTime.now().toString();
-        const messageToSend = {
-          timestamp: timestamp,
-          content: this.reply,
-          myself: true,
-          participantId: 1
-        };
+    setErrorAlert() {
+      this.alertMessage = 'Sorry, an unexpected error seems to have occurred. You can click on the submit button again later.';
+      this.alertType = 'error';
+      this.alert = true;
+    },
+    reenter() {
+      this.alert = false;
+      this.showConfirm = false;
+    },
+    updatePenRequestStatus() {
+      return ApiService.updatePenRequestStatus(this.penRequestID, PenRequestStatuses.SUBSREV).then(statusRes => {
+        this.updatedPenRequest = statusRes.data;
+        this.setSuccessAlert();
+        this.showConfirm=false;
+      }).catch(() => {
+        this.setErrorAlert();
+      });
+    },
+    submitComment() {
+      if(!this.replyEmpty) {
+        this.alert = false;
         this.submitting = true;
-        this.$emit('submit-comment', {
-          message: messageToSend,
-          replied: this.replied
-        });
+        if(!this.partialSubmitted) {
+          const messageToSend = {
+            content: this.reply,
+            myself: true,
+            participantId: 1
+          };
+          this.postComment({ penRequestID: this.penRequestID, comment: messageToSend }).then(() => {
+            return this.updatePenRequestStatus();
+          }).catch(() => {
+            this.setErrorAlert();
+          }).finally(() => {
+            this.submitting = false;
+          });
+        } else {
+          this.updatePenRequestStatus().finally(() => {
+            this.submitting = false;
+          });
+        }
+      }
+    },
+    dismissAlert() {
+      if(this.submitted) {
         this.reply = '';
+        this.setCommentSubmitted(this.unsubmittedDocuments);
+        this.setUnsubmittedDocuments();
+        this.setPenRequest(this.updatedPenRequest);
+        window.scrollTo(0,0);
       }
     },
   },
@@ -196,9 +269,9 @@ export default {
     align-items: center;
     background-color: #EBEBEB;
     /* border-radius: 30px; */
-    margin: 1rem;
-    padding-right: 1rem;
-    padding-left: 1rem;
+    /* margin: 1rem; */
+    /* padding-right: 1rem; */
+    /* padding-left: 1rem; */
     /* width: 90%; */
     overflow: hidden;
 }
@@ -282,9 +355,33 @@ hr {
 
 .v-textarea /deep/ .v-text-field__details {
   min-height: fit-content !important;
+  margin-bottom: 0 !important;
 }
 
 .v-dialog > .v-card > .v-card__text {
   padding: 24px 24px 20px;
 }
+
+.slider {
+  transition-property: all;
+	transition-duration: 0.8s;
+	transition-timing-function: ease;
+}
+
+.slider.open {
+  overflow-y: hidden;
+	max-height: 100px; /*approximate max height */
+  /* visibility: visible; */
+}
+
+.slider.closed {
+	max-height: 0;
+  /* visibility:hidden; */
+  transition-duration: 0.5s;
+}
+
+.v-alert /deep/ .v-icon {
+    padding-left: 0;
+}
+
 </style>
