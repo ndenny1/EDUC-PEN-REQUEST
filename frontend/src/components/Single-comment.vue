@@ -51,17 +51,19 @@ export default {
         amPm = 'pm';
         //hours = d.hour - 12;
       }
-      // if(d.minute < 10){
-      //   d.minute = "0" + d.minute;
-      // }
+      
+      let fixTime = d.dateTime;
+      if(Number(d.minute) < 10){
+        fixTime = (d.dateTime).split(" ");
+        fixTime[1] = String(d.hour) + ':' +  d.minute;
+        fixTime = fixTime.join(" ");
+      }
 
       // d.dayOfWeek = d.dayOfWeek.toLower();
-
-
       // d.month = d.month.pascalCase();
       //d.month = d.month.substring(0, 3);
       //const readableTime = d.month + ' ' + d.day + ', ' + d.year + ' ' + hours + ':' + d.minute + ' ' + amPm;
-      const readableTime = d.dateTime + amPm; //d.year + '-' + d.month + '-' + d.day + ' ' + hours + ':' + d.minute + ' ' + amPm;
+      const readableTime = fixTime + amPm; //d.year + '-' + d.month + '-' + d.day + ' ' + hours + ':' + d.minute + ' ' + amPm;
       if(this.comment.myself){
         return {
           name: this.myself.name,
