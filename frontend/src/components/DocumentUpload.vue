@@ -26,6 +26,9 @@
         :error-messages="fileInputError"
         @change="selectFile"
       ></v-file-input>
+      <p class="bottom-text">PDF, JPEG, and PNG files supported</p>
+
+
       </v-form>
       <!-- </v-card-text> -->
       <v-alert
@@ -214,6 +217,27 @@ p{
 }
 ul{
   width: 100%
+}
+
+.v-input{
+  padding-bottom: 0;
+}
+.bottom-text{
+  margin-top: -0.7rem;
+  padding-top: 0;
+  color: #666666;
+  margin-left: 1.7rem;
+  font-size: 0.8rem
+}
+
+.v-text-field__details{
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+}
+.v-messages{
+  min-height: 0 !important;
+  height: 0 !important;
 }
 
 h3 {
