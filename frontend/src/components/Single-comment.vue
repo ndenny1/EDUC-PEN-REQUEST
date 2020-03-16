@@ -54,9 +54,9 @@ export default {
       
       let fixTime = d.dateTime;
       if(Number(d.minute) < 10){
-        fixTime = (d.dateTime).split(" ");
+        fixTime = (d.dateTime).split(' ');
         fixTime[1] = String(d.hour) + ':' +  d.minute;
-        fixTime = fixTime.join(" ");
+        fixTime = fixTime.join(' ');
       }
 
       // d.dayOfWeek = d.dayOfWeek.toLower();
