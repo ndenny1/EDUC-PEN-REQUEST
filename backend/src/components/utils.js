@@ -28,7 +28,7 @@ function minify(obj, keys=['documentData']) {
 }
 
 function getSessionUser(req) {
-  log.silly('getSessionUser', req.session);
+  log.verbose('getSessionUser', req.session);
   const session = req.session;
   return session && session.passport && session.passport.user;
 }
