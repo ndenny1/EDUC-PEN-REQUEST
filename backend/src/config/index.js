@@ -18,7 +18,7 @@ nconf.overrides({
   logoutEndpoint: process.env.SOAM_URL + '/auth/realms/master/protocol/openid-connect/logout',
   siteMinder_logout_endpoint: process.env.SITEMINDER_LOGOUT_ENDPOINT,
   server: {
-    logLevel: 'verbose',
+    logLevel: process.env.LOG_LEVEL,
     morganFormat: 'dev',
     port: 8080
   }
@@ -32,7 +32,7 @@ nconf.defaults({
   siteMinder_logout_endpoint: process.env.SITEMINDER_LOGOUT_ENDPOINT,
   server: {
     frontend: process.env.SERVER_FRONTEND,
-    logLevel: 'verbose',
+    logLevel: process.env.LOG_LEVEL,
     morganFormat: 'dev',
     port: 8080
   },
