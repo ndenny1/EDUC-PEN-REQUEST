@@ -17,7 +17,7 @@
             </v-card-text>
             <hr>
             <v-card-actions>
-              <a class="login-card-text" href="https://www.bceid.ca/os/?4763&SkipTo=Basic#action" target="_blank" rel="noopener noreferrer">Register</a>
+              <a class="login-card-text" href="https://www.test.bceid.ca/os/?7081&SkipTo=Basic#action" target="_blank" rel="noopener noreferrer">Register</a>
             </v-card-actions>
           </v-card>
 
