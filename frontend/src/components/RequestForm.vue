@@ -82,6 +82,7 @@
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='legalMiddleNames'
+              :readonly="serviceCardBool"
               v-model="userPost.legalMiddleNames"
               color="#003366"
               hint="As shown on current Government Photo ID"

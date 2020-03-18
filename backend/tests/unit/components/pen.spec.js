@@ -2,11 +2,13 @@ const HttpStatus = require('http-status-codes');
 const lodash = require('lodash');
 const config = require('../../../src/config/index');
 
+jest.mock('@js-joda/core');
+const LocalDateTime = require('@js-joda/core').LocalDateTime;
 jest.mock('../../../src/components/utils');
 const utils = require('../../../src/components/utils');
 const pen = require('../../../src/components/pen');
 const {  __RewireAPI__: rewirePen} =  require('../../../src/components/pen');
-const { ServiceError, ApiError } = require('../../../src/components/error'); 
+const { ServiceError, ApiError, ConflictStateError } = require('../../../src/components/error'); 
 const { mockRequest, mockResponse } = require('../helpers'); 
 
 describe('getDigitalIdData', () => {
@@ -432,10 +434,8 @@ describe('getCodes', () => {
     res = mockResponse();
   });
 
-  const spy = jest.spyOn(utils, 'getData');
-
   afterEach(() => {
-    spy.mockClear();
+    jest.clearAllMocks();
   });
 
   it('should return codes', async () => {
@@ -463,5 +463,415 @@ describe('getCodes', () => {
     await pen.getCodes(req, res);
 
     expect(res.status).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
+  });
+});
+
+
+describe('sendVerificationEmail', () => {
+  const emailAddress = 'name@test.com';
+  const penRequestId = 'penRequestId';
+  const identityTypeLabel = 'identityTypeLabel';
+  const response = {data: 'data'};
+
+  const spy = jest.spyOn(utils, 'postData');
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  it('should return response data', async () => {
+    utils.postData.mockResolvedValue(response);
+
+    const result = await pen.__get__('sendVerificationEmail')('token', emailAddress, penRequestId, identityTypeLabel);
+
+    const reqData = {
+      emailAddress,
+      penRequestId,
+      identityTypeLabel
+    };
+    expect(result).toBeTruthy();
+    expect(result).toEqual(response);
+    expect(spy).toHaveBeenCalledWith('token', reqData, config.get('email:apiEndpoint') + '/verify');
+  });
+
+  it('should throw ServiceError if postData is failed', async () => {
+    utils.postData.mockRejectedValue(new Error('error'));
+
+    expect(pen.__get__('sendVerificationEmail')('token', emailAddress, penRequestId, identityTypeLabel)).rejects.toThrowError(ServiceError);
+  });
+});
+
+describe('getAutoMatchResults', () => {
+  const spy = jest.spyOn(utils, 'getDataWithParams');
+
+  afterEach(() => {
+    spy.mockClear();
+  });
+
+  it('should return ZEROMATCHES if no PEN records', async () => {
+    const userInfo = {
+      surname: 'Surname',
+      givenName: 'Givenname',
+      givenNames: 'Givenname Givenname2',
+      birthDate: '2000-01-01',
+      gender: 'Female'
+    };
+    const autoMatchResults = [];
+    utils.getDataWithParams.mockResolvedValue(autoMatchResults);
+
+    const result = await pen.__get__('getAutoMatchResults')('token', userInfo);
+
+    expect(result).toEqual({
+      bcscAutoMatchOutcome: 'ZEROMATCHES',
+      bcscAutoMatchDetails: 'Zero PEN records found by BCSC auto-match'
+    });
+    //expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith('token', config.get('demographics:apiEndpoint'), {
+      params: {
+        studSurName: 'Surname',
+        studGiven: 'Givenname',
+        studMiddle: 'Givenname2',
+        studBirth: '20000101',
+        studSex: 'F'
+      }
+    });
+  });
+
+  it('should return MANYMATCHES if multiple PEN records', async () => {
+    const userInfo = {
+      surname: 'Surname',
+      givenName: 'Givenname',
+      givenNames: '',
+      birthDate: '',
+      gender: ''
+    };
+    const autoMatchResults = [{
+      studSurname: 'studSurname',
+      studGiven: 'studGiven',
+      middleName: 'studMiddle'
+    }, {
+      studSurname: 'studSurname',
+      studGiven: 'studGiven',
+      middleName: 'studMiddle'
+    }];
+    utils.getDataWithParams.mockResolvedValue(autoMatchResults);
+
+    const result = await pen.__get__('getAutoMatchResults')('token', userInfo);
+
+    expect(result).toEqual({
+      bcscAutoMatchOutcome: 'MANYMATCHES',
+      bcscAutoMatchDetails: '2 PEN records found by BCSC auto-match'
+    });
+    //expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith('token', config.get('demographics:apiEndpoint'), {
+      params: {
+        studSurName: 'Surname',
+        studGiven: 'Givenname',
+        studMiddle: '',
+        studBirth: '',
+        studSex: ''
+      }
+    });
+  });
+
+  it('should return ONEMATCH if one PEN record', async () => {
+    const userInfo = {
+      surname: 'Surname',
+      givenName: 'Givenname',
+    };
+    const autoMatchResults = [{
+      studSurname: 'studSurname',
+      studGiven: 'studGiven',
+      studMiddle: 'studMiddle',
+      pen: 'pen'
+    }];
+    utils.getDataWithParams.mockResolvedValue(autoMatchResults);
+
+    const result = await pen.__get__('getAutoMatchResults')('token', userInfo);
+
+    expect(result).toEqual({
+      bcscAutoMatchOutcome: 'ONEMATCH',
+      bcscAutoMatchDetails: 'pen studSurname, studGiven, studMiddle'
+    });
+    expect(spy).toHaveBeenCalledWith('token', config.get('demographics:apiEndpoint'), {
+      params: {
+        studSurName: 'Surname',
+        studGiven: 'Givenname',
+      }
+    });
+  });
+
+  it('should throw ServiceError if getDataWithParams is failed', async () => {
+    const userInfo = {};
+    utils.getDataWithParams.mockRejectedValue(new Error('error'));
+
+    expect(pen.__get__('getAutoMatchResults')('token', userInfo)).rejects.toThrowError(ServiceError);
+  });
+});
+
+describe('updatePenRequestStatus', () => {
+  const reqData = { legalLastName: 'legalLastName' };
+  const userInfo = {
+    digitalIdentityID: 'digitalIdentityID',
+    displayName: 'Firstname Lastname',
+    accountType: 'BCEID',
+  };
+
+  const spy = jest.spyOn(utils, 'postData');
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    rewirePen.__ResetDependency__('getAutoMatchResults');
+  });
+
+  it('should return penrequest data', async () => {
+    utils.postData.mockResolvedValue({penRequestID: 'penRequestID'});
+
+    const result = await pen.__get__('postPenRequest')('token', reqData, userInfo);
+
+    expect(result).toBeTruthy();
+    expect(result.penRequestID).toEqual('penRequestID');
+    expect(result.digitalID).toBeNull();
+    const penRequst = {
+      ...reqData,
+      emailVerified: utils.EmailVerificationStatuses.NOT_VERIFIED,
+      digitalID: userInfo.digitalIdentityID
+    };
+    expect(spy).toHaveBeenCalledWith('token', penRequst, config.get('penRequest:apiEndpoint') + '/');
+  });
+
+  it('should return penrequest data with autoMatchResults if accountType is BCSC', async () => {
+    const userInfo = {
+      digitalIdentityID: 'digitalIdentityID',
+      displayName: 'Firstname Lastname',
+      accountType: 'BCSC',
+    };
+    const autoMatchResults = {
+      bcscAutoMatchOutcome: 'ONEMATCH',
+      bcscAutoMatchDetails: 'pen studSurname, studGiven, studMiddle'
+    };
+    utils.postData.mockResolvedValue({penRequestID: 'penRequestID'});
+    rewirePen.__Rewire__('getAutoMatchResults', () => Promise.resolve(autoMatchResults));
+
+    const result = await pen.__get__('postPenRequest')('token', reqData, userInfo);
+
+    expect(result).toBeTruthy();
+    expect(result.penRequestID).toEqual('penRequestID');
+    expect(result.digitalID).toBeNull();
+    const penRequst = {
+      ...reqData,
+      ...autoMatchResults,
+      emailVerified: utils.EmailVerificationStatuses.NOT_VERIFIED,
+      digitalID: userInfo.digitalIdentityID
+    };
+    expect(spy).toHaveBeenCalledWith('token', penRequst, config.get('penRequest:apiEndpoint') + '/');
+  });
+
+  it('should return penrequest data with ZEROMATCHES if accountType is BCSC and no autoMatchResults', async () => {
+    const userInfo = {
+      digitalIdentityID: 'digitalIdentityID',
+      displayName: 'Firstname Lastname',
+      accountType: 'BCSC',
+    };
+    const autoMatchResults = {
+      bcscAutoMatchOutcome: 'ZEROMATCHES',
+      bcscAutoMatchDetails: 'Zero PEN records found by BCSC auto-match'
+    };
+    const autoMatchRes = [];
+
+    jest.spyOn(utils, 'getDataWithParams');
+    utils.getDataWithParams.mockResolvedValue(autoMatchRes);
+    utils.postData.mockResolvedValue({penRequestID: 'penRequestID'});
+
+    const result = await pen.__get__('postPenRequest')('token', reqData, userInfo);
+
+    expect(result).toBeTruthy();
+    expect(result.penRequestID).toEqual('penRequestID');
+    expect(result.digitalID).toBeNull();
+    const penRequst = {
+      ...reqData,
+      ...autoMatchResults,
+      emailVerified: utils.EmailVerificationStatuses.NOT_VERIFIED,
+      digitalID: userInfo.digitalIdentityID
+    };
+    expect(spy).toHaveBeenCalledWith('token', penRequst, config.get('penRequest:apiEndpoint') + '/');
+  });
+
+  it('should throw ServiceError if postData is failed', async () => {
+    utils.postData.mockRejectedValue(new Error('error'));
+
+    expect(pen.__get__('postPenRequest')('token', reqData, userInfo)).rejects.toThrowError(ServiceError);
+  });
+});
+
+describe('submitPenRequest', () => {
+  const digitalID = 'ac337def-704b-169f-8170-653e2f7c001';
+  const penRequest = { 
+    legalLastName: 'legalLastName' 
+  };
+
+  const penRequestRes = {
+    penRequestID: 'penRequestID',
+    digitalID: null,
+  };
+
+  const emailRes = {
+  };
+
+  const sessionUser = {
+    jwt: 'token',
+    _json: {
+      digitalIdentityID: digitalID,
+      displayName: 'Firstname Lastname',
+      accountType: 'BCEID',
+    }
+  };
+
+  let session;
+
+  let req;
+  let res;
+
+  jest.spyOn(utils, 'getSessionUser');
+  jest.spyOn(utils, 'postData');
+
+  beforeEach(() => {
+    session = {
+      digitalIdentityData: {
+        identityTypeLabel: 'identityTypeLabel',
+      }
+    };
+    utils.getSessionUser.mockReturnValue(sessionUser);
+    req = mockRequest(penRequest, session);
+    res = mockResponse();
+    rewirePen.__Rewire__('postPenRequest', () => Promise.resolve(penRequestRes));
+    rewirePen.__Rewire__('sendVerificationEmail', () => Promise.resolve(emailRes));
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    rewirePen.__ResetDependency__('postPenRequest');
+    rewirePen.__ResetDependency__('sendVerificationEmail');
+  });
+
+  it('should return UNAUTHORIZED if no session', async () => {
+    utils.getSessionUser.mockReturnValue(null);
+
+    await pen.getUserInfo(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED);
+  });
+
+  it('should return penRequest response and send verification email', async () => {
+
+    await pen.submitPenRequest(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
+    expect(res.json).toHaveBeenCalledWith(penRequestRes);
+    expect(req.session.penRequest).toEqual(penRequestRes);
+  });
+
+  it('should return CONFLICT if the status of existed penRequest is not REJECTED', async () => {
+    session = {
+      ...session,
+      penRequest: {
+        penRequestStatusCode: utils.PenRequestStatuses.DRAFT,
+      }
+    };
+
+    req = mockRequest(penRequest, session);
+
+    await pen.submitPenRequest(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.CONFLICT);
+  });
+
+  it('should return INTERNAL_SERVER_ERROR if exceptions thrown', async () => {
+    rewirePen.__Rewire__('postPenRequest', () => Promise.reject(new ServiceError('error')));
+
+    await pen.submitPenRequest(req, res);
+    
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
+  });
+
+  it('should return penRequest response if sending verification email failed', async () => {
+    rewirePen.__Rewire__('sendVerificationEmail', () => Promise.reject(new ServiceError('error')));
+
+    await pen.submitPenRequest(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
+    expect(res.json).toHaveBeenCalledWith(penRequestRes);
+    expect(req.session.penRequest).toEqual(penRequestRes);
+  });
+
+  it('should return penRequest response if the status of existed penRequest is REJECTED', async () => {
+    session = {
+      ...session,
+      penRequest: {
+        penRequestStatusCode: utils.PenRequestStatuses.REJECTED,
+      }
+    };
+
+    req = mockRequest(penRequest, session);
+    rewirePen.__ResetDependency__('postPenRequest');
+    rewirePen.__ResetDependency__('sendVerificationEmail');
+    utils.postData.mockReturnValueOnce({penRequestID: 'penRequestID'}).mockReturnValueOnce({});
+
+    await pen.submitPenRequest(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
+    expect(res.json).toHaveBeenCalledWith(penRequestRes);
+    expect(req.session.penRequest).toEqual(penRequestRes);
+  });
+});
+
+describe('updatePenRequestStatus', () => {
+  const localDateTime = '2020-01-01T12:00:00';
+  const penRequestID = 'penRequestID';
+  let penRequest = {
+    penRequestID,
+    digitalID: 'digitalID'
+  };
+
+  const getDataSpy = jest.spyOn(utils, 'getData');
+  const putDataSpy = jest.spyOn(utils, 'putData');
+
+  jest.spyOn(LocalDateTime, 'now');
+
+  beforeEach(() => {
+    LocalDateTime.now.mockReturnValue(localDateTime);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should return penrequest data', async () => {
+    utils.getData.mockResolvedValue(penRequest);
+    utils.putData.mockResolvedValue(penRequest);
+
+    const result = await pen.__get__('updatePenRequestStatus')('token', penRequestID, utils.PenRequestStatuses.INITREV, () => penRequest);
+
+    expect(result).toBeTruthy();
+    expect(result.penRequestID).toEqual(penRequestID);
+    expect(result.digitalID).toBeNull();
+    expect(result.penRequestStatusCode).toEqual(utils.PenRequestStatuses.INITREV);
+    expect(result.statusUpdateDate).toEqual(localDateTime);
+
+    expect(getDataSpy).toHaveBeenCalledWith('token', `${config.get('penRequest:apiEndpoint')}/${penRequestID}`);
+    expect(putDataSpy).toHaveBeenCalledWith('token', penRequest ,config.get('penRequest:apiEndpoint'));
+  });
+
+  it('should throw ConflictStateError if ConflictStateError is already raised', async () => {
+    utils.getData.mockResolvedValue(penRequest);
+
+    expect(pen.__get__('updatePenRequestStatus')('token', penRequestID, utils.PenRequestStatuses.INITREV, () => { throw new ConflictStateError(); })).rejects.toThrowError(ConflictStateError);
+  });
+
+  it('should throw ServiceError if other errors are already raised', async () => {
+    utils.getData.mockResolvedValue(penRequest);
+    utils.putData.mockRejectedValue(new Error('error'));
+
+    expect(pen.__get__('updatePenRequestStatus')('token', penRequestID, utils.PenRequestStatuses.INITREV, () => penRequest)).rejects.toThrowError(ServiceError);
   });
 });

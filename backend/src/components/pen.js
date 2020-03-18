@@ -204,9 +204,9 @@ async function getAutoMatchResults(accessToken, userInfo) {
       params: {
         studSurName: userInfo['surname'],
         studGiven: userInfo['givenName'],
-        studMiddle: userInfo['givenNames'].replace(userInfo['givenName'],'').trim(),
-        studBirth: userInfo['birthDate'].split('-').join(''),
-        studSex: userInfo['gender'].charAt(0)
+        studMiddle: userInfo['givenNames'] && userInfo['givenNames'].replace(userInfo['givenName'],'').trim(),
+        studBirth: userInfo['birthDate'] && userInfo['birthDate'].split('-').join(''),
+        studSex: userInfo['gender'] && userInfo['gender'].charAt(0)
       }
     };
 
@@ -238,13 +238,18 @@ async function getAutoMatchResults(accessToken, userInfo) {
   }
 }
 
-async function postPenRequest(accessToken, req, userInfo) {
+async function postPenRequest(accessToken, reqData, userInfo) {
   try{
     const url = config.get('penRequest:apiEndpoint') + '/';
 
-    let reqData = lodash.cloneDeep(req);
+    if(userInfo.accountType === 'BCSC') {
+      const autoMatchResults = await getAutoMatchResults(accessToken, userInfo);
+      reqData.bcscAutoMatchOutcome = autoMatchResults.bcscAutoMatchOutcome;
+      reqData.bcscAutoMatchDetails = autoMatchResults.bcscAutoMatchDetails;
+    }
+
     reqData.emailVerified = EmailVerificationStatuses.NOT_VERIFIED;
-    reqData.digitalID = userInfo._json.digitalIdentityID;
+    reqData.digitalID = userInfo.digitalIdentityID;
     let resData = await postData(accessToken, reqData, url);
     resData.digitalID = null;
 
@@ -271,15 +276,7 @@ async function submitPenRequest(req, res) {
       });
     }
 
-    let reqData = req.body;
-
-    if(userInfo._json.accountType === 'BCSC') {
-      const autoMatchResults = await getAutoMatchResults(accessToken, userInfo._json);
-      reqData.bcscAutoMatchOutcome = autoMatchResults.bcscAutoMatchOutcome;
-      reqData.bcscAutoMatchDetails = autoMatchResults.bcscAutoMatchDetails;
-    }
-
-    const resData = await postPenRequest(accessToken, reqData, userInfo);
+    const resData = await postPenRequest(accessToken, req.body, userInfo._json);
 
     req.session.penRequest = resData;
     sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeLabel).catch(e => 
@@ -305,7 +302,7 @@ async function postComment(req, res) {
       });
     }
 
-    if(req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
+    if(!req.session.penRequest || req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Post comment not allowed'
       });
@@ -351,7 +348,6 @@ async function getComments(req, res) {
 
     const apiResData = await getData(accessToken, url);
 
-    //console.log(apiResData);
     let response = {
       participants: [],
       myself: {
@@ -375,30 +371,12 @@ async function getComments(req, res) {
           response.participants.push(participant);
         }
       }
-      // if(element.commentTimestamp.length>23){
-      //   element.commentTimestamp = element.commentTimestamp.substring(0,23);
-      // }
 
-      // const retrievedTimestamp = localDateTime.parse(element.commentTimestamp);
-      // let minute =  retrievedTimestamp.minute();
-      // if(retrievedTimestamp.minute() < 10){
-      //   minute = '0' + retrievedTimestamp.minute();
-      // }
       response.messages.push({
         content: element.commentContent,
         participantId: (element.staffMemberIDIRGUID ? element.staffMemberIDIRGUID : '1'),
         myself: participant.id.toUpperCase() === response.myself.id.toUpperCase(),
         timestamp: element.commentTimestamp
-        // timestamp: {
-        //   year: retrievedTimestamp.year(),
-        //   month: retrievedTimestamp.month().name(),// this will show month name as ex:- DECEMBER not value 12.
-        //   day: retrievedTimestamp.dayOfMonth(),
-        //   hour: retrievedTimestamp.hour(),
-        //   minute: minute,
-        //   second: retrievedTimestamp.second(),
-        //   millisecond: retrievedTimestamp.nano(),
-        //   dayOfWeek: retrievedTimestamp.dayOfWeek()
-        // }
       });
     });
 
@@ -471,8 +449,10 @@ async function verifyEmail(req, res) {
     }
 
     const data = await setPenRequestAsInitrev(penRequestID);
-    req.session.penRequest = data;
-
+    if(loggedin) {
+      req.session.penRequest = data;
+    }
+    
     return res.redirect(loggedin ? baseUrl : (verificationUrl + VerificationResults.OK));
   }catch(e){
     if(e instanceof ConflictStateError) {
