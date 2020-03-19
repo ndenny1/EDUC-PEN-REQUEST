@@ -42,6 +42,7 @@
               readOnly: true
             - name: pen-request-frontend-config-map
               mountPath: "/etc/config.js"
+              subPath: config.js
             livenessProbe:
               failureThreshold: 3
               httpGet:
