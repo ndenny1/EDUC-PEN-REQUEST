@@ -287,6 +287,7 @@
               color="green"
               class="mt-0"
               :rules="acceptanceRule('')"
+              @click.native="clickAcceptance"
             >
               <template v-slot:label>
                 <div class="pl-3">
@@ -506,7 +507,12 @@ export default {
     },
     maxSelectableDate(){
       return new Date(LocalDate.now().minusYears(5).toString()).toISOString().substr(0, 10);
-    }
+    },
+    clickAcceptance() {
+      if(this.acceptance) {
+        this.validate();
+      }
+    },
   },
 };
 </script>

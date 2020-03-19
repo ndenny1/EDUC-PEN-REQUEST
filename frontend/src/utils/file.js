@@ -27,11 +27,15 @@ export function getFileExtension(fileName) {
   return fileName.slice((fileName.lastIndexOf('.') - 1 >>> 0) + 2);
 }
 
+export function getFileExtensionWithDot(fileName) {
+  const extension = getFileExtension(fileName);
+  return (extension.length > 0 ? ('.' + extension) : '');
+}
 
 export function getFileNameWithMaxNameLength(fileName, nameLength=30, extensionLength=10) {
   const nameIndex = fileName.lastIndexOf('.') >>> 0;
   const name = fileName.slice(0, nameIndex > nameLength ? nameLength : nameIndex);
-  const extension = getFileExtension(fileName).substring(0, extensionLength);
+  const extension = getFileExtensionWithDot(fileName).substring(0, extensionLength);
 
-  return name + (extension.length > 0 ? ('.' + extension) : '');
+  return name + extension;
 }
