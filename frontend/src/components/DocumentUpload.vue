@@ -26,7 +26,7 @@
         :error-messages="fileInputError"
         @change="selectFile"
       ></v-file-input>
-      <p class="bottom-text">PDF, JPEG, and PNG files supported</p>
+      <p class="bottom-text">{{fileFormats}} files supported</p>
 
 
       </v-form>
@@ -89,6 +89,7 @@ export default {
     return {
       fileRules: [ ],
       fileAccept: '',
+      fileFormats: 'PDF, JPEG, and PNG',
       requiredRules: [v => !!v || 'Required'],
       validForm: true,
       fileInputError: [],
@@ -188,14 +189,26 @@ export default {
         this.handleFileReadErr();
       });
     },
+    makefileFormatList(extensions) {
+      extensions = extensions.map(v => v.split(new RegExp('/'))[1]).filter(v => v).map(v => v.toUpperCase());
+      if(extensions.length <= 2) {
+        return extensions.join(' and ');
+      } else {
+        const lastTwo = extensions.splice(-2, 2).join(', and ');
+        extensions.push(lastTwo);
+        return extensions.join(', ');
+      }
+    },
     async getFileRules() {
       const response = await ApiService.getFileRequirements();
       const fileRequirements = response.data;
       const maxSize = fileRequirements.maxSize;
       this.fileRules = [
         value => !value || value.size < maxSize || `File size should not be larger than ${humanFileSize(maxSize)}!`,
+        value => !value || fileRequirements.extensions.includes(value.type) || `File formats should be ${this.fileFormats}.`,
       ];
       this.fileAccept = fileRequirements.extensions.join();
+      this.fileFormats = this.makefileFormatList(fileRequirements.extensions);
     },
   },
 };
@@ -223,7 +236,7 @@ ul{
   padding-bottom: 0;
 }
 .bottom-text{
-  margin-top: -0.7rem;
+  /* margin-top: -0.7rem; */
   padding-top: 0;
   color: #666666;
   margin-left: 1.7rem;

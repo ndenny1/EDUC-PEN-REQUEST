@@ -17,7 +17,7 @@
             </v-card-text>
             <hr>
             <v-card-actions>
-              <a class="login-card-text" :href="bceid_reg" target="_blank" rel="noopener noreferrer">Register</a>
+              <a class="login-card-text" :href="bceidReg" target="_blank" rel="noopener noreferrer">Register</a>
             </v-card-actions>
           </v-card>
 
@@ -77,7 +77,7 @@ export default {
     return {
       appTitle: process.env.VUE_APP_TITLE,
       authRoutes: AuthRoutes,
-      bceid_reg: process.env.VUE_APP_BCEID_REG_URL
+      bceidReg: process.env.VUE_APP_BCEID_REG_URL
     };
   },
   computed: {

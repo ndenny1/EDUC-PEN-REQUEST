@@ -82,6 +82,7 @@
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-text-field
               id='legalMiddleNames'
+              :readonly="serviceCardBool"
               v-model="userPost.legalMiddleNames"
               color="#003366"
               hint="As shown on current Government Photo ID"
@@ -286,6 +287,7 @@
               color="green"
               class="mt-0"
               :rules="acceptanceRule('')"
+              @click.native="clickAcceptance"
             >
               <template v-slot:label>
                 <div class="pl-3">
@@ -505,7 +507,12 @@ export default {
     },
     maxSelectableDate(){
       return new Date(LocalDate.now().minusYears(5).toString()).toISOString().substr(0, 10);
-    }
+    },
+    clickAcceptance() {
+      if(this.acceptance) {
+        this.validate();
+      }
+    },
   },
 };
 </script>

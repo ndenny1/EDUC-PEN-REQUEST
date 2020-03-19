@@ -1,8 +1,11 @@
 'use strict';
 
-const mockRequest = (session = {}) => {
+const mockRequest = (body, session = {}, params = {}, query = {}) => {
   return {
+    body,
     session,
+    params,
+    query,
   };
 };
 
@@ -16,6 +19,7 @@ const mockResponse = () => {
     res.data.json = v;
     return res; 
   });
+  res.redirect = jest.fn().mockReturnValue(res);
   return res;
 };
 
