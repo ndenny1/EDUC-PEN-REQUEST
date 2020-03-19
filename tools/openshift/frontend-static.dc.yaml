@@ -40,6 +40,8 @@
             - name: tls-certs
               mountPath: "/etc/tls-certs"
               readOnly: true
+            - name: pen-request-frontend-config-map
+              mountPath: "/etc/config.js"
             livenessProbe:
               failureThreshold: 3
               httpGet:
@@ -70,6 +72,10 @@
           - name: tls-certs
             secret:
               secretName: pen-request-frontend-cert
+          - config-map:
+              defaultMode: 420
+              name: pen-request-frontend-config-map
+            name: pen-request-frontend-config-map
       test: false
       triggers:
       - type: ConfigChange
