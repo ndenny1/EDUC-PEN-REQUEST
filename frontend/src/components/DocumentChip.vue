@@ -161,7 +161,7 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-right: 32px !important;
+  padding-right: 38px !important;
   position: relative;
 }
 
@@ -171,6 +171,8 @@ export default {
   top: 5px;
   right: 8px;
   width: 24px;
+  padding-left: 7px !important;
+  max-width: 24px;
 }
 
 .v-list-item {

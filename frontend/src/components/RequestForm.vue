@@ -8,18 +8,13 @@
     </v-row>
 
 
-    <v-card color="#FFECA9" class="pa-3 pb-8 mb-8 mx-3">
+    <v-card color="#FFECA9" class="pa-3 mb-8 mx-3">
       <h3>Guidance:</h3>
-      <br/>
-      <ul>
-        <li>This form can only be completed by the owner of the PEN.</li>
-        <li>If you are a parent/guardian see here. (do not currently have the URL TBD but this will likely be on journey
-          builder).
-        </li>
-        <li>Enter your legal name exactly as indicated on your Government Photo ID.</li>
+      <ul class="pt-2">
+        <li>This form can only be completed by the owner of the PEN</li>
+        <li>Enter your legal name exactly as indicated on your Government Photo ID</li>
         <li>If your name has been legally changed since attending school in British Columbia, please indicate previous
-          name(s)
-          in Past Names field.
+          name(s) in Past Names field
         </li>
       </ul>
     </v-card>
@@ -31,7 +26,7 @@
       v-model="validForm"
     >
 
-      <v-container fluid>
+      <v-container fluid class="py-0">
         <v-row>
           <v-col cols="12" class="declaration py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-checkbox
@@ -42,7 +37,7 @@
             >
               <template v-slot:label>
                 <div class="pl-3">
-                  I declare that I am submitting a request for my Personal Education Number on my own behalf.
+                  I declare that I am submitting a request for my Personal Education Number on my own behalf. (If you are a parent/guardian go to your child's school to get their PEN.)
                 </div>
               </template>
             </v-checkbox>
@@ -192,6 +187,8 @@
                   :rules="requiredRules()"
                   :disabled="enableDisableForm.disabled"
                   required
+                  @keyup="focusBirthdateField"
+                  ref="birthdate"
                   autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
                 ></v-text-field>
               </template>
@@ -464,6 +461,7 @@ export default {
     },
     save(date) {
       this.$refs.menu.save(date);
+      this.$refs.birthdate.$el.querySelectorAll('#birthdate')[0].focus();
     },
     validate() {
       this.$refs.form.validate();
@@ -512,8 +510,13 @@ export default {
       if(this.acceptance) {
         this.validate();
       }
-    },
-  },
+    },      
+    focusBirthdateField(event) {
+      if(event.key === 'Tab' && event.type === 'keyup') {
+        this.menu = true;
+      }
+    }
+  }
 };
 </script>
 
@@ -565,6 +568,32 @@ export default {
 
   .bottom_group {
     padding-bottom: 15px;
+  }
+
+  .v-text-field /deep/ .v-input__slot {
+    min-height: 42px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .v-text-field /deep/ .v-label {
+    top: 10px !important;
+  }
+
+  .v-text-field /deep/ .v-text-field__details {
+    margin-bottom: 18px;
+    min-height: 0;
+  }
+
+  .v-text-field /deep/ .v-messages {
+    min-height: 0;
+  }
+
+  .v-select /deep/ .v-select__selections {
+    padding: 0 !important;
+  }
+
+  .v-select /deep/ .v-input__append-inner {
+    margin-top: 8px !important;
   }
 
   @media screen and (max-width: 300px) {

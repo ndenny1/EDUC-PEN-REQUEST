@@ -875,3 +875,172 @@ describe('updatePenRequestStatus', () => {
     expect(pen.__get__('updatePenRequestStatus')('token', penRequestID, utils.PenRequestStatuses.INITREV, () => penRequest)).rejects.toThrowError(ServiceError);
   });
 });
+
+describe('beforeUpdatePenRequestAsSubsrev', () => {
+  it('should throw ConflictStateError if penRequest is not RETURNED', async () => {
+    let penRequest = {
+      penRequestStatusCode: utils.PenRequestStatuses.INITREV,
+    };
+
+    expect(() => pen.__get__('beforeUpdatePenRequestAsSubsrev')(penRequest)).toThrowError(ConflictStateError);
+  });
+
+  it('should return penRequest if penRequest is RETURNED', async () => {
+    let penRequest = {
+      penRequestStatusCode: utils.PenRequestStatuses.RETURNED,
+    };
+
+    const result = await pen.__get__('beforeUpdatePenRequestAsSubsrev')(penRequest);
+
+    expect(result).toEqual(penRequest);
+  });
+});
+
+describe('setPenRequestAsSubsrev', () => {
+  const penRequestID = 'penRequestID';
+  const penRequest = {
+    penRequestID
+  };
+  const accessToken = 'token';
+  const reqBody = {
+    penRequestStatusCode: utils.PenRequestStatuses.SUBSREV
+  };
+  jest.spyOn(utils, 'getAccessToken');
+  const updatePenRequestStatusSpy = jest.fn();
+
+  let req;
+  let res;
+
+  beforeEach(() => {
+    utils.getAccessToken.mockReturnValue(accessToken);
+    req = mockRequest(reqBody, undefined, {id: penRequestID});
+    res = mockResponse();
+    updatePenRequestStatusSpy.mockResolvedValue(penRequest);
+    rewirePen.__Rewire__('updatePenRequestStatus', updatePenRequestStatusSpy);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    rewirePen.__ResetDependency__('updatePenRequestStatus');
+  });
+
+  it('should return OK and penRequest data', async () => {
+    await pen.setPenRequestAsSubsrev(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
+    expect(res.json).toHaveBeenCalledWith(penRequest);
+    expect(req.session.penRequest).toEqual(penRequest);
+    expect(updatePenRequestStatusSpy).toHaveBeenCalledWith(accessToken, penRequestID, reqBody.penRequestStatusCode, rewirePen.__get__('beforeUpdatePenRequestAsSubsrev'));
+  });
+
+  it('should return UNAUTHORIZED if no access token in session', async () => {
+    utils.getAccessToken.mockReturnValue(null);
+    await pen.setPenRequestAsSubsrev(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED);
+  });
+
+  it('should return BAD_REQUEST if penRequestStatus is not RETURNED in request body', async () => {
+    const reqBody = {
+      penRequestStatusCode: utils.PenRequestStatuses.INITREV
+    };
+    req = mockRequest(reqBody, undefined, {id: penRequestID});
+    await pen.setPenRequestAsSubsrev(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+  });
+
+  it('should return BAD_REQUEST if no penRequestStatus in request body', async () => {
+    req = mockRequest({}, undefined, {id: penRequestID});
+    await pen.setPenRequestAsSubsrev(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+  });
+
+  it('should return INTERNAL_SERVER_ERROR if errors thrown', async () => {
+    updatePenRequestStatusSpy.mockRejectedValue(new Error('test error'));
+    rewirePen.__Rewire__('updatePenRequestStatus', updatePenRequestStatusSpy);
+    await pen.setPenRequestAsSubsrev(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
+  });
+
+});
+
+describe('resendVerificationEmail', () => {
+  const penRequestID = 'penRequestID';
+  const penRequest = {
+    penRequestID,
+    penRequestStatusCode: utils.PenRequestStatuses.DRAFT,
+    email: 'user@test.com'
+  };
+  const digitalIdentityData = {
+    identityTypeLabel: 'identityTypeLabel'
+  };
+  const accessToken = 'token';
+  const session = {
+    penRequest,
+    digitalIdentityData
+  };
+  const resData = {
+    data: 'data'
+  };
+  jest.spyOn(utils, 'getAccessToken');
+  const sendVerificationEmailSpy = jest.fn();
+
+  let req;
+  let res;
+
+  beforeEach(() => {
+    utils.getAccessToken.mockReturnValue(accessToken);
+    req = mockRequest(null, session);
+    res = mockResponse();
+    sendVerificationEmailSpy.mockResolvedValue(resData);
+    rewirePen.__Rewire__('sendVerificationEmail', sendVerificationEmailSpy);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    rewirePen.__ResetDependency__('sendVerificationEmailSpy');
+  });
+
+  it('should return OK and response data', async () => {
+    await pen.resendVerificationEmail(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.OK);
+    expect(res.json).toHaveBeenCalledWith(resData);
+    expect(sendVerificationEmailSpy).toHaveBeenCalledWith(accessToken, penRequest.email, penRequest.penRequestID, digitalIdentityData.identityTypeLabel);
+  });
+
+  it('should return UNAUTHORIZED if no access token in session', async () => {
+    utils.getAccessToken.mockReturnValue(null);
+    await pen.resendVerificationEmail(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED);
+  });
+
+  it('should return CONFLICT if penRequestStatus is not DRAFT in session', async () => {
+    const penRequest = {
+      penRequestID,
+      penRequestStatusCode: utils.PenRequestStatuses.INITREV,
+      email: 'user@test.com'
+    };
+    const session = {
+      penRequest,
+      digitalIdentityData
+    };
+    req = mockRequest(null, session);
+    await pen.resendVerificationEmail(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.CONFLICT);
+  });
+
+  it('should return INTERNAL_SERVER_ERROR if errors thrown', async () => {
+    sendVerificationEmailSpy.mockRejectedValue(new Error('test error'));
+    rewirePen.__Rewire__('sendVerificationEmail', sendVerificationEmailSpy);
+    await pen.resendVerificationEmail(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
+  });
+
+});
