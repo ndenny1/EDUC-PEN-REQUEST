@@ -2,6 +2,7 @@
 
 const config = require('./config/index');
 const http = require('http');
+//const fs = require('fs')
 const log = require('npmlog');
 const localDateTime = require('@js-joda/core').LocalDateTime;
 //Add timestamp to log
@@ -21,8 +22,12 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
+// const options = {
+//   key: fs.readFileSync('/etc/tls-certs/tls.key'),
+//   cert: fs.readFileSync('/etc/tls-certs/tls.crt')
+// };
 
-const server = http.createServer(app);
+const server = http.createServer(pp);
 
 /**
  * Listen on provided port, on all network interfaces.
