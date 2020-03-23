@@ -33,7 +33,7 @@ export default {
     ...mapActions('penRequest', ['getCodes'])
   },
   async created() {
-    console.log(process.env.VUE_APP_BCEID_REG_URL);
+    console.log(config.VUE_APP_BCEID_REG_URL);
     this.setLoading(true);
     this.getJwtToken().then(() => 
       Promise.all([this.getCodes(), this.getUserInfo()])
