@@ -41,8 +41,7 @@
               mountPath: "/etc/tls-certs"
               readOnly: true
             - name: pen-request-frontend-config-map
-              mountPath: "/var/www/html/js/config.js"
-              subPath: config.js
+              mountPath: "/var/www/html/js"
             livenessProbe:
               failureThreshold: 3
               httpGet:

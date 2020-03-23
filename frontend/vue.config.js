@@ -9,7 +9,7 @@ module.exports = {
             {
               loader: 'file-loader',
               options: {
-                name: 'config.js'
+                name: '/js/config.js'
               },
             }
           ]
