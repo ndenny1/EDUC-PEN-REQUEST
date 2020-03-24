@@ -334,8 +334,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="primary"
-            text
+            color="#003366"
+            class="white--text"
             @click="closeDialog"
           >
             Close
@@ -367,7 +367,6 @@ export default {
       nameLimit: 80,
       validForm: false,
       dialog: false,
-      isSubmitted: false,
       submitting: false,
       dialogMessage: null,
       apiGenderCodes: [],
@@ -466,6 +465,14 @@ export default {
     validate() {
       this.$refs.form.validate();
     },
+    setSuccessDialog() {
+      this.dialogMessage = 'Form submit success!';
+      this.dialog = true;
+    },
+    setErrorDialog() {
+      this.dialogMessage = 'Sorry, an unexpected error seems to have occured. You can click on the submit button again later.';
+      this.dialog = true;
+    },
     async submitRequestForm() {
       this.validate();
       if (this.validForm) {
@@ -477,20 +484,16 @@ export default {
           const resData = await this.postRequest(this.userPost);
           if (resData) {
             this.$refs.form.reset();
-            this.dialogMessage = 'Form submit success!';
-            this.dialog = true;
-            this.isSubmitted = true;
+            this.setSuccessDialog();
             this.setPenRequest(resData);
+            if (this.$route.name !== 'home') {
+              this.$router.replace({name: 'home'});
+            }
           } else {
-            //this.$refs.form.reset();
-            this.dialogMessage = 'Form submit failure.';
-            this.dialog = true;
-            this.isSubmitted = false;
+            this.setErrorDialog();
           }
         } catch (e) {
-          this.dialogMessage = 'Form submit failure.';
-          this.dialog = true;
-          this.isSubmitted = false;
+          this.setErrorDialog();
           throw e;
         } finally {
           this.submitting = false;
@@ -499,9 +502,6 @@ export default {
     },
     closeDialog() {
       this.dialog = false;
-      if (this.isSubmitted && this.$route.name !== 'home') {
-        this.$router.replace({name: 'home'});
-      }
     },
     maxSelectableDate(){
       return new Date(LocalDate.now().minusYears(5).toString()).toISOString().substr(0, 10);

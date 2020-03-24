@@ -1,62 +1,44 @@
 <template>
-    <v-card class="mx-0 mt-2 mb-5 px-6 py-2 px-sm-10 py-sm-5">  
-        <v-row class="flex-grow-0 pb-5">
-            <v-card height="100%" width="100%" elevation=0 color="#036" class="white--text">
-                <v-card-title class="request-display-header px-1 px-sm-5">
-                  <h1>{{status === requestStatuses.RETURNED ? 'Provide More Info for PEN Request' : 'PEN Request Status'}}</h1>
-                </v-card-title>
-            </v-card>
-        </v-row>
-        <v-row>
-            <v-alert
-                id="alert-message"
-                dense
-                text
-                dismissible
-                v-model="alert"
-                :type="alertType"
-                class="mb-5"
-                width="100%"
-            >
-                {{ alertMessage }}
-            </v-alert>
-        </v-row>
-        <v-row class="pb-5">
-            <MessageCard></MessageCard>
-        </v-row>
-        <v-row>
-            <StatusCard @success-alert="setSuccessAlert" @error-alert="setErrorAlert"></StatusCard>
-        </v-row>
-        <v-row>
-          <Chat 
-            @success-alert="setSuccessAlert" 
-            @error-alert="setErrorAlert" 
-            :hideInput="status !== requestStatuses.RETURNED"
-            v-if="status !== requestStatuses.DRAFT || status !== requestStatuses.INITREV"
-          ></Chat>
-        </v-row>
-        <v-row>
-          <RequestCard></RequestCard>
-        </v-row>
-        <!-- <v-row v-if="this.status !== this.requestStatuses.DRAFT">
-            <v-col col="12" class="px-0 py-3">
-                <DocumentList :editable="this.status === this.requestStatuses.RETURNED"></DocumentList>
-            </v-col>
-        </v-row>
-        <v-card height="100%" width="100%" elevation=0 v-if="this.status === this.requestStatuses.RETURNED">
-          <v-row no-gutters justify="end" class="py-3">
-            <v-btn color="#38598a" dark class="ml-2 text-none" :loading="submitting" @click.stop="submitMoreInfo">Submit</v-btn>
-          </v-row>
-        </v-card> -->
+  <v-card class="mx-0 mt-2 mb-5 px-6 py-2 px-sm-10 py-sm-5">  
+    <v-row class="flex-grow-0 pb-5">
+      <v-card height="100%" width="100%" elevation=0 color="#036" class="white--text">
+        <v-card-title class="request-display-header px-1 px-sm-5">
+          <h1>{{status === requestStatuses.RETURNED ? 'Provide More Info for PEN Request' : 'PEN Request Status'}}</h1>
+        </v-card-title>
+      </v-card>
+    </v-row>
+    <v-row>
+      <v-alert
+        dense
+        outlined
+        dismissible
+        v-model="alert"
+        :class="alertType"
+        class="mb-5"
+        width="100%"
+      >
+        {{ alertMessage }}
+      </v-alert>
+    </v-row>
+    <v-row class="pb-5">
+      <MessageCard></MessageCard>
+    </v-row>
+    <v-row>
+      <StatusCard @success-alert="setSuccessAlert" @error-alert="setErrorAlert"></StatusCard>
+    </v-row>
+    <v-row>
+      <Chat v-if="status !== requestStatuses.DRAFT || status !== requestStatuses.INITREV"></Chat>
+    </v-row>
+    <v-row>
+      <RequestCard></RequestCard>
+    </v-row>
   </v-card>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
 import { PenRequestStatuses } from '@/utils/constants';
-import ApiService from '@/common/apiService';
 import Chat from './Chat';
-// import DocumentList from './DocumentList';
 import RequestCard from './RequestCard';
 import MessageCard from './MessageCard';
 import StatusCard from './StatusCard';
@@ -65,7 +47,6 @@ export default {
   name: 'requestDisplay',
   components: {
     Chat,
-    // DocumentList,
     RequestCard,
     MessageCard,
     StatusCard
@@ -98,38 +79,19 @@ export default {
     ...mapMutations('penRequest', ['setPenRequest']),
     setSuccessAlert(alertMessage) {
       this.alertMessage = alertMessage;
-      this.alertType = 'success';
+      this.alertType = 'bootstrap-success';
       this.alert = true;
     },
     setErrorAlert(alertMessage) {
       this.alertMessage = alertMessage;
-      this.alertType = 'error';
+      this.alertType = 'bootstrap-error';
       this.alert = true;
-    },
-    submitMoreInfo() {
-      this.submitting = true;
-      ApiService.updatePenRequestStatus(this.request.penRequestID, PenRequestStatuses.SUBSREV).then(response => {
-        if(response.data) {
-          this.setPenRequest(response.data);
-        }
-        this.setSuccessAlert('Your PEN request has been submitted successfully.');
-        window.scrollTo(0,0);
-      }).catch(() => {
-        this.setErrorAlert('Sorry, an unexpected error seems to have occured. You can click on the submmit button again later.');
-        window.scrollTo(0,0);
-      }).finally(() => {
-        this.submitting = false;
-      });
     },
   }
 };
 </script>
 
 <style scoped>
-
-#alert-message /deep/ .v-icon {
-  padding-left: 1px;
-}
 
 @media screen and (max-width: 600px) {
 
