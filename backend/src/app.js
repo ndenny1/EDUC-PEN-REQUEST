@@ -42,15 +42,33 @@ app.use(morgan(config.get('server:morganFormat')));
 
 //sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
 const expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-app.use(session({
-  name: 'pen_request_cookie',
-  secret: config.get('oidc:clientSecret'),
-  resave: false,
-  saveUninitialized: true,
-  httpOnly: true,
-  secure: true,
-  expires: expiryDate,
-}));
+
+if(config.get('environment') === 'local'){
+	log.info('Using localhost cookie');
+	app.use(session({
+	  name: 'pen_request_cookie',
+	  secret: config.get('oidc:clientSecret'),
+	  resave: false,
+	  saveUninitialized: true,
+	  cookie: { 
+		  secure: false,
+		  httpOnly: true,
+		  expires: expiryDate
+	  }
+	}));
+}else{
+	app.use(session({
+	  name: 'pen_request_cookie',
+	  secret: config.get('oidc:clientSecret'),
+	  resave: false,
+	  saveUninitialized: true,
+	  cookie: { 
+		  secure: true,
+		  httpOnly: true,
+		  expires: expiryDate
+	  }
+	}));	
+}
 
 //initialize routing and session. Cookies are now only reachable via requests (not js)
 app.use(passport.initialize());
