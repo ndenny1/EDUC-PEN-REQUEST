@@ -49,15 +49,15 @@ export default {
       //let hours = d.hour;
       if(d.hour > 12){
         amPm = 'pm';
-        //hours = d.hour - 12;
+        d.hour = d.hour - 12;
+        //changes from 24 hour to 12 hour
       }
       
       let fixTime = d.dateTime;
-      if(Number(d.minute) < 10){
-        fixTime = (d.dateTime).split(' ');
-        fixTime[1] = String(d.hour) + ':' +  d.minute;
-        fixTime = fixTime.join(' ');
-      }
+      fixTime = (d.dateTime).split(' ');
+      fixTime[1] = String(d.hour) + ':' +  d.minute;
+      fixTime = fixTime.join(' ');
+  
 
       // d.dayOfWeek = d.dayOfWeek.toLower();
       // d.month = d.month.pascalCase();
