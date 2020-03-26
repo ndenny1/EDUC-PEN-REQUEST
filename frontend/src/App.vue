@@ -2,6 +2,7 @@
   <v-app id="app">
     <Header/>
     <ModalIdle v-if="isAuthenticated && isIdle"/>
+    <ModalLoginError v-if="loginError"/>
     <router-view/>
     <Footer/>
   </v-app>
@@ -13,24 +14,26 @@ import HttpStatus from 'http-status-codes';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ModalIdle from './components/ModalIdle';
+import ModalLoginError from './components/ModalLoginError';
 
 export default {
   name: 'app',
   components: {
     Header,
     Footer,
-    ModalIdle
+    ModalIdle,
+    ModalLoginError
   },
   computed: {
-    ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('auth', ['isAuthenticated', 'loginError']),
     isIdle(){
       return this.$store.state.idleVue.isIdle;
-    }
+    },
   },
   methods: {
     ...mapMutations('auth', ['setLoading']),
     ...mapActions('auth', ['getJwtToken', 'getUserInfo', 'logout']),
-    ...mapActions('penRequest', ['getCodes'])
+    ...mapActions('penRequest', ['getCodes']),
   },
   async created() {
     this.setLoading(true);
@@ -39,7 +42,7 @@ export default {
     ).catch(e => {
       if(! e.response || e.response.status !== HttpStatus.UNAUTHORIZED) {
         this.logout();
-        this.$router.replace({name: 'error', query: { message: `500_${e.data || 'ServerErro'}` } });
+        this.$router.replace({name: 'error', query: { message: `500_${e.data || 'ServerError'}` } });
       }
     }).finally(() => 
       this.setLoading(false)

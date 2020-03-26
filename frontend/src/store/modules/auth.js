@@ -48,12 +48,14 @@ export default {
     userInfo: false,
     error: false,
     isLoading: true,
+    loginError: false
   },
   getters: {
     acronyms: state => state.acronyms,
     isAuthenticated: state => state.isAuthenticated,
     jwtToken: () => localStorage.getItem('jwtToken'),
     userInfo: state => state.userInfo,
+    loginError: state => state.loginError,
     error: state => state.error,
     isLoading: state => state.isLoading
   },
@@ -83,6 +85,10 @@ export default {
       state.isAuthenticated = false;
     },
 
+    setLoginError: (state) => {
+      state.loginError = true;
+    },
+
     setError: (state, error) => {
       state.error = error;
     },
@@ -92,6 +98,9 @@ export default {
     }
   },
   actions: {
+    loginErrorRedirect(context){
+      context.commit('setLoginError');
+    },
     logout(context) {
       context.commit('logoutState');
       // router.push(AuthRoutes.LOGOUT);

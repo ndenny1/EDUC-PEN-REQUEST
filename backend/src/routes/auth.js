@@ -66,7 +66,9 @@ router.get('/logout', async (req, res) => {
     let siteMinderRetUrl;
     if(req.query.sessionExpired){
       siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/session-expired');
-    }else {
+    } else if(req.query.loginError){
+      siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+ '/login-error');
+    } else {
       siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/logout');
     }
     const siteMinderLogoutUrl = config.get('siteMinder_logout_endpoint');
@@ -80,7 +82,9 @@ router.get('/logout', async (req, res) => {
       let siteMinderRetUrl;
       if(req.query.sessionExpired){
         siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + refresh.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/session-expired');
-      }else {
+      }else if(req.query.loginError){
+        siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/login-error');
+      } else {
         siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + refresh.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/logout');
       }
       const siteMinderLogoutUrl = config.get('siteMinder_logout_endpoint');
@@ -90,7 +94,9 @@ router.get('/logout', async (req, res) => {
       req.session.destroy();
       if(req.query.sessionExpired){
         res.redirect(config.get('server:frontend')+'/session-expired');
-      }else {
+      } else if(req.query.loginError){
+        res.redirect(config.get('server:frontend') + '/login-error');
+      } else {
         res.redirect( config.get('server:frontend')+'/logout');
       }
     }
