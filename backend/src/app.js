@@ -47,9 +47,11 @@ app.use(session({
   secret: config.get('oidc:clientSecret'),
   resave: false,
   saveUninitialized: true,
-  httpOnly: true,
-  secure: true,
-  expires: expiryDate,
+  cookie: { 
+	  secure: false,
+	  httpOnly: true,
+	  expires: expiryDate
+  }
 }));
 
 //initialize routing and session. Cookies are now only reachable via requests (not js)

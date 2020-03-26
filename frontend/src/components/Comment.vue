@@ -63,10 +63,10 @@
       </div>
       <v-alert
         dense
-        text
+        outlined
         dismissible
         v-model="alert"
-        :type="alertType"
+        :class="alertType"
         @input="dismissAlert"
       >
          {{ alertMessage }}
@@ -156,7 +156,7 @@ export default {
       return !!this.unsubmittedComment;
     },
     submitted() {
-      return this.alertType && this.alertType === 'success';
+      return this.alertType && this.alertType.includes('success');
     },
     hasUnsubmittedDocuments() {
       return this.unsubmittedDocuments.length > 0;
@@ -169,12 +169,12 @@ export default {
     ...mapMutations('penRequest', ['setPenRequest']),
     setSuccessAlert() {
       this.alertMessage = 'Your request has been submitted. It will be reviewed during business hours in the order received.';
-      this.alertType = 'success';
+      this.alertType = 'bootstrap-success';
       this.alert = true;
     },
     setErrorAlert() {
       this.alertMessage = 'Sorry, an unexpected error seems to have occurred. You can click on the submit button again later.';
-      this.alertType = 'error';
+      this.alertType = 'bootstrap-error';
       this.alert = true;
     },
     reenter() {
@@ -378,10 +378,6 @@ hr {
 	max-height: 0;
   /* visibility:hidden; */
   transition-duration: 0.5s;
-}
-
-.v-alert /deep/ .v-icon {
-    padding-left: 0;
 }
 
 </style>

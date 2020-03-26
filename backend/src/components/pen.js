@@ -16,7 +16,7 @@ function getPenRequest(req, res, next) {
   const userInfo = getSessionUser(req);
   if(!userInfo) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
-      status: 401,
+      status: HttpStatus.UNAUTHORIZED,
       message: 'you are not authorized to access this page'
     });
   }
@@ -567,7 +567,7 @@ async function uploadFile(req, res) {
       });
     }
 
-    if(req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
+    if(!req.session.penRequest || req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Upload file not allowed'
       });
@@ -604,7 +604,7 @@ async function deleteDocument(req, res) {
 
     let resData = await getDocument(accessToken, req.params.id, req.params.documentId, 'N');
 
-    if(resData.createDate <= req.session.penRequest.statusUpdateDate || 
+    if(!req.session.penRequest || resData.createDate <= req.session.penRequest.statusUpdateDate || 
       req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Delete file not allowed'

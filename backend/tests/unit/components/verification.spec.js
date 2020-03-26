@@ -11,7 +11,7 @@ const auth = require('../../../src/components/auth');
 
 const pen = require('../../../src/components/pen');
 const {  __RewireAPI__: rewirePen} =  require('../../../src/components/pen');
-const { ConflictStateError } = require('../../../src/components/error');  //, ServiceError
+const { ConflictStateError } = require('../../../src/components/error');
 const { mockRequest, mockResponse } = require('../helpers'); 
 
 describe('beforeUpdatePenRequestAsInitrev', () => {

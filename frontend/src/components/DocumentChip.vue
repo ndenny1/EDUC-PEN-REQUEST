@@ -63,7 +63,7 @@
         </v-list-item>
       </v-list>
 
-      <v-alert dense text dismissible v-model="alert" :type="alertType" class="mx-3 my-1">
+      <v-alert dense outlined dismissible v-model="alert" :class="alertType" class="mx-3 my-1">
         {{ alertMessage }}
       </v-alert>
 
@@ -128,12 +128,12 @@ export default {
     ...mapActions('document', ['deleteFile']),
     setSuccessAlert(alertMessage) {
       this.alertMessage = alertMessage;
-      this.alertType = 'success';
+      this.alertType = 'bootstrap-success';
       this.alert = true;
     },
     setErrorAlert(alertMessage) {
       this.alertMessage = alertMessage;
-      this.alertType = 'error';
+      this.alertType = 'bootstrap-error';
       this.alert = true;
     },
     deleteDocument() {

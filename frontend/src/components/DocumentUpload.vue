@@ -33,10 +33,10 @@
       <!-- </v-card-text> -->
       <v-alert
         dense
-        text
+        outlined
         dismissible
         v-model="alert"
-        :type="alertType"
+        :class="alertType"
       >
          {{ alertMessage }}
       </v-alert>
@@ -134,12 +134,12 @@ export default {
     },
     setSuccessAlert() {
       this.alertMessage = 'File upload success!';
-      this.alertType = 'success';
+      this.alertType = 'bootstrap-success';
       this.alert = true;
     },
     setErrorAlert(alertMessage) {
       this.alertMessage = alertMessage;
-      this.alertType = 'error';
+      this.alertType = 'bootstrap-error';
       this.alert = true;
     },
     selectFile(file) {

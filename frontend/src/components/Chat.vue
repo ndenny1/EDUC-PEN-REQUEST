@@ -80,12 +80,6 @@ export default {
     Comments,
     SingleComment,
   },
-  props: {
-    hideInput: {
-      type: Boolean,
-      default: false
-    }
-  },
   data() {
     return {
       participants: [],

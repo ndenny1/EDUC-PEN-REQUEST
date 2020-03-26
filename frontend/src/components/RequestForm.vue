@@ -7,7 +7,6 @@
       </v-card>
     </v-row>
 
-
     <v-card color="#FFECA9" class="pa-3 mb-8 mx-3">
       <h3>Guidance:</h3>
       <ul class="pt-2">
@@ -58,6 +57,7 @@
               required
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="40"
+              dense
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -72,6 +72,8 @@
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="40"
+              dense
+              :rules="charRules"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -86,6 +88,8 @@
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="255"
+              dense
+              :rules="charRules"
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -99,6 +103,8 @@
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="40"
+              dense
+              :rules="charRules"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -112,6 +118,8 @@
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="40"
+              dense
+              :rules="charRules"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -125,6 +133,8 @@
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="255"
+              dense
+              :rules="charRules"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -138,6 +148,8 @@
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="40"
+              dense
+              :rules="charRules"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -151,6 +163,8 @@
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="255"
+              dense
+              :rules="charRules"
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -165,6 +179,7 @@
               required
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+              dense
             ></v-text-field>
             <v-menu
               ref="menu"
@@ -190,6 +205,7 @@
                   @keyup="focusBirthdateField"
                   ref="birthdate"
                   autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
+                  dense
                 ></v-text-field>
               </template>
               <v-date-picker
@@ -201,7 +217,6 @@
                 :max="new Date(this.localDate.now().minusYears(5).toString()).toISOString().substr(0, 10)"
                 min="1903-01-01"
                 @change="save"
-                :reactive="true"
               ></v-date-picker>
             </v-menu>
           </v-col>
@@ -218,6 +233,7 @@
               label="Gender"
               :disabled="enableDisableForm.disabled"
               required
+              dense
             ></v-select>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -233,6 +249,7 @@
               required
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="255"
+              dense
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -246,6 +263,8 @@
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="255"
+              dense
+              :rules="charRules"
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -259,6 +278,8 @@
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="12"
+              dense
+              :rules="charRules"
             ></v-text-field>
           </v-col>
           <v-col cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
@@ -272,6 +293,8 @@
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="255"
+              dense
+              :rules="charRules"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -334,8 +357,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="primary"
-            text
+            color="#003366"
+            class="white--text"
             @click="closeDialog"
           >
             Close
@@ -367,7 +390,6 @@ export default {
       nameLimit: 80,
       validForm: false,
       dialog: false,
-      isSubmitted: false,
       submitting: false,
       dialogMessage: null,
       apiGenderCodes: [],
@@ -417,6 +439,11 @@ export default {
         v => /^[\w!#$%&’*+/=?`{|}~^-]+(?:\.[\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}$/.test(v) || this.emailHint,
       ];
     },
+    charRules() {
+      return [
+        v => !(/[\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\u1100-\u11FF\u3040-\u309F\u30A0-\u30FF\u3130-\u318F\u3400-\u4DBF\u4E00-\u9FFF\uAC00-\uD7AF]/.test(v)) || 'Enter English characters only'
+      ];
+    },
   },
   watch: {
     menu(val) {
@@ -449,7 +476,10 @@ export default {
     ...mapMutations('penRequest', ['setPenRequest']),
     ...mapActions('penRequest', ['postRequest']),
     requiredRules(hint = 'Required') {
-      return [v => !!v || hint];
+      return [
+        v => !!(v && v.trim()) || hint,
+        ...this.charRules
+      ];
     },
     privacyRule(hint = 'Required') {
       this.enableDisableForm.disabled = !this.declared;
@@ -466,6 +496,14 @@ export default {
     validate() {
       this.$refs.form.validate();
     },
+    setSuccessDialog() {
+      this.dialogMessage = 'Form submit success!';
+      this.dialog = true;
+    },
+    setErrorDialog() {
+      this.dialogMessage = 'Sorry, an unexpected error seems to have occured. You can click on the submit button again later.';
+      this.dialog = true;
+    },
     async submitRequestForm() {
       this.validate();
       if (this.validForm) {
@@ -477,20 +515,16 @@ export default {
           const resData = await this.postRequest(this.userPost);
           if (resData) {
             this.$refs.form.reset();
-            this.dialogMessage = 'Form submit success!';
-            this.dialog = true;
-            this.isSubmitted = true;
+            this.setSuccessDialog();
             this.setPenRequest(resData);
+            if (this.$route.name !== 'home') {
+              this.$router.replace({name: 'home'});
+            }
           } else {
-            //this.$refs.form.reset();
-            this.dialogMessage = 'Form submit failure.';
-            this.dialog = true;
-            this.isSubmitted = false;
+            this.setErrorDialog();
           }
         } catch (e) {
-          this.dialogMessage = 'Form submit failure.';
-          this.dialog = true;
-          this.isSubmitted = false;
+          this.setErrorDialog();
           throw e;
         } finally {
           this.submitting = false;
@@ -499,9 +533,6 @@ export default {
     },
     closeDialog() {
       this.dialog = false;
-      if (this.isSubmitted && this.$route.name !== 'home') {
-        this.$router.replace({name: 'home'});
-      }
     },
     maxSelectableDate(){
       return new Date(LocalDate.now().minusYears(5).toString()).toISOString().substr(0, 10);
@@ -554,46 +585,12 @@ export default {
     margin-top: 0;
   }
 
-  /* .col{
-    padding: 0 10px;
-  }
-
-  .col-sm-6{
-    padding: 0 10px;
-  } */
-
   .top_group {
     padding-top: 15px;
   }
 
   .bottom_group {
     padding-bottom: 15px;
-  }
-
-  .v-text-field /deep/ .v-input__slot {
-    min-height: 42px !important;
-    margin-bottom: 4px !important;
-  }
-
-  .v-text-field /deep/ .v-label {
-    top: 10px !important;
-  }
-
-  .v-text-field /deep/ .v-text-field__details {
-    margin-bottom: 18px;
-    min-height: 0;
-  }
-
-  .v-text-field /deep/ .v-messages {
-    min-height: 0;
-  }
-
-  .v-select /deep/ .v-select__selections {
-    padding: 0 !important;
-  }
-
-  .v-select /deep/ .v-input__append-inner {
-    margin-top: 8px !important;
   }
 
   @media screen and (max-width: 300px) {

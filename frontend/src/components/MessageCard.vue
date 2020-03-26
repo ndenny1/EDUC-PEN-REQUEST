@@ -1,5 +1,5 @@
 <template>
-  <v-card height="100%" width="100%" color="#C3F1E8" class="pa-3" v-if="status === requestStatuses.INITREV">
+  <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-success" v-if="status === requestStatuses.INITREV">
     <p class="mb-2"><strong>Your email has been verified and your PEN request has now been submitted for processing.</strong></p>
     <ul>
       <li>You will receive an email when your request has been processed.</li>
@@ -8,8 +8,8 @@
       <li>Your request details are shown below.</li>
       <li><strong>We recommend that you also check back here after one business day.</strong></li>
     </ul>
-  </v-card>
-  <v-card height="100%" width="100%" color="#C3F1E8" class="pa-3" v-else-if="status === requestStatuses.SUBSREV">
+  </v-alert>
+  <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-success" v-else-if="status === requestStatuses.SUBSREV">
     <p class="mb-2"><strong>Your updated PEN request has now been submitted for processing.</strong></p>
     <ul>
       <li>You will receive an email when your request has been processed.</li>
@@ -18,16 +18,16 @@
       <li>Your request details are shown below.</li>
       <li><strong>We recommend that you also check back here after one business day.</strong></li>
     </ul>
-  </v-card>
-  <v-card height="100%" width="100%" color="#FFECA9" class="pa-3" v-else-if="status === requestStatuses.DRAFT && timedout">
+  </v-alert>
+  <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-warning" v-else-if="status === requestStatuses.DRAFT && timedout">
     <p class="mb-2"><strong>Your email verification was not completed within the time limited. Repeat the email verification process.</strong></p>
     <ol>
       <li>Click the "Resend Verification Email" button below.</li>
       <li>Go to your email inbox for {{ request.email }} and check for an email from {{ ministry }}. Check your spam folder too.</li>
       <li>Open the email and click on the link within 24 hours to complete the verification process.</li>
     </ol>
-  </v-card>
-  <v-card height="100%" width="100%" color="#FFECA9" class="pa-3" v-else-if="status === requestStatuses.DRAFT && ! timedout">
+  </v-alert>
+  <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-warning" v-else-if="status === requestStatuses.DRAFT && ! timedout">
     <p class="mb-2"><strong>You are almost finished! To complete your request, verify the email address you provided. Follow these steps.</strong></p>
     <p>
       <ol>
@@ -37,11 +37,11 @@
     </p>
     <p>If needed, click the "Resend Verification Email" button below to have the system send a new email and then follow the instructions above.</p>
     <p>The details of your request are shown below.</p>
-  </v-card>
-  <v-card height="100%" width="100%" color="#FFECA9" class="pa-3" v-else-if="status === requestStatuses.RETURNED">
+  </v-alert>
+  <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-warning" v-else-if="status === requestStatuses.RETURNED">
     <p class="mb-2"><strong>Additional information is required.</strong> See the Request below.</p>
-  </v-card>
-  <v-card height="100%" width="100%" color="#FFECA9" class="pa-3" v-else-if="status === requestStatuses.REJECTED">
+  </v-alert>
+  <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-warning" v-else-if="status === requestStatuses.REJECTED">
     <p class="mb-2"><strong>Your request to get your PEN could not be completed, for the following reason:</strong></p>
     <p>
       <ul>
@@ -49,8 +49,8 @@
       </ul>
     </p>
     <p>If needed, you can submit another request using the button below.</p>
-  </v-card>
-  <v-card height="100%" width="100%" color="#C3F1E8" class="pa-3" v-else-if="status === requestStatuses.AUTO || status === requestStatuses.MANUAL">
+  </v-alert>
+  <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-success" v-else-if="status === requestStatuses.AUTO || status === requestStatuses.MANUAL">
     <p class="mb-2"><strong>Your PEN request is complete! Your PEN is: {{student.pen}}</strong></p>
     <br/>
     <p>Below is the key information the Ministry of Education has on file for you.</p>
@@ -107,7 +107,7 @@
       </ul>
     </p>
     <p>You can log back into this site at any time to see this page with your PEN.</p>
-  </v-card>
+  </v-alert>
 </template>
 
 <script>
