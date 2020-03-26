@@ -30,15 +30,20 @@
 </template>
 
 <script>
+import { mapActions, mapMutations, mapGetters } from 'vuex';
+import {AuthRoutes} from '../utils/constants';
 export default {
   data() {
     return {
       errorMessage: this.$route.query.message
     };
   },
+  methods: {
+    ...mapActions('auth', ['loginErrorRedirect'])
+  },
   async created(){
     if(this.errorMessage === 'Unable_to_authenticate'){
-      this.$router.push('login-error')
+      this.loginErrorRedirect();
     }
   }
 };

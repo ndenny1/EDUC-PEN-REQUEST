@@ -9,6 +9,7 @@ object = {
   LOGIN_BCEID: authRoot + '/login_bceid',
   LOGOUT: authRoot + '/logout',
   SESSION_EXPIRED: authRoot + '/logout?sessionExpired=true',
+  LOGIN_FAILED: authRoot + '/logout?loginError=true',
   REFRESH: authRoot + '/refresh',
   TOKEN: authRoot + '/token'
 };
