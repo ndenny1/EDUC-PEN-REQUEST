@@ -7,6 +7,7 @@ import SessionExpired from './components/SessionExpired';
 import RequestPage from '@/components/RequestPage.vue';
 import Verification from '@/components/Verification.vue';
 import ErrorPage from '@/components/ErrorPage.vue';
+import LoginError from '@/components/LoginError.vue';
 
 Vue.use(VueRouter);
 
@@ -43,6 +44,11 @@ const router = new VueRouter({
       path: '/session-expired',
       name: 'session-expired',
       component: SessionExpired
+    },
+    {
+      path: '/login-error',
+      name: 'login-error',
+      component: LoginError
     },
     {
       path: '*',

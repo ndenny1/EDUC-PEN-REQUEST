@@ -39,7 +39,7 @@ export default {
     ).catch(e => {
       if(! e.response || e.response.status !== HttpStatus.UNAUTHORIZED) {
         this.logout();
-        this.$router.replace({name: 'error', query: { message: `500_${e.data || 'ServerErro'}` } });
+        this.$router.replace({name: 'error', query: { message: `500_${e.data || 'ServerError'}` } });
       }
     }).finally(() => 
       this.setLoading(false)
