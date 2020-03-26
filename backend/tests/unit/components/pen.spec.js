@@ -11,6 +11,69 @@ const {  __RewireAPI__: rewirePen} =  require('../../../src/components/pen');
 const { ServiceError, ApiError, ConflictStateError } = require('../../../src/components/error'); 
 const { mockRequest, mockResponse } = require('../helpers'); 
 
+describe('getPenRequest', () => {
+  const penRequestID = 'penRequestID';
+  const params = {
+    id: penRequestID,
+    documentId: 'documentId'
+  };
+  const session = {
+    penRequest: {
+      penRequestID,
+    }
+  };
+  const userInfo = { };
+
+  let req;
+  let res;
+  let next;
+
+  jest.spyOn(utils, 'getSessionUser'); 
+
+  beforeEach(() => {
+    utils.getSessionUser.mockReturnValue(userInfo);
+    req = mockRequest(null, session, params);
+    res = mockResponse();
+    next = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should call next', () => {
+    pen.getPenRequest(req, res, next);
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('should return UNAUTHORIZED if no session', async () => {
+    utils.getSessionUser.mockReturnValue(null);
+
+    pen.getPenRequest(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED);
+  });
+
+  it('should return BAD_REQUEST if no penRequest in session', async () => {
+    const session = {
+    };
+    req = mockRequest(null, session, params);
+    pen.getPenRequest(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+  });
+
+  it('should return BAD_REQUEST if different penRequestID in session', async () => {
+    const session = {
+      penRequestID: 'OtherPenRequestID,'
+    };
+    req = mockRequest(null, session, params);
+    pen.getPenRequest(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+  });
+});
+
 describe('getDigitalIdData', () => {
   const digitalIdData = { data: 'data' };
 

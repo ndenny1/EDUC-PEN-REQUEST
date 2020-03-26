@@ -20,6 +20,11 @@ const mockResponse = () => {
     return res; 
   });
   res.redirect = jest.fn().mockReturnValue(res);
+  res.send = jest.fn().mockImplementation((v) => {
+    res.data.raw = v;
+    return res; 
+  });
+  res.setHeader = jest.fn().mockReturnValue(res);
   return res;
 };
 
