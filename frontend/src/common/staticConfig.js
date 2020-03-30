@@ -1,2 +1,3 @@
 // eslint-disable-next-line
-export const StaticConfig = config;
+const StaticConfig = config;
+export default StaticConfig;
