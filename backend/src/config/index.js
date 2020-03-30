@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 dotenv.config();
 
-const env = 'local';
+const env = process.env.NODE_ENV;
 // Setlocal environment to "local" to run locally (duh)
 // $env:NODE_ENV="local"
 
