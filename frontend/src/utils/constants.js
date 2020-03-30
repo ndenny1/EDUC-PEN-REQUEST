@@ -5,8 +5,8 @@ let object;
 
 object = {
   LOGIN:'/',
-  LOGIN_BCSC: authRoot + '/login_bcsc',
-  LOGIN_BCEID: authRoot + '/login_bceid',
+  LOGIN_BCSC: authRoot + '/logout?loginBcsc=true',
+  LOGIN_BCEID: authRoot + '/logout?loginBceid=true',
   LOGOUT: authRoot + '/logout',
   SESSION_EXPIRED: authRoot + '/logout?sessionExpired=true',
   LOGIN_FAILED: authRoot + '/logout?loginError=true',
