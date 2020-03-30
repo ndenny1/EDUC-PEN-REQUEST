@@ -105,9 +105,9 @@ router.get('/logout', async (req, res) => {
       } else if(req.query.loginError){
         res.redirect(config.get('server:frontend') + '/login-error');
       } else if(req.query.loginBcsc){
-        res.redirect(config.get('server:frontend')+ '/api/auth/login_bcsc')
+        res.redirect(config.get('server:frontend')+ '/api/auth/login_bcsc');
       } else if(req.query.loginBceid){
-        res.redirect(config.get('server:frontend')+ '/api/auth/login_bceid')
+        res.redirect(config.get('server:frontend')+ '/api/auth/login_bceid');
       }else {
         res.redirect( config.get('server:frontend')+'/logout');
       }
