@@ -22,7 +22,7 @@ describe('DocumentUpload.vue', () => {
   let vuetify = new Vuetify();
   let store = mockStore();
 
-  const getFileRequirementsSpy = jest.spyOn(ApiService, 'getFileRequirements');
+  jest.spyOn(ApiService, 'getFileRequirements');
   const fileRequirements = {
     maxSize: 1048579, 
     extensions: ['image/png', 'image/jpeg', 'image/bmp', '.pdf']
