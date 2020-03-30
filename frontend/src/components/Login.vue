@@ -1,6 +1,13 @@
 <template>
     <v-container class="login-cards" style="padding-bottom: 1vh">
-      <v-row>
+      <v-row justify=center align=center>
+          <v-card>
+            <v-card-text>
+            You are not logged in. Redirecting to the login page...
+            </v-card-text>
+          </v-card>
+      </v-row>
+      <!-- <v-row>
         <v-col cols="12" xl="4" lg="4" md="4" >
 
           <v-card>
@@ -64,7 +71,7 @@
           </v-card>
 
         </v-col>
-      </v-row>
+      </v-row> -->
     </v-container>
 </template>
 
@@ -142,7 +149,7 @@ export default {
     color: #1a5a96
   }
   .v-card__text{
-    height: 9rem;
+    font-size: 1.2rem
   }
   .img-holder{
     height: 10rem;
