@@ -53,6 +53,7 @@ export default {
         //changes from 24 hour to 12 hour
       }
       
+      //split the hour/minute object, make fixes, then add it back to the datatime object
       let fixTime = d.dateTime;
       fixTime = (d.dateTime).split(' ');
       fixTime[1] = String(d.hour) + ':' +  d.minute;

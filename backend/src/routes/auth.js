@@ -68,6 +68,10 @@ router.get('/logout', async (req, res) => {
       siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/session-expired');
     } else if(req.query.loginError){
       siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+ '/login-error');
+    } else if(req.query.loginBcsc){
+      siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+ '/api/auth/login_bcsc');
+    } else if(req.query.loginBceid){
+      siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+ '/api/auth/login_bceid');
     } else {
       siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/logout');
     }
@@ -83,8 +87,12 @@ router.get('/logout', async (req, res) => {
       if(req.query.sessionExpired){
         siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + refresh.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/session-expired');
       }else if(req.query.loginError){
-        siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/login-error');
-      } else {
+        siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + refresh.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/login-error');
+      } else if(req.query.loginBcsc){
+        siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + refresh.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend')+ '/api/auth/login_bcsc');
+      } else if(req.query.loginBceid){
+        siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + refresh.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend')+ '/api/auth/login_bceid');
+      }else {
         siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + refresh.jwt + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/logout');
       }
       const siteMinderLogoutUrl = config.get('siteMinder_logout_endpoint');
@@ -96,7 +104,11 @@ router.get('/logout', async (req, res) => {
         res.redirect(config.get('server:frontend')+'/session-expired');
       } else if(req.query.loginError){
         res.redirect(config.get('server:frontend') + '/login-error');
-      } else {
+      } else if(req.query.loginBcsc){
+        res.redirect(config.get('server:frontend')+ '/api/auth/login_bcsc')
+      } else if(req.query.loginBceid){
+        res.redirect(config.get('server:frontend')+ '/api/auth/login_bceid')
+      }else {
         res.redirect( config.get('server:frontend')+'/logout');
       }
     }

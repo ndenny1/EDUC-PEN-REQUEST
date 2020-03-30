@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 dotenv.config();
 
-const env = process.env.NODE_ENV;
+const env = 'local';
 // Setlocal environment to "local" to run locally (duh)
 // $env:NODE_ENV="local"
 
@@ -15,8 +15,7 @@ nconf.argv()
 //injects environment variables into the json file
 nconf.overrides({
   environment: env,
-  logoutEndpoint: process.env.SOAM_URL + '/auth/realms/master/protocol/openid-connect/logout',
-  siteMinder_logout_endpoint: process.env.SITEMINDER_LOGOUT_ENDPOINT,
+
   server: {
     logLevel: process.env.LOG_LEVEL,
     morganFormat: 'dev',
