@@ -5,7 +5,7 @@ import Vue from 'vue';
 import PenDisplay from '@/components/PenDisplay.vue';
 import auth from '@/store/modules/auth.js';
 
-describe('UserCard.vue', () => {
+describe('PenDisplay.vue', () => {
   let wrapper;
   let store;
 
@@ -14,7 +14,15 @@ describe('UserCard.vue', () => {
     Vue.use(Vuex);
 
     store = new Vuex.Store({
-      modules: { auth }
+      modules: { 
+        auth, 
+        penRequest: {
+          namespaced: true,
+          getters: {
+            student: jest.fn().mockReturnValue('12345')
+          },
+        }
+      }
     });
 
     wrapper = shallowMount(PenDisplay, {

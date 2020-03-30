@@ -3,10 +3,8 @@ import Vuetify from 'vuetify';
 import Vuex from 'vuex';
 import Vue from 'vue';
 import RequestForm from '@/components/RequestForm.vue';
-import auth from '@/store/modules/auth.js';
 
-
-describe('UserCard.vue', () => {
+describe('RequestForm.vue', () => {
   let wrapper;
   let store;
 
@@ -14,14 +12,35 @@ describe('UserCard.vue', () => {
     Vue.use(Vuetify);
     Vue.use(Vuex);
 
-    var actions = {
+    const actions = {
       postRequest: jest.fn().mockReturnValueOnce(true).mockReturnValueOnce(false)
     };
 
+    let genderCodes = [
+      {label:'Male', genderCode:'M'},
+      {label:'Female', genderCode:'F'},
+      {label:'Gender Diverse', genderCode:'X'},
+      {label:'Unknown', genderCode:'U'},
+    ];
+    
+    const penRequestGetters = {
+      genders: jest.fn().mockReturnValue(genderCodes),
+    }
+
+    const authGetters = {
+      userInfo: jest.fn().mockReturnValue({accountType: 'BCEID'}),
+    }
+
     store = new Vuex.Store({
-      modules: { auth,
+      modules: { 
+        auth: {
+          namespaced: true,
+          getters: authGetters, 
+        },
         penRequest: {
-          actions: actions,
+          namespaced: true,
+          actions,
+          getters: penRequestGetters,
         }
       }
     });

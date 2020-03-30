@@ -71,13 +71,14 @@
 <script>
 import { mapGetters } from 'vuex';
 import { AuthRoutes } from '@/utils/constants';
+import StaticConfig from '@/common/staticConfig';
 export default {
   name: 'Login',
   data() {
     return {
       appTitle: process.env.VUE_APP_TITLE,
       authRoutes: AuthRoutes,
-      bceidReg: config.VUE_APP_BCEID_REG_URL
+      bceidReg: StaticConfig.VUE_APP_BCEID_REG_URL
     };
   },
   computed: {
