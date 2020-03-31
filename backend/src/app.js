@@ -154,6 +154,11 @@ apiRouter.get('/', (_req, res) => {
   });
 });
 
+// GetOK Base API for readiness and liveness probe
+apiRouter.get('/health', (_req, res) => {
+  res.status(200).json();
+});
+
 //set up routing to auth and main API
 app.use(/(\/api)?/, apiRouter);
 
