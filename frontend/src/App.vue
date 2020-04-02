@@ -2,8 +2,7 @@
   <v-app id="app">
     <Header/>
     <ModalIdle v-if="isAuthenticated && isIdle"/>
-    <ModalLoginError v-if="loginError"/>
-    <ModalJourney v-if="!isAuthenticated"/>
+    <ModalJourney v-if="!isAuthenticated && !isLoading"/>
     <router-view/>
     <Footer/>
   </v-app>
@@ -15,7 +14,6 @@ import HttpStatus from 'http-status-codes';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ModalIdle from './components/ModalIdle';
-import ModalLoginError from './components/ModalLoginError';
 import ModalJourney from './components/ModalJourney';
 
 export default {
@@ -24,11 +22,10 @@ export default {
     Header,
     Footer,
     ModalIdle,
-    ModalLoginError,
     ModalJourney
   },
   computed: {
-    ...mapGetters('auth', ['isAuthenticated', 'loginError']),
+    ...mapGetters('auth', ['isAuthenticated', 'loginError', 'isLoading']),
     isIdle(){
       return this.$store.state.idleVue.isIdle;
     },
