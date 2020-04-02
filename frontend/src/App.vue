@@ -48,7 +48,7 @@ export default {
         this.$router.replace({name: 'error', query: { message: `500_${e.data || 'ServerError'}` } });
       }
     }).finally(() => {
-      this.setLoading(false)
+      this.setLoading(false);
     });
   }
 };

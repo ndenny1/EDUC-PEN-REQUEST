@@ -11,7 +11,7 @@ export default {
   data(){
     return{
       journeyBuilder:StaticConfig.VUE_APP_JOURNEY_BUILDER
-    }
+    };
   },
   mounted() {
     console.log(this.journeyBuilder);
