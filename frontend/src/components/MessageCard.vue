@@ -51,62 +51,61 @@
     <p>If needed, you can submit another request using the button below.</p>
   </v-alert>
   <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-success" v-else-if="status === requestStatuses.AUTO || status === requestStatuses.MANUAL">
-    <p class="mb-2"><strong>Your PEN request is complete! Your PEN is: {{student.pen}}</strong></p>
-    <br/>
-    <p>Below is the key information the Ministry of Education has on file for you.</p>
-    <v-container justify="center">
-    <v-row no-gutters class="py-0 px-2">
-      <v-col cols="12" xl="4" lg="4" md="4" sm="4">
-        <p class="mb-1">Legal Last Name:</p>
-      </v-col>
-      <v-col cols="12" xl="4" lg="5" md="5" sm="5">
-        <p class="mb-1"><strong>{{ student.legalLastName }}</strong></p>
-      </v-col>
-    </v-row>
-    <v-row no-gutters class="py-0 px-2">
-      <v-col cols="12" xl="4" lg="4" md="4" sm="4">
-        <p class="mb-1">Legal First Name(s):</p>
-      </v-col>
-      <v-col cols="12" xl="4" lg="5" md="5" sm="5">
-        <p class="mb-1"><strong>{{ student.legalFirstName }}</strong></p>
-      </v-col>
-    </v-row>   
-    <v-row no-gutters class="py-0 px-2">
-      <v-col cols="12" xl="4" lg="4" md="4" sm="4">
-        <p class="mb-1" color="green">Legal Middle Name(s):</p>
-      </v-col>
-      <v-col cols="12" xl="4" lg="5" md="5" sm="5">
-        <p class="mb-1"><strong>{{ student.legalMiddleNames }}</strong></p>
-      </v-col>
-    </v-row>
-    <v-row no-gutters class="py-0 px-2">
-      <v-col cols="12" xl="4" lg="4" md="4" sm="4">
-        <p class="mb-1">Date of Birth:</p>
-      </v-col>
-      <v-col cols="12" xl="4" lg="5" md="5" sm="5">
-        <p class="mb-1"><strong>{{ student.dob }}</strong></p>
-      </v-col>
-    </v-row>
-    <v-row no-gutters class="py-0 px-2">
-      <v-col cols="12" xl="4" lg="4" md="4" sm="4">
-        <p class="mb-3">Sex:</p>
-      </v-col>
-      <v-col cols="12" xl="4" lg="5" md="5" sm="5">
-        <p class="mb-3"><strong>{{ student.sexLabel }}</strong></p>
-      </v-col>
-    </v-row>
+    <p class="mb-1"><strong>Your PEN request is complete. Your PEN is:</strong></p>
+    <p class="mb-2 pen"><strong>{{student.pen}}</strong></p>
+    <p class="mb-2">Below is the key information the Ministry of Education has on file for you. If any of this information is not current, please contact <a href="mailto:pens.coordinator@gov.bc.ca">pens.coordinator@gov.bc.ca</a>.</p>
+    <v-container class="pen-info pt-0 pb-2 px-0 px-sm-3" justify="center">
+      <v-row no-gutters class="py-0 px-2">
+        <v-col xl="4" lg="4" md="4" sm="4">
+          <p class="mb-2">Legal Last Name:</p>
+        </v-col>
+        <v-col xl="4" lg="5" md="5" sm="5">
+          <p class="mb-2"><strong>{{ student.legalLastName }}</strong></p>
+        </v-col>
+      </v-row>
+      <v-row no-gutters class="py-0 px-2">
+        <v-col xl="4" lg="4" md="4" sm="4">
+          <p class="mb-2">Legal First Name(s):</p>
+        </v-col>
+        <v-col xl="4" lg="5" md="5" sm="5">
+          <p class="mb-2"><strong>{{ student.legalFirstName }}</strong></p>
+        </v-col>
+      </v-row>   
+      <v-row no-gutters class="py-0 px-2">
+        <v-col xl="4" lg="4" md="4" sm="4">
+          <p class="mb-2" color="green">Legal Middle Name(s):</p>
+        </v-col>
+        <v-col xl="4" lg="5" md="5" sm="5">
+          <p class="mb-2"><strong>{{ student.legalMiddleNames }}</strong></p>
+        </v-col>
+      </v-row>
+      <v-row no-gutters class="py-0 px-2">
+        <v-col xl="4" lg="4" md="4" sm="4">
+          <p class="mb-2">Date of Birth:</p>
+        </v-col>
+        <v-col xl="4" lg="5" md="5" sm="5">
+          <p class="mb-2"><strong>{{ student.dob }}</strong></p>
+        </v-col>
+      </v-row>
+      <v-row no-gutters class="py-0 px-2">
+        <v-col xl="4" lg="4" md="4" sm="4">
+          <p class="mb-2">Gender:</p>
+        </v-col>
+        <v-col xl="4" lg="5" md="5" sm="5">
+          <p class="mb-2"><strong>{{ student.sexLabel }}</strong></p>
+        </v-col>
+      </v-row>
     </v-container>
-    <p>You now may wish to use your PEN to:<p>
-    <p>
+    <p class="mb-2">You now may wish to use your PEN to:
       <ul>
         <li>
           <a :href="transcriptUrl" target="_blank">
-            Get or send copies of your B.C. School Transcript
+            Order Transcripts & Certificates - StudentTranscripts Service
           </a>
         </li>
       </ul>
     </p>
-    <p>You can log back into this site at any time to see this page with your PEN.</p>
+    <p class="mb-2">You can log back into this site at any time to see this page with your PEN.</p>
   </v-alert>
 </template>
 
@@ -119,7 +118,7 @@ export default {
   name: 'messageCard',
   data() {
     return {
-      transcriptUrl: 'https://www2.gov.bc.ca/gov/content/education-training/k-12/support/transcripts-and-certificates'
+      transcriptUrl: 'https://www2.gov.bc.ca/gov/content?id=040EB8CF78CF4F2090D9C6FFF6F3CDA0'
     };
   },
   computed: {
@@ -149,3 +148,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.pen {
+  font-size: 1.2rem;
+}
+
+.pen-info{
+  line-height: 1.2;
+}
+</style>

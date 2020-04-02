@@ -78,6 +78,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { AuthRoutes } from '@/utils/constants';
+import StaticConfig from '@/common/staticConfig';
 export default {
   name: 'Login',
   data() {

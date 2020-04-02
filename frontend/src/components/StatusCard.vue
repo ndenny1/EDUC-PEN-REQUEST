@@ -1,29 +1,29 @@
 <template>
-  <div id="status-card" class="d-flex flex-wrap justify-space-between px-1">
+  <div class="status-card d-flex flex-wrap justify-space-between px-1 pb-2">
     <div class="py-0 pl-0">
         <v-card height="100%" width="100%" elevation=0>
             <v-row no-gutters>
                 <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p class="mb-2">Status of your request:</p>
+                  <p class="mb-3">Status of your request:</p>
                 </v-col>
                 <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p class="ml-2 mb-2"><strong>{{statusLabel}}</strong></p>
-                </v-col>
-            </v-row>
-            <v-row no-gutters>
-                <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p class="mb-2">Status was last updated:</p>
-                </v-col>
-                <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p class="ml-2 mb-2"><strong>{{ request.statusUpdateDate ? moment(request.statusUpdateDate).fromNow():'' }}</strong>, at {{ request.statusUpdateDate ? moment(request.statusUpdateDate).format('YYYY-MM-DD LT'):'' }}</p>
+                  <p class="ml-2 mb-3"><strong>{{statusLabel}}</strong></p>
                 </v-col>
             </v-row>
             <v-row no-gutters>
                 <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p>Request was first Submitted:</p>
+                  <p class="mb-3">Status was last updated:</p>
                 </v-col>
                 <v-col xl="auto" lg="auto" md="auto" sm="auto">
-                    <p class="ml-2 mb-2"><strong>{{ request.initialSubmitDate ? moment(request.initialSubmitDate).fromNow():'' }}</strong> {{ request.initialSubmitDate ? ', at ' + moment(request.initialSubmitDate).format('YYYY-MM-DD LT'):'' }}</p>
+                  <p class="ml-2 mb-3"><strong>{{ request.statusUpdateDate ? moment(request.statusUpdateDate).fromNow():'' }}</strong>, at {{ request.statusUpdateDate ? moment(request.statusUpdateDate).format('YYYY-MM-DD LT'):'' }}</p>
+                </v-col>
+            </v-row>
+            <v-row no-gutters>
+                <v-col xl="auto" lg="auto" md="auto" sm="auto">
+                  <p class="mb-3">Request was first Submitted:</p>
+                </v-col>
+                <v-col xl="auto" lg="auto" md="auto" sm="auto">
+                  <p class="ml-2 mb-3"><strong>{{ request.initialSubmitDate ? moment(request.initialSubmitDate).fromNow():'' }}</strong>{{ request.initialSubmitDate ? ', at ' + moment(request.initialSubmitDate).format('YYYY-MM-DD LT'):'' }}</p>
                 </v-col>
             </v-row>
         </v-card>
@@ -95,7 +95,8 @@ export default {
 </script>
 
 <style scoped>
-  #status-card {
-    width: 100%;
-  }
+.status-card {
+  width: 100%;
+  line-height: 1.2;
+}
 </style>

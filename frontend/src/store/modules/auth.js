@@ -45,15 +45,16 @@ export default {
   state: {
     acronyms: [],
     isAuthenticated: false,
-    userInfo: false,
+    userInfo: null,
     error: false,
     isLoading: true,
-    loginError: false
+    loginError: false,
+    jwtToken: localStorage.getItem('jwtToken'),
   },
   getters: {
     acronyms: state => state.acronyms,
     isAuthenticated: state => state.isAuthenticated,
-    jwtToken: () => localStorage.getItem('jwtToken'),
+    jwtToken: state => state.jwtToken,
     userInfo: state => state.userInfo,
     loginError: state => state.loginError,
     error: state => state.error,
@@ -64,25 +65,21 @@ export default {
     setJwtToken: (state, token = null) => {
       if (token) {
         state.isAuthenticated = true;
+        state.jwtToken = token;
         localStorage.setItem('jwtToken', token);
       } else {
         state.isAuthenticated = false;
+        state.jwtToken = null;
         localStorage.removeItem('jwtToken');
       }
     },
+
     setUserInfo: (state, userInfo) => {
       if(userInfo){
         state.userInfo = userInfo;
       } else {
         state.userInfo = null;
       }
-    },
-
-    //sets the token required for refresing expired json web tokens
-    logoutState: (state) => {
-      localStorage.removeItem('jwtToken');
-      state.userInfo = false;
-      state.isAuthenticated = false;
     },
 
     setLoginError: (state) => {
@@ -102,7 +99,8 @@ export default {
       context.commit('setLoginError');
     },
     logout(context) {
-      context.commit('logoutState');
+      context.commit('setJwtToken');
+      context.commit('setUserInfo');
       // router.push(AuthRoutes.LOGOUT);
     },
     async getUserInfo({commit}){

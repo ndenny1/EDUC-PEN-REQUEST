@@ -65,20 +65,14 @@
 
 <script>
 import Login from './Login';
-// import Info from './Info';
 import RequestForm from './RequestForm';
-// import LoginCards from './LoginCards';
-// import PenDisplay from './PenDisplay';
 import RequestDisplay from './RequestDisplay';
 import { mapGetters } from 'vuex';
 export default {
   name: 'home',
   components: {
     Login,
-    // Info,
-    // LoginCards,
     RequestForm,
-    // PenDisplay,
     RequestDisplay,
   },
   computed: {

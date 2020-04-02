@@ -1,5 +1,5 @@
 <template>
-    <v-card v-if="userInfo !== false">
+    <v-card v-if="userInfo">
         <v-list-item dark>
           <v-list-item-avatar size='50px' color="info">{{ userInfo.displayName[0] }}</v-list-item-avatar>
           <v-list-item-content>

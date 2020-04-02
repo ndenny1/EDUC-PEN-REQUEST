@@ -428,7 +428,7 @@ export default {
     ...mapGetters('auth', ['userInfo']),
     ...mapGetters('penRequest', ['genders']),
     dataReady() {
-      return this.userInfo !== undefined;
+      return !!this.userInfo;
     },
     serviceCardBool() {
       return this.dataReady && this.userInfo.accountType === 'BCSC';
@@ -454,7 +454,7 @@ export default {
 
     this.genderLabels = this.genders.map(a => a.label);
     //populate form if user is logged in with BCSC
-    if (this.userInfo.accountType === 'BCSC') {
+    if (this.userInfo && this.userInfo.accountType === 'BCSC') {
       this.userPost.legalLastName = this.userInfo.legalLastName;
       this.userPost.legalFirstName = this.userInfo.legalFirstName;
       this.userPost.legalMiddleNames = this.userInfo.legalMiddleNames;
