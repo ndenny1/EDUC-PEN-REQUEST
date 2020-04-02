@@ -116,6 +116,10 @@ h1 {
   h1 {
     font-size: 0.9rem;
   }
+
+  .v-application {
+    line-height: 1.3;
+  }
 }
 
 @media screen and (min-width: 371px) and (max-width: 600px) {
@@ -129,6 +133,10 @@ h1 {
 
   h1 {
     font-size: 1rem;
+  }
+
+  .v-application {
+    line-height: 1.3;
   }
 }
 
