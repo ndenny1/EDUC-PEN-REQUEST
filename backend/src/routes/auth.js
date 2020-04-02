@@ -45,7 +45,7 @@ router.get('/callback_bceid',
 
 //a prettier way to handle errors
 router.get('/error', (_req, res) => {
-  res.redirect(config.get('server:frontend') + '/error?message=Unable_to_authenticate');
+  res.redirect(config.get('server:frontend') + '/login-error');
 });
 
 //redirects to the SSO login screen
