@@ -2,7 +2,6 @@
   <v-app id="app">
     <Header/>
     <ModalIdle v-if="isAuthenticated && isIdle"/>
-    <ModalJourney v-if="!isAuthenticated && !isLoading"/>
     <router-view/>
     <Footer/>
   </v-app>
@@ -14,7 +13,6 @@ import HttpStatus from 'http-status-codes';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ModalIdle from './components/ModalIdle';
-import ModalJourney from './components/ModalJourney';
 
 export default {
   name: 'app',
