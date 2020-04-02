@@ -35,7 +35,7 @@ describe('App.vue', () => {
     });
   });
 
-  // test('app exists', () => {
-  //   expect(wrapper).toBeTruthy();
-  // });
+  test('app exists', () => {
+    expect(wrapper).toBeTruthy();
+  });
 });
