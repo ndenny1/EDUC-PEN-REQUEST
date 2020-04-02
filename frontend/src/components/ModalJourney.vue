@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import StaticConfig from '@/common/staticConfig';
 export default {
   name: 'ModalJourney',
   computed:{
