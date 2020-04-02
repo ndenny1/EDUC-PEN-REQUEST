@@ -162,7 +162,8 @@
       "!src/main.js",
       "!src/plugins/*.*",
       "!src/router.js",
-      "!tests/e2e/student-form.js"
+      "!tests/e2e/student-form.js",
+      "!src/common/staticConfig.js"
     ],
     "testResultsProcessor": "jest-sonar-reporter"
   },
