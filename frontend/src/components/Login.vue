@@ -83,8 +83,7 @@ export default {
   data() {
     return {
       appTitle: process.env.VUE_APP_TITLE,
-      authRoutes: AuthRoutes,
-      bceidReg: config.VUE_APP_BCEID_REG_URL
+      authRoutes: AuthRoutes
     };
   },
   computed: {
