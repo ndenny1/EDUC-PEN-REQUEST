@@ -76,6 +76,7 @@ export default {
     Login,
     RequestForm,
     RequestDisplay,
+    ModalJourney
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated', 'userInfo', 'isLoading']),
