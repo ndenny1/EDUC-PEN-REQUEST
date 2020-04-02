@@ -7,12 +7,9 @@
 <script>
 export default {
   name: 'ModalJourney',
-  computed:{
-    journeyBuilder(){
-      if(config.VUE_APP_JOURNEY_BUILDER){
-        return config.VUE_APP_JOURNEY_BUILDER;
-      }
-      return 'https://www2.qa.gov.bc.ca/gov/content/education-training/k-12/support/pen';
+  data(){
+    return{
+      journeyBuilder:StaticConfig.VUE_APP_JOURNEY_BUILDER
     }
   },
   mounted() {
