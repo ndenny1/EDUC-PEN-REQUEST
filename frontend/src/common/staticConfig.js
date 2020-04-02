@@ -4,6 +4,7 @@ let StaticConfig = {
     VUE_APP_JOURNEY_BUILDER: 'https://www2.qa.gov.bc.ca/gov/content/education-training/k-12/support/pen',
 };
 if(typeof config !== undefined){
+    // eslint-disable-next-line
     StaticConfig = config
 }
 export default StaticConfig;
