@@ -5,12 +5,13 @@
 </template>
 
 <script>
+import StaticConfig from '@/common/StaticConfig';
 export default {
   name: 'ModalJourney',
   data(){
     return{
       journeyBuilder:StaticConfig.VUE_APP_JOURNEY_BUILDER
-    }
+    };
   },
   mounted() {
     console.log(this.journeyBuilder);
