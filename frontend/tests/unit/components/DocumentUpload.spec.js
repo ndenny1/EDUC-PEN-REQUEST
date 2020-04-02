@@ -159,11 +159,11 @@ function mockStore() {
 
   const documentGetters = {
     documentTypeCodes: jest.fn().mockReturnValue(documentTypeCodes)
-  }
+  };
 
   const penRequestGetters = {
     penRequestID: jest.fn().mockReturnValue('penRequestID')
-  }
+  };
 
   let store = new Vuex.Store({
     modules: { auth,

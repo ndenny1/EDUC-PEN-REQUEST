@@ -1,5 +1,5 @@
 <template>
-    <div :class="commentObject.color">
+    <div :class="commentObject.color" :style="highlight ? {backgroundColor: '#fef4dd'} : {}">
       <v-row>
           <v-col class="pa-0 iconCol" md="auto">
               <!-- <v-avatar> -->
@@ -16,10 +16,10 @@
             </p> -->
           </v-col>
       </v-row>
-      <v-row class="pl-9 pl-sm-10">
+      <v-row class="ml-6 ml-sm-7 mr-1">
         <v-col class="content-col">
-        <v-row>
-              <span>{{ commentObject.content }}</span>
+        <v-row class="mb-1">
+          <span :class="{commentContent: comment.content && comment.content.length > 0}" :style="highlight ? {fontWeight: 'bold'} : {}">{{ commentObject.content }}</span>
         </v-row>
         <v-row>
             <DocumentChip
@@ -41,6 +41,24 @@ import {LocalDateTime, DateTimeFormatter} from '@js-joda/core';
 export default {
   components: {
     DocumentChip
+  },
+  props: {
+    comment: {
+      type: Object,
+      required: true
+    },
+    myself: {
+      type: Object,
+      required: true
+    },
+    participants: {
+      type: Array,
+      required: true
+    },
+    highlight: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     commentObject() {
@@ -95,7 +113,6 @@ export default {
       }
     }
   },
-  props: ['comment', 'myself', 'participants'],
   mounted() {
 
   },
@@ -168,7 +185,7 @@ export default {
   padding-bottom: 0;
 }
 .content-col{
-  padding: 0.2rem 1rem;
+  padding: 0.2rem 0.5rem 0.2rem 1rem;
 }
 .studentGreen{
   background-color: #E9F2DF;
@@ -189,5 +206,9 @@ export default {
 }
 .iconCol{
   flex-grow: 0
+}
+.commentContent {
+  white-space: pre-wrap; 
+  word-wrap: break-word;
 }
 </style>

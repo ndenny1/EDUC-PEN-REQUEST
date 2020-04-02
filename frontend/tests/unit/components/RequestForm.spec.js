@@ -25,11 +25,11 @@ describe('RequestForm.vue', () => {
     
     const penRequestGetters = {
       genders: jest.fn().mockReturnValue(genderCodes),
-    }
+    };
 
     const authGetters = {
       userInfo: jest.fn().mockReturnValue({accountType: 'BCEID'}),
-    }
+    };
 
     store = new Vuex.Store({
       modules: { 
