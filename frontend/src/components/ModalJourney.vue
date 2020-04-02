@@ -1,0 +1,29 @@
+<template>
+  <div style="display: none">
+    <a id="journey_href" :href='journeyBuilder'/>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'ModalJourney',
+  data() {
+    return{
+      journeyBuilder: config.VUE_APP_JOURNEY_BUILDER
+    }
+  },
+  mounted() {
+    console.log(this.journeyBuilder)
+    window.location = document.getElementById('journey_href').href;
+  },
+  methods: {
+    logout() {
+      this.$store.commit('auth/setJwtToken');
+    }
+  }
+
+};
+</script>
+<style scoped>
+
+</style>

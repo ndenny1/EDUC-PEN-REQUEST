@@ -3,6 +3,7 @@
     <Header/>
     <ModalIdle v-if="isAuthenticated && isIdle"/>
     <ModalLoginError v-if="loginError"/>
+    <ModalJourney v-if="!isAuthenticated"/>
     <router-view/>
     <Footer/>
   </v-app>
@@ -15,6 +16,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ModalIdle from './components/ModalIdle';
 import ModalLoginError from './components/ModalLoginError';
+import ModalJourney from './components/ModalJourney';
 
 export default {
   name: 'app',
@@ -22,7 +24,8 @@ export default {
     Header,
     Footer,
     ModalIdle,
-    ModalLoginError
+    ModalLoginError,
+    ModalJourney
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated', 'loginError']),
@@ -44,9 +47,9 @@ export default {
         this.logout();
         this.$router.replace({name: 'error', query: { message: `500_${e.data || 'ServerError'}` } });
       }
-    }).finally(() => 
+    }).finally(() => {
       this.setLoading(false)
-    );
+    });
   }
 };
 </script>
