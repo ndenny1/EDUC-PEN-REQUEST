@@ -19,8 +19,7 @@ export default {
   components: {
     Header,
     Footer,
-    ModalIdle,
-    ModalJourney
+    ModalIdle
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated', 'loginError', 'isLoading']),
