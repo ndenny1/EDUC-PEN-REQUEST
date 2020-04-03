@@ -48,16 +48,9 @@
           id="upload_form"
           @click="submitRequest"
           :disabled="!dataReady"
+          :loading="active"
         >
-          <div v-if="active">
-            <v-progress-circular
-              indeterminate
-              :size="30"
-            ></v-progress-circular>
-          </div>
-          <div v-else>
-            Upload
-          </div>
+          Upload
         </v-btn>
         <v-btn
           color="#003366"
@@ -113,7 +106,7 @@ export default {
     ...mapGetters('document', ['documentTypeCodes']),
     ...mapGetters('penRequest', ['penRequestID']),
     dataReady () {
-      return this.validForm && this.file && !this.active;
+      return this.validForm && this.file;
     },
     documentTypes() {
       return sortBy(this.documentTypeCodes, ['displayOrder']).map(code => 

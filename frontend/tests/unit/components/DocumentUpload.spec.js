@@ -11,25 +11,40 @@ describe('DocumentUpload.vue', () => {
 
   const localVue = createLocalVue();
 
-  const oneMBFile = new File([new ArrayBuffer(1048576)], 'test.jpg');
-  const twoMBFile = new File([new ArrayBuffer(2097152)], 'test.pdf');
-
   Vue.use(Vuetify);
   localVue.use(Vuex);
 
   addElemWithDataAppToBody();
 
-  let vuetify = new Vuetify();
-  let store = mockStore();
+  const vuetify = new Vuetify();
+
+  const setUploadedDocumentSpy = jest.fn();
+  const store = mockStore(setUploadedDocumentSpy);
 
   jest.spyOn(ApiService, 'getFileRequirements');
+  const uploadFileSpy = jest.spyOn(ApiService, 'uploadFile');
+  
+  class FileReaderMock {
+    readAsBinaryString() {
+      this.onload({target: {result: 'file data'}});
+    }
+  }
+
+  const oneMBFile = new File([new ArrayBuffer(1048576)], 'test.jpg' , {
+    type: "image/jpeg",
+  });
+  const twoMBFile = new File([new ArrayBuffer(2097152)], 'test.pdf', {
+    type: "application/pdf",
+  });
+
   const fileRequirements = {
     maxSize: 1048579, 
-    extensions: ['image/png', 'image/jpeg', 'image/bmp', '.pdf']
+    extensions: ['image/png', 'image/jpeg', '.pdf']
   };
 
   beforeEach(() => {
     ApiService.getFileRequirements.mockResolvedValue({data: fileRequirements});
+    global.FileReader = FileReaderMock;
     wrapper = mount(DocumentUpload, {
       localVue,
       vuetify,
@@ -99,83 +114,93 @@ describe('DocumentUpload.vue', () => {
     expect(wrapper.vm.dataReady).toBeFalsy();
   });
 
-  // test('upload file with successful API response', async () => {    
-  //   const input = wrapper.find({name: 'v-file-input'});
-  //   input.vm.internalValue = oneMBFile;
+  test('upload file with successful API response', async () => {
+    // const submitRequestStub = jest.fn();
+    // wrapper.setMethods({ uploadFile: submitRequestStub })
+    const apiRes = ({data: {documentID: 'documentID'}});
+    ApiService.uploadFile.mockResolvedValue(apiRes);
 
-  //   const select = wrapper.find({name: 'v-select'});
-  //   select.findAll('.v-list-item').at(1).trigger('click');
+    const input = wrapper.find({name: 'v-file-input'});
+    input.vm.internalValue = oneMBFile;
 
-  //   wrapper.vm.validate();
-  //   wrapper.vm.validForm = true;
-  //   expect(wrapper.vm.dataReady).toBeTruthy();
+    const select = wrapper.find({name: 'v-select'});
+    select.findAll('.v-list-item').at(1).trigger('click');
 
-  //   await localVue.nextTick();
+    wrapper.vm.validate();
+    wrapper.setData({validForm: true});
+    expect(wrapper.vm.dataReady).toBeTruthy();
 
-  //   const button = wrapper.find('#upload_form');
-  //   button.trigger('click');
+    await localVue.nextTick();
 
-  //   await localVue.nextTick();
-  //   await localVue.nextTick();
-  //   expect(wrapper.vm.alert).toBeTruthy();
-  //   expect(wrapper.vm.alertMessage).toContain('success');
-  // });
+    const button = wrapper.find('#upload_form');
+    //console.log(wrapper.html());
+    button.trigger('click');
 
-  // test('upload file with failed API response', async () => {    
-  //   const input = wrapper.find({name: 'v-file-input'});
-  //   input.vm.internalValue = oneMBFile;
+    await localVue.nextTick();
+    expect(uploadFileSpy).toHaveBeenCalled();
+    expect(setUploadedDocumentSpy).toHaveBeenCalledWith({}, apiRes.data);
+    expect(wrapper.vm.alert).toBeTruthy();
+    expect(wrapper.vm.alertMessage).toContain('success');
+  });
 
-  //   const select = wrapper.find({name: 'v-select'});
-  //   select.findAll('.v-list-item').at(1).trigger('click');
+  test('upload file with failed API response', async () => {    
+    ApiService.uploadFile.mockRejectedValue(new Error('test error'));
+    const input = wrapper.find({name: 'v-file-input'});
+    input.vm.internalValue = oneMBFile;
 
-  //   wrapper.vm.validate();
-  //   wrapper.vm.validForm = true;
-  //   expect(wrapper.vm.dataReady).toBeTruthy();
+    const select = wrapper.find({name: 'v-select'});
+    select.findAll('.v-list-item').at(1).trigger('click');
 
-  //   await localVue.nextTick();
+    wrapper.vm.validate();
+    wrapper.setData({validForm: true});
+    expect(wrapper.vm.dataReady).toBeTruthy();
 
-  //   const button = wrapper.find('#upload_form');
-  //   button.trigger('click');
+    await localVue.nextTick();
 
-  //   await localVue.nextTick();
-  //   await localVue.nextTick();
-  //   expect(wrapper.vm.alert).toBeTruthy();
-  //   expect(wrapper.vm.alertMessage).toContain('failure');
-  // });
+    const button = wrapper.find('#upload_form');
+    button.trigger('click');
+
+    await localVue.nextTick();
+    await localVue.nextTick();
+    expect(wrapper.vm.alert).toBeTruthy();
+    expect(wrapper.vm.alertMessage).toContain('failure');
+  });
 
 });
 
 
-function mockStore() {
+function mockStore(setUploadedDocument) {
   const documentTypeCodes = [
     {label:'Canadian Birth Certificate', documentTypeCode:'CABIRTH', displayOrder:'3'},
     {label:'Canadian Passport', documentTypeCode:'CAPASSPORT', displayOrder:'1'},
     {label:'Canadian Driver’s License', documentTypeCode:'CADL', displayOrder:'2'},
   ];
 
-  const actions = {
-    uploadFile: jest.fn().mockReturnValueOnce(true).mockReturnValueOnce(false)
+  const penRequestStore = {
+    namespaced: true,
+    getters: {
+      penRequestID: jest.fn().mockReturnValue('penRequestID')
+    }
   };
 
-  const documentGetters = {
-    documentTypeCodes: jest.fn().mockReturnValue(documentTypeCodes)
-  };
-
-  const penRequestGetters = {
-    penRequestID: jest.fn().mockReturnValue('penRequestID')
+  const documentStore = {
+    namespaced: true,
+    actions: {
+      uploadFile: jest.fn().mockReturnValueOnce(true).mockReturnValueOnce(false)
+    },
+    getters: {
+      documentTypeCodes: jest.fn().mockReturnValue(documentTypeCodes)
+    },
+    mutations: {
+      setUploadedDocument
+    }
   };
 
   let store = new Vuex.Store({
-    modules: { auth,
-      document: {
-        namespaced: true,
-        actions,
-        getters: documentGetters
-      },
-      penRequest: {
-        namespaced: true,
-        getters: penRequestGetters
-      }
+    modules: { 
+      auth,
+      document: documentStore,
+      penRequest: penRequestStore
     }
   });
 

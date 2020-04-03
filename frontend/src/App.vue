@@ -1,5 +1,6 @@
 <template>
   <v-app id="app">
+    <MsieBanner v-if="isIE"/>
     <Header/>
     <ModalIdle v-if="isAuthenticated && isIdle"/>
     <router-view/>
@@ -13,19 +14,24 @@ import HttpStatus from 'http-status-codes';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ModalIdle from './components/ModalIdle';
+import MsieBanner from './components/MsieBanner';
 
 export default {
   name: 'app',
   components: {
     Header,
     Footer,
-    ModalIdle
+    ModalIdle,
+    MsieBanner
   },
   computed: {
     ...mapGetters('auth', ['isAuthenticated', 'loginError', 'isLoading']),
     isIdle(){
       return this.$store.state.idleVue.isIdle;
     },
+    isIE() {
+      return /Trident\/|MSIE/.test(window.navigator.userAgent);
+    }
   },
   methods: {
     ...mapMutations('auth', ['setLoading']),
@@ -69,7 +75,7 @@ h1 {
     text-transform: none !important;
 }
 
-.v-alert /deep/ .v-icon {
+.v-alert .v-icon {
     padding-left: 0;
 }
 

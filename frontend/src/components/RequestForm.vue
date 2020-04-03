@@ -320,11 +320,21 @@
         <v-row>
           <v-col id="confidential_information" cols="12" class="py-0 px-2 px-sm-2 px-md-3 px-lg-3 px-xl-3">
             <v-card height="100%" width="100%" elevation=2
-                    class="black--text">
+                    class="black--text pa-4">
 
-              <p style="padding: 1rem"><strong>CONFIDENTIAL INFORMATION.</strong> The information collected on this form will be used to verify your identity for the purpose of communicating your personal education number to you, and may also
-              be used update your PEN file. All information provided on this form will be administered in accordance with Freedom of Information and Protection of Privacy Act. For more information regarding
-              the use of your personal information provided in this form, please contact the Student Information Services Branch, Data management Unit, Ministry of Education.</p>
+              <p><strong>Collection Notice:</strong></p>
+              <p>
+                The information included in this form is collected under ss. 26(c) of the Freedom of Information and Protection of Privacy Act, R.S.B.C. 1996, c. 165. 
+                The information you provide will be used in confirming your identity and communicating with you.
+              </p>
+              <p>
+                If you have any questions about the collection and use of this information, please contact:<br/>
+                Data Management Unit, Student Data & Educational Resource Services Branch<br/>
+                B.C. Ministry of Education<br/>
+                PO Box 9886 Stn Prov Govt<br/>
+                Victoria BC V8W 9T6<br/>
+                250 812-0272
+              </p>
             </v-card>
           </v-col>
         </v-row>
