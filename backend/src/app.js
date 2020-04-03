@@ -12,7 +12,8 @@ const cors = require('cors');
 const utils = require('./components/utils');
 const auth = require('./components/auth');
 const bodyParser = require('body-parser');
-
+const redis = require('redis');
+const connectRedis = require('connect-redis');
 dotenv.config();
 
 const JWTStrategy = require('passport-jwt').Strategy;
@@ -39,7 +40,18 @@ app.use(bodyParser.urlencoded({
 
 
 app.use(morgan(config.get('server:morganFormat')));
-
+const redisClient = redis.createClient({
+  host: config.get('redis:host'),
+  port: config.get('redis:port'),
+  password: config.get('redis:password')
+});
+const RedisStore = connectRedis(session);
+const dbSession = new RedisStore({
+  client: redisClient,
+});
+redisClient.on('error', (error)=>{
+  log.error(`error occurred in redis client. ${error}`);
+});
 //sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
 const expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 app.use(session({
@@ -50,6 +62,7 @@ app.use(session({
   httpOnly: true,
   secure: true,
   expires: expiryDate,
+  store:dbSession
 }));
 
 //initialize routing and session. Cookies are now only reachable via requests (not js)
