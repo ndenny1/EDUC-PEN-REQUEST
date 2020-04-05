@@ -48,6 +48,7 @@ const redisClient = redis.createClient({
 const RedisStore = connectRedis(session);
 const dbSession = new RedisStore({
   client: redisClient,
+  prefix: 'pen-request-sess:'
 });
 redisClient.on('error', (error)=>{
   log.error(`error occurred in redis client. ${error}`);
