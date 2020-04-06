@@ -26,7 +26,7 @@ const penRouter = require('./routes/pen');
 
 //initialize app
 const app = express();
-
+app.set('trust proxy', 1);
 //sets security measures (headers, etc)
 app.use(cors());
 app.use(helmet());
@@ -49,22 +49,26 @@ const RedisStore = connectRedis(session);
 const dbSession = new RedisStore({
   client: redisClient,
   prefix: 'pen-request-sess:',
-  ttl: 1800 // 30 minutes after which key will be deleted from redis, if user is active key life will be automatically extended.
 });
 redisClient.on('error', (error)=>{
   log.error(`error occurred in redis client. ${error}`);
 });
+const cookie = {
+  secure: true,
+  httpOnly: true,
+  maxAge: 1800000 //30 minutes in ms. this is same as session time. DO NOT MODIFY, IF MODIFIED, MAKE SURE SAME AS SESSION TIME OUT VALUE.
+};
+if (config.get('environment') !== undefined && config.get('environment') === 'local') {
+  cookie.secure = false;
+}
 //sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
-const expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 app.use(session({
   name: 'pen_request_cookie',
   secret: config.get('oidc:clientSecret'),
   resave: false,
   saveUninitialized: true,
-  httpOnly: true,
-  secure: true,
-  expires: expiryDate,
-  store:dbSession
+  cookie: cookie,
+  store: dbSession
 }));
 
 //initialize routing and session. Cookies are now only reachable via requests (not js)
