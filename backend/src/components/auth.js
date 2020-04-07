@@ -51,8 +51,12 @@ const auth = {
       );
 
       log.verbose('renew', utils.prettyStringify(response.data));
-      result.jwt = response.data.access_token;
-      result.refreshToken = response.data.refresh_token;
+      if(response && response.data && response.data.access_token && response.data.refresh_token){
+        result.jwt = response.data.access_token;
+        result.refreshToken = response.data.refresh_token;
+      } else{
+        console.log('Access token or refresh token not retreived properly');
+      }
     } catch (error) {
       log.error('renew', error.message);
       result = error.response && error.response.data;
@@ -65,7 +69,7 @@ const auth = {
   // Update or remove token based on JWT and user state
   async refreshJWT(req, _res, next) {
     try {
-      if (!!req.user && !!req.user.jwt) {
+      if (!!req && !!req.user && !!req.user.jwt) {
         log.verbose('refreshJWT', 'User & JWT exists');
 
         if (auth.isTokenExpired(req.user.jwt)) {
@@ -92,37 +96,6 @@ const auth = {
     }
     next();
   },
-
-  //this is used to get JWTs for API consumption (eg. PEN Request API, Digital ID API, etc)
-  /*async getApiJwt(client, secret, optionalScope){
-    let result ={};
-    try {
-      const discovery = await utils.getOidcDiscovery();
-      const response = await axios.post(discovery.token_endpoint,
-        qs.stringify({
-          client_id: client,
-          client_secret: secret,
-          grant_type: 'client_credentials',
-          scope: optionalScope
-        }), {
-          headers: {
-            Accept: 'application/json',
-            'Cache-Control': 'no-cache',
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }
-      );
-
-      log.verbose('api jwt', utils.prettyStringify(response.data));
-      result.jwt = response.data.access_token;
-      result.refreshToken = response.data.refresh_token;
-    } catch (error) {
-      log.error('api jwt', error.message);
-      result = error.response.data;
-    }
-
-    return result;
-  },*/
 
   generateUiToken() {
     const i  = config.get('tokenGenerate:issuer');

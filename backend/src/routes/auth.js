@@ -59,18 +59,18 @@ router.get('/login_bceid', passport.authenticate('oidcBceid', {
 
 //removes tokens and destroys session
 router.get('/logout', async (req, res) => {
-  if(req.user && req.user.jwt){
+  if(req && req.user && req.user.jwt){
     const token = req.user.jwt;
     req.logout();
     req.session.destroy();
     let siteMinderRetUrl;
-    if(req.query.sessionExpired){
+    if(req.query && req.query.sessionExpired){
       siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/session-expired');
-    } else if(req.query.loginError){
+    } else if(req.query && req.query.loginError){
       siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+ '/login-error');
-    } else if(req.query.loginBcsc){
+    } else if(req.query && req.query.loginBcsc){
       siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+ '/api/auth/login_bcsc');
-    } else if(req.query.loginBceid){
+    } else if(req.query && req.query.loginBceid){
       siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+ '/api/auth/login_bceid');
     } else {
       siteMinderRetUrl = encodeURIComponent(config.get('logoutEndpoint') + '?id_token_hint=' + token + '&post_logout_redirect_uri=' + config.get('server:frontend')+'/logout');
@@ -131,7 +131,7 @@ router.post('/refresh', [
       errors: errors.array()
     });
   }
-  if(!req.user || !req.user.refreshToken){
+  if(!!req || !req.user || !req.user.refreshToken){
     res.status(401).json(UnauthorizedRsp);
   } else{
     const result = await auth.renew(req.user.refreshToken);  //need to update req.user?

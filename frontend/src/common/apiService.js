@@ -22,7 +22,7 @@ function processQueue(error, token = null) {
 const apiAxios = axios.create();
 const intercept = apiAxios.interceptors.response.use(config => config, error => {
   const originalRequest = error.config;
-  if (error.response.status === 401 && !originalRequest._retry) {
+  if (error.response && error.response.status && error.response.status === 401 && !originalRequest._retry) {
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         try {
