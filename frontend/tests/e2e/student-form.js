@@ -20,21 +20,25 @@ set NODE_ENV=local
 //to run type: testcafe chrome sharene_basic_login_test.js --hostname 127.0.0.1 -s path=artifacts/screenshots,fullPage=true,pathPattern=${TEST_INDEX}/${USERAGENT}/${FILE_INDEX}.png
 
 import { Selector } from 'testcafe';
-import { bceidLogin, fillRequestForm } from './helpers/helperFunctions';
-import { credentials, fullStudent } from './helpers/constants';
-//import { enterLoginWithBasicBCeID } from './helper.js';
+import BceidLoginPage from './pageObjects/BceidLoginPage';
+import PenRequestForm from './pageObjects/PenRequestForm';
+import { credentials, fullStudent, BceidLoginUrl } from './helpers/constants';
 
-fixture `Basic BCeID SDF Test`
-  .page `https://pen-request-c2mvws-test.pathfinder.gov.bc.ca/`;
 
+const penRequestForm = new PenRequestForm()
+const bceidLoginPage = new BceidLoginPage()
+
+fixture`Bceid Login and Fill Pen request form`
+  .page(BceidLoginUrl)
+  .beforeEach(async t =>{
+    await t.maximizeWindow()
+  })
 
 test('basic bceid login', async t => {
-  await t
-    .click(Selector('#login-button'))
-    .expect(Selector('#password').count).eql(1); //login type displayed
-    
-  await bceidLogin(t, credentials);
-  await fillRequestForm(t, fullStudent, false);
+ 
+  await bceidLoginPage.bceidLogin(t, credentials);
 
-  await t.takeScreenshot();		
+  await penRequestForm.fillRequestForm(t, fullStudent, false);
+
+  await t.takeScreenshot();
 });
