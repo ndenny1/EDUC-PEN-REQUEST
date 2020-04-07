@@ -1,6 +1,8 @@
 import config from '../config/index';
 import faker from 'faker';
 
+export const BceidLoginUrl = 'https://pen-request-c2mvws-dev.pathfinder.gov.bc.ca/api/auth/logout?loginBceid=true';
+
 export const credentials = Object.freeze({
   username: config.get('bceid:user'), 
   password: config.get('bceid:pass')
