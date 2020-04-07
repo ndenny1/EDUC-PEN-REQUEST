@@ -40,17 +40,18 @@ async function getDigitalIdData(token, digitalID) {
 }
 
 async function getStudent(token, studentID, sexCodes) {
+  let student;
   try {
-    let student = await getData(token, config.get('student:apiEndpoint') + `/${studentID}`);
-    const sexInfo = lodash.find(sexCodes, ['sexCode', student.sexCode]);
-    if(!sexInfo) {
-      throw new ServiceError(`Wrong sexCode: ${student.sexCode}`);
-    }
-    student.sexLabel = sexInfo.label;
-    return student;
+    student = await getData(token, config.get('student:apiEndpoint') + `/${studentID}`);
   } catch (e) {
     throw new ServiceError('getStudent error', e);
   }
+  const sexInfo = lodash.find(sexCodes, ['sexCode', student.sexCode]);
+  if(!sexInfo) {
+    throw new ServiceError(`Wrong sexCode: ${student.sexCode}`);
+  }
+  student.sexLabel = sexInfo.label;
+  return student;
 }
 
 async function getLatestPenRequest(token, digitalID) {
@@ -86,7 +87,7 @@ function getDefaultBcscInput(userInfo) {
 
 async function getUserInfo(req, res) {
   const userInfo = getSessionUser(req);
-  if(!userInfo) {
+  if(!userInfo || !userInfo.jwt || !userInfo._json || !userInfo._json.digitalIdentityID) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
       message: 'No session data'
     });
