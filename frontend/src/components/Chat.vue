@@ -121,9 +121,24 @@ export default {
     }).catch(error => {
       console.log(error);
       this.alert = true;
-    }).finally(() => 
-      this.loading = false
-    );
+    }).finally(() => {
+      if(!this.userInfo){
+        console.log('UserInfo undefined');
+      }
+      if(!this.penRequest){
+        console.log('penRequest object undefined');
+      }
+      if(!this.unsubmittedDocuments){
+        console.log('unsubmittedDocuments object undefined');
+      }
+      if(!this.commentHistory){
+        console.log('Comment History object undefined');
+      }
+      if(!this.setRequestComments){
+        console.log('Set Request Comments objects undefined');
+      }
+      this.loading = false;
+    });
   },
   methods: {
     ...mapActions('document', ['getDocumentTypeCodes']),

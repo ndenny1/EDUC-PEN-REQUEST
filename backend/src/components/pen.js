@@ -22,7 +22,7 @@ function getPenRequest(req, res, next) {
   }
 
   const penRequestID = req.params.id;
-  if(!req.session.penRequest || req.session.penRequest.penRequestID !== penRequestID) {
+  if(!req || !req.session || !req.session.penRequest || req.session.penRequest.penRequestID !== penRequestID) {
     return res.status(HttpStatus.BAD_REQUEST).json({
       message: 'Wrong penRequestID'
     });
@@ -114,10 +114,13 @@ async function getUserInfo(req, res) {
       student = await getStudent(accessToken, digitalIdData.studentID, codes.sexCodes);
     }
 
-    req.session.digitalIdentityData = digitalIdData;
-    req.session.digitalIdentityData.identityTypeLabel = identityType.label;
-    req.session.penRequest = penRequest;
-
+    if(req && req.session){
+      req.session.digitalIdentityData = digitalIdData;
+      req.session.digitalIdentityData.identityTypeLabel = identityType.label;
+      req.session.penRequest = penRequest;
+    } else {
+      throw new ServiceError('userInfo error: session does not exist');
+    }
     let resData = {
       displayName: userInfo._json.displayName,
       accountType: userInfo._json.accountType,
@@ -270,7 +273,7 @@ async function submitPenRequest(req, res) {
 
     const accessToken = userInfo.jwt;
 
-    if(req.session.penRequest && req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.REJECTED) {
+    if(req && req.session && req.session.penRequest && req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.REJECTED) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Submit PEN Request not allowed'
       });
@@ -302,7 +305,7 @@ async function postComment(req, res) {
       });
     }
 
-    if(!req.session.penRequest || req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
+    if(!req || !req.session || !req.session.penRequest || req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Post comment not allowed'
       });
@@ -364,7 +367,7 @@ async function getComments(req, res) {
         id: (element.staffMemberIDIRGUID ? element.staffMemberIDIRGUID : '1')
       };
 
-      if (participant.id.toUpperCase() !== response.myself.id.toUpperCase()) {
+      if (participant && participant.id && participant.id.toUpperCase() !== response.myself.id.toUpperCase()) {
         const index = response.participants.findIndex((e) => e.id === participant.id);
 
         if (index === -1) {
