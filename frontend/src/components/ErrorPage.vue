@@ -30,8 +30,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapGetters } from 'vuex';
-import {AuthRoutes} from '../utils/constants';
+import { mapActions } from 'vuex';
 export default {
   data() {
     return {

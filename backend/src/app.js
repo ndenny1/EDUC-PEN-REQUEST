@@ -12,7 +12,8 @@ const cors = require('cors');
 const utils = require('./components/utils');
 const auth = require('./components/auth');
 const bodyParser = require('body-parser');
-
+const redis = require('redis');
+const connectRedis = require('connect-redis');
 dotenv.config();
 
 const JWTStrategy = require('passport-jwt').Strategy;
@@ -25,7 +26,7 @@ const penRouter = require('./routes/pen');
 
 //initialize app
 const app = express();
-
+app.set('trust proxy', 1);
 //sets security measures (headers, etc)
 app.use(cors());
 app.use(helmet());
@@ -39,17 +40,35 @@ app.use(bodyParser.urlencoded({
 
 
 app.use(morgan(config.get('server:morganFormat')));
-
+const redisClient = redis.createClient({
+  host: config.get('redis:host'),
+  port: config.get('redis:port'),
+  password: config.get('redis:password')
+});
+const RedisStore = connectRedis(session);
+const dbSession = new RedisStore({
+  client: redisClient,
+  prefix: 'pen-request-sess:',
+});
+redisClient.on('error', (error)=>{
+  log.error(`error occurred in redis client. ${error}`);
+});
+const cookie = {
+  secure: true,
+  httpOnly: true,
+  maxAge: 1800000 //30 minutes in ms. this is same as session time. DO NOT MODIFY, IF MODIFIED, MAKE SURE SAME AS SESSION TIME OUT VALUE.
+};
+if (config.get('environment') !== undefined && config.get('environment') === 'local') {
+  cookie.secure = false;
+}
 //sets cookies for security purposes (prevent cookie access, allow secure connections only, etc)
-const expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 app.use(session({
   name: 'pen_request_cookie',
   secret: config.get('oidc:clientSecret'),
   resave: false,
   saveUninitialized: true,
-  httpOnly: true,
-  secure: true,
-  expires: expiryDate,
+  cookie: cookie,
+  store: dbSession
 }));
 
 //initialize routing and session. Cookies are now only reachable via requests (not js)
@@ -152,6 +171,11 @@ apiRouter.get('/', (_req, res) => {
       1
     ]
   });
+});
+
+// GetOK Base API for readiness and liveness probe
+apiRouter.get('/health', (_req, res) => {
+  res.status(200).json();
 });
 
 //set up routing to auth and main API

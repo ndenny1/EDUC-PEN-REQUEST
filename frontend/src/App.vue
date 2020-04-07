@@ -1,8 +1,8 @@
 <template>
   <v-app id="app">
+    <MsieBanner v-if="isIE"/>
     <Header/>
     <ModalIdle v-if="isAuthenticated && isIdle"/>
-    <ModalLoginError v-if="loginError"/>
     <router-view/>
     <Footer/>
   </v-app>
@@ -14,7 +14,7 @@ import HttpStatus from 'http-status-codes';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ModalIdle from './components/ModalIdle';
-import ModalLoginError from './components/ModalLoginError';
+import MsieBanner from './components/MsieBanner';
 
 export default {
   name: 'app',
@@ -22,13 +22,16 @@ export default {
     Header,
     Footer,
     ModalIdle,
-    ModalLoginError
+    MsieBanner
   },
   computed: {
-    ...mapGetters('auth', ['isAuthenticated', 'loginError']),
+    ...mapGetters('auth', ['isAuthenticated', 'loginError', 'isLoading']),
     isIdle(){
       return this.$store.state.idleVue.isIdle;
     },
+    isIE() {
+      return /Trident\/|MSIE/.test(window.navigator.userAgent);
+    }
   },
   methods: {
     ...mapMutations('auth', ['setLoading']),
@@ -44,9 +47,9 @@ export default {
         this.logout();
         this.$router.replace({name: 'error', query: { message: `500_${e.data || 'ServerError'}` } });
       }
-    }).finally(() => 
-      this.setLoading(false)
-    );
+    }).finally(() => {
+      this.setLoading(false);
+    });
   }
 };
 </script>
@@ -72,7 +75,7 @@ h1 {
     text-transform: none !important;
 }
 
-.v-alert /deep/ .v-icon {
+.v-alert .v-icon {
     padding-left: 0;
 }
 
@@ -113,6 +116,10 @@ h1 {
   h1 {
     font-size: 0.9rem;
   }
+
+  .v-application {
+    line-height: 1.3;
+  }
 }
 
 @media screen and (min-width: 371px) and (max-width: 600px) {
@@ -126,6 +133,10 @@ h1 {
 
   h1 {
     font-size: 1rem;
+  }
+
+  .v-application {
+    line-height: 1.3;
   }
 }
 

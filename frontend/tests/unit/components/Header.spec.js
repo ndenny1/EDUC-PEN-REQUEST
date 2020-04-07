@@ -24,12 +24,12 @@ describe('Header.vue', () => {
   });
 
   test('expect site title', () => {
-    expect(wrapper.html()).toContain('<v-toolbar-title-stub><h3 style="color: white;">PEN Request');
+    expect(wrapper.html()).toContain(process.env.VUE_APP_TITLE);
   });
 
-  test('logout of site', () => {
-    wrapper.vm.clearStorage();
-  });
+  // test('logout of site', () => {
+  //   wrapper.vm.clearStorage();
+  // });
 
   test('test computed values', () => {
     expect(wrapper.vm.dataReady).toBeFalsy();

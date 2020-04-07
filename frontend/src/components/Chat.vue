@@ -19,6 +19,7 @@
             :myself="myself"
             :participants="participants"
             :key="comment.id"
+            :highlight="true"
           ></SingleComment>
         </div>
       </v-card>

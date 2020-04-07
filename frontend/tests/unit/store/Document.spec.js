@@ -37,7 +37,6 @@ describe('document.js', () => {
       status: 400
     });
 
-    var response = await store.dispatch('uploadFile');
-    expect(response).toBeFalsy();
+    await expect(store.dispatch('uploadFile')).rejects.toThrow(Error);
   });
 });
