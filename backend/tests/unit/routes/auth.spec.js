@@ -1,4 +1,9 @@
 const request = require('supertest');
+const redis = require('redis-mock');
+
+jest.doMock('redis', () => {
+  return redis;
+});
 
 //const auth = require('../../../src/components/auth');
 const app = require('../../../src/app');

@@ -1,6 +1,6 @@
 createAppDiv();
 function createAppDiv() {
   var app = document.createElement('div');
-  app.setAttribute('id', 'app');
+  app.setAttribute('data-app', true);
   document.body.appendChild(app);
 }

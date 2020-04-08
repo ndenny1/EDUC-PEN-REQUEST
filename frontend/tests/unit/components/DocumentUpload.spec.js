@@ -14,7 +14,7 @@ describe('DocumentUpload.vue', () => {
   Vue.use(Vuetify);
   localVue.use(Vuex);
 
-  addElemWithDataAppToBody();
+  //addElemWithDataAppToBody();
 
   const vuetify = new Vuetify();
 
@@ -35,6 +35,9 @@ describe('DocumentUpload.vue', () => {
   });
   const twoMBFile = new File([new ArrayBuffer(2097152)], 'test.pdf', {
     type: "application/pdf",
+  });
+  const otherFile = new File([new ArrayBuffer(1048576)], 'test.bmp', {
+    type: "image/bmp",
   });
 
   const fileRequirements = {
@@ -63,12 +66,14 @@ describe('DocumentUpload.vue', () => {
   test('expect document upload ready', () => {
     expect(wrapper.html()).toContain('Document Type');
     expect(wrapper.html()).toContain('Select your file');
+    expect(wrapper.html()).toContain('PNG and JPEG files supported');
     expect(wrapper.vm.documentTypes).toContainEqual({text:'Canadian Passport', value:'CAPASSPORT'});
     expect(wrapper.vm.fileAccept).toContain('image/jpeg');
     expect(wrapper.vm.fileRules).toHaveLength(2);
+    expect(wrapper.vm.dataReady).toBeFalsy();
   });
 
-  test('select document type', () => {
+  test('can select document type', () => {
     const select = wrapper.find({name: 'v-select'});
     // expect(select.html()).toContain('Canadian Passport');
 
@@ -78,7 +83,7 @@ describe('DocumentUpload.vue', () => {
     expect(wrapper.vm.documentTypeCode).toBe('CADL');
   });
 
-  test('select file', () => {    
+  test('can select file', () => {    
     const input = wrapper.find({name: 'v-file-input'});
     // input.setProps({
     //   value: oneMBFile,
@@ -95,7 +100,7 @@ describe('DocumentUpload.vue', () => {
   });
 
 
-  test('select too large file', () => {    
+  test('alert error if file too large', async () => {    
     const input = wrapper.find({name: 'v-file-input'});
     input.vm.internalValue = twoMBFile;
 
@@ -103,9 +108,25 @@ describe('DocumentUpload.vue', () => {
     expect(input.vm.hasError).toBeTruthy();
     expect(wrapper.vm.validForm).toBeFalsy();
     expect(wrapper.vm.dataReady).toBeFalsy();
+
+    await localVue.nextTick();
+    expect(input.html()).toContain('File size should not be larger than 1 MB');
   });
 
-  test('does not select file', () => {    
+  test('alert error if file type not supported', async () => {    
+    const input = wrapper.find({name: 'v-file-input'});
+    input.vm.internalValue = otherFile;
+
+    input.vm.validate();
+    expect(input.vm.hasError).toBeTruthy();
+    expect(wrapper.vm.validForm).toBeFalsy();
+    expect(wrapper.vm.dataReady).toBeFalsy();
+
+    await localVue.nextTick();
+    expect(input.html()).toContain('File formats should be PNG and JPEG.');
+  });
+
+  test('alert error if no file slected', () => {    
     const input = wrapper.find({name: 'v-file-input'});
     input.vm.internalValue = null;
 
@@ -114,7 +135,7 @@ describe('DocumentUpload.vue', () => {
     expect(wrapper.vm.dataReady).toBeFalsy();
   });
 
-  test('upload file with successful API response', async () => {
+  test('alert success if upload succesful', async () => {
     // const submitRequestStub = jest.fn();
     // wrapper.setMethods({ uploadFile: submitRequestStub })
     const apiRes = ({data: {documentID: 'documentID'}});
@@ -143,7 +164,7 @@ describe('DocumentUpload.vue', () => {
     expect(wrapper.vm.alertMessage).toContain('success');
   });
 
-  test('upload file with failed API response', async () => {    
+  test('alert error if upload failed', async () => {    
     ApiService.uploadFile.mockRejectedValue(new Error('test error'));
     const input = wrapper.find({name: 'v-file-input'});
     input.vm.internalValue = oneMBFile;
@@ -163,7 +184,7 @@ describe('DocumentUpload.vue', () => {
     await localVue.nextTick();
     await localVue.nextTick();
     expect(wrapper.vm.alert).toBeTruthy();
-    expect(wrapper.vm.alertMessage).toContain('failure');
+    expect(wrapper.vm.alertMessage).toContain('error');
   });
 
 });
@@ -205,17 +226,4 @@ function mockStore(setUploadedDocument) {
   });
 
   return store;
-}
-
-
-/**
- * Adds a warapping `div data-app="true"` to the body so that we don't
- * get Vuetify complaining about missing data-app attribute for some components.
- *
- * @return undefined
- */
-function addElemWithDataAppToBody() {
-  const app = document.createElement('div');
-  app.setAttribute('data-app', true);
-  document.body.append(app);
 }
