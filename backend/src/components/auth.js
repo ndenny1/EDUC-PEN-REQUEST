@@ -55,7 +55,7 @@ const auth = {
         result.jwt = response.data.access_token;
         result.refreshToken = response.data.refresh_token;
       } else{
-        console.log('Access token or refresh token not retreived properly');
+        log.error('Access token or refresh token not retreived properly');
       }
     } catch (error) {
       log.error('renew', error.message);
