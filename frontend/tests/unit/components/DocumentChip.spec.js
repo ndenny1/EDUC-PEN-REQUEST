@@ -17,7 +17,7 @@ describe('DocumentChip.vue', () => {
 
   //addElemWithDataAppToBody();
 
-  const router = new VueRouter()
+  const router = new VueRouter();
   const vuetify = new Vuetify();
 
   const deleteFileSpy = jest.fn();

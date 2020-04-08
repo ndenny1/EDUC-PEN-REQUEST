@@ -31,13 +31,13 @@ describe('DocumentUpload.vue', () => {
   }
 
   const oneMBFile = new File([new ArrayBuffer(1048576)], 'test.jpg' , {
-    type: "image/jpeg",
+    type: 'image/jpeg',
   });
   const twoMBFile = new File([new ArrayBuffer(2097152)], 'test.pdf', {
-    type: "application/pdf",
+    type: 'application/pdf',
   });
   const otherFile = new File([new ArrayBuffer(1048576)], 'test.bmp', {
-    type: "image/bmp",
+    type: 'image/bmp',
   });
 
   const fileRequirements = {
