@@ -126,7 +126,7 @@ export default {
       this.active = false;
     },
     setSuccessAlert() {
-      this.alertMessage = 'File upload success!';
+      this.alertMessage = 'File upload successful.';
       this.alertType = 'bootstrap-success';
       this.alert = true;
     },
@@ -163,7 +163,7 @@ export default {
     },
     handleFileReadErr() {
       this.active = false;
-      this.setErrorAlert('File upload failure.');
+      this.setErrorAlert('Sorry, an unexpected error seems to have occured. You can upload files later.');
     },
     uploadFile(env) {
       let document = {

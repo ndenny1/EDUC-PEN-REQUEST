@@ -2,11 +2,9 @@
   <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-success" v-if="status === requestStatuses.INITREV">
     <p class="mb-2"><strong>Your email has been verified and your PEN request has now been submitted for processing.</strong></p>
     <ul>
-      <li>You will receive an email when your request has been processed.</li>
-      <li>Requests are processed during normal business hours.</li>
-      <li>In most cases you'll get a response within one business day.</li>
-      <li>Your request details are shown below.</li>
-      <li><strong>We recommend that you also check back here after one business day.</strong></li>
+      <li>Requests are processed M-F 8am – 4:30pm excluding stat holidays.</li>
+      <li>In most cases you will get a response within one business day.</li>
+      <li>You will receive an email when your request has been processed. You can also log into GetMyPEN after one business day to check on status of your request.</li>
     </ul>
   </v-alert>
   <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-success" v-else-if="status === requestStatuses.SUBSREV">
@@ -14,7 +12,7 @@
     <ul>
       <li>You will receive an email when your request has been processed.</li>
       <li>Requests are processed during normal business hours.</li>
-      <li>In most cases you'll get a response within one business day.</li>
+      <li>In most cases you will get a response within one business day.</li>
       <li>Your request details are shown below.</li>
       <li><strong>We recommend that you also check back here after one business day.</strong></li>
     </ul>
@@ -22,24 +20,23 @@
   <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-warning" v-else-if="status === requestStatuses.DRAFT && timedout">
     <p class="mb-2"><strong>Your email verification was not completed within the time limited. Repeat the email verification process.</strong></p>
     <ol>
-      <li>Click the "Resend Verification Email" button below.</li>
+      <li>Click the 'Resend Verification Email' button below.</li>
       <li>Go to your email inbox for {{ request.email }} and check for an email from {{ ministry }}. Check your spam folder too.</li>
       <li>Open the email and click on the link within 24 hours to complete the verification process.</li>
     </ol>
   </v-alert>
   <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-warning" v-else-if="status === requestStatuses.DRAFT && ! timedout">
-    <p class="mb-2"><strong>You are almost finished! To complete your request, verify the email address you provided. Follow these steps.</strong></p>
+    <p class="mb-2"><strong>You are almost finished. To complete your request, you must verify the email address you provided by completing the following steps:</strong></p>
     <p>
       <ol>
-        <li>Go to your email inbox for <strong>{{ request.email }}</strong> and check for an email from {{ ministry }}. Check your spam folder too.</li>
-        <li>Open the email and click on the link in the email <strong>within 24 hours</strong> of starting the email verification process.</li>
+        <li>Go to your email inbox for <strong>{{ request.email }}</strong> and look for an email from {{ ministry }}. You may need to check your spam folder.</li>
+        <li><strong>Within 24 hours</strong> you must click on the link in the email to complete your request.</li>
       </ol>
     </p>
-    <p>If needed, click the "Resend Verification Email" button below to have the system send a new email and then follow the instructions above.</p>
-    <p>The details of your request are shown below.</p>
+    <p>If the email has expired or is not in your Inbox (or spam folder) click on the 'Resend Verification Email' button below to receive a new email and then follow the 2 steps listed above.</p>
   </v-alert>
   <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-warning" v-else-if="status === requestStatuses.RETURNED">
-    <p class="mb-2"><strong>Additional information is required.</strong> See the Request below.</p>
+    <p class="mb-2"><strong>Additional information is required.</strong> See the request below.</p>
   </v-alert>
   <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-warning" v-else-if="status === requestStatuses.REJECTED">
     <p class="mb-2"><strong>Your request to get your PEN could not be completed, for the following reason:</strong></p>
@@ -105,7 +102,7 @@
         </li>
       </ul>
     </p>
-    <p class="mb-2">You can log back into this site at any time to see this page with your PEN.</p>
+    <p class="mb-2">You can log back into GetMyPEN at any time to see your PEN.</p>
   </v-alert>
 </template>
 
@@ -131,7 +128,7 @@ export default {
       return this.penRequest;
     },
     ministry() {
-      return 'Ministry of Education';
+      return 'the Ministry of Education';
     },
     requestStatuses() {
       return PenRequestStatuses;

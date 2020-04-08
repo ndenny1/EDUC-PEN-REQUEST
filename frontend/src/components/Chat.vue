@@ -167,7 +167,7 @@ export default {
       if(this.status === this.requestStatuses.RETURNED && lastMessage) {
         if(lastMessage.myself) {
           this.setUnsubmittedComment(lastMessage);
-          unsubmittedDocuments = lastMessage.documents;
+          unsubmittedDocuments = (unsubmittedDocuments || []).concat(lastMessage.documents || []);
           messages = messages.slice(0, messages.length - 1);          
         }
         

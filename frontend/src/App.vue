@@ -75,6 +75,10 @@ h1 {
     text-transform: none !important;
 }
 
+.v-alert {
+  font-size: 1.05rem;
+}
+
 .v-alert .v-icon {
     padding-left: 0;
 }
