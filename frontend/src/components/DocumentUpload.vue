@@ -249,4 +249,9 @@ ul{
 h3 {
   font-size: 1.2rem
 }
+
+.v-alert {
+  font-size: 1.05rem;
+}
+
 </style>
