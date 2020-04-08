@@ -151,7 +151,8 @@ async function postData(token, data, url) {
 
     log.info('post Data Url', url);
     log.verbose('post Data Req', minify(data));
-
+    data.createUser='PEN-REQUEST';
+    data.updateUser='PEN-REQUEST';
     const response = await axios.post(url, data, postDataConfig);
 
     log.info('post Data Status', response.status);
@@ -177,7 +178,7 @@ async function putData(token, data, url) {
 
     log.info('put Data Url', url);
     log.verbose('put Data Req', data);
-
+    data.updateUser='PEN-REQUEST';
     const response = await axios.put(url, data, putDataConfig);
 
     log.info('put Data Status', response.status);
