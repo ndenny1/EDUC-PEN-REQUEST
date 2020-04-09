@@ -4,26 +4,12 @@
         <v-col xs="4" sm="4" md="4" lg="4" xl="4">
         <v-card class="error-card">
           <v-card-title class="gov-header">
-            <h4 id="error_text">Error</h4>
+            <h4 id="error_text">System Error</h4>
           </v-card-title>
           <v-card-text id="error_message">
-            Uh-oh, something went wrong! Try contacting support at <a href="mailto:John.Cox@gov.bc.ca?subject=GetMyPEN Support">John.Cox@gov.bc.ca</a>
+            You have encountered a System Error. Close your Web browser, open a new session, then try again.
           </v-card-text>
-          <v-expansion-panels>
-            <v-expansion-panel>
-              <v-expansion-panel-header>
-                Error Details
-              </v-expansion-panel-header>
-              <v-expansion-panel-content class="detail-text">
-                <v-icon v-if="errorMessage.includes('404')">$search</v-icon>
-                <v-icon v-if="errorMessage.includes('500')">$error</v-icon>
-                <v-icon v-if="errorMessage.includes('401')">$lock</v-icon>
-                &nbsp;&nbsp;
-                {{ errorMessage.split('_').join(' ') }}
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-      </v-card>
+        </v-card>
         </v-col>
     </v-row>
   </v-container>
