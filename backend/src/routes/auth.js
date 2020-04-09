@@ -110,7 +110,7 @@ router.post('/refresh', [
       errors: errors.array()
     });
   }
-  if(!!req || !req.user || !req.user.refreshToken){
+  if(!req || !req.user || !req.user.refreshToken){
     res.status(401).json(UnauthorizedRsp);
   } else{
     const result = await auth.renew(req.user.refreshToken);  //need to update req.user?
