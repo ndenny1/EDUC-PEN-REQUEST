@@ -34,6 +34,8 @@ export default {
 
       // penRequest.penRequestStatusCode = 'INITREV';
 
+      // penRequest.penRequestStatusCode = 'SUBSREV';
+
       // penRequest.penRequestStatusCode = 'RETURNED';
 
       // penRequest.penRequestStatusCode = 'AUTO';
