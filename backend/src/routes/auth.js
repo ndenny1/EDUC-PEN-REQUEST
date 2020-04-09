@@ -112,18 +112,16 @@ router.post('/refresh', [
   }
   if(!req || !req.user || !req.user.refreshToken){
     res.status(401).json(UnauthorizedRsp);
-  } else{
-    const result = await auth.renew(req.user.refreshToken);  //need to update req.user?
-    if(req.user){
+  } else {
+    const result = await auth.renew(req.user.refreshToken);
+    if (result && result.jwt && result.refreshToken) {
       req.user.jwt = result.jwt;
       req.user.refreshToken = result.refreshToken;
-
-      const newUiToken = auth.generateUiToken();
       const responseJson = {
-        jwtFrontend: newUiToken
+        jwtFrontend: auth.generateUiToken()
       };
       res.status(200).json(responseJson);
-    } else {
+    }else {
       res.status(401).json(UnauthorizedRsp);
     }
   }
