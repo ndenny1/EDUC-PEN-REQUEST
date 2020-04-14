@@ -11,6 +11,12 @@ module.exports = {
               options: {
                 name: '/js/config/config.js'
               },
+            },
+            {
+              loader: 'file-loader',
+              options: {
+                name: '/js/snowplow.js'
+              }
             }
           ]
         }
