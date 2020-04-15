@@ -65,6 +65,9 @@
               successThreshold: 1
               timeoutSeconds: 1
             resources:
+              requests:
+                cpu: "50m"
+                memory: "300mi"
               limits:
                 cpu: "100m"
                 memory: "500Mi"
