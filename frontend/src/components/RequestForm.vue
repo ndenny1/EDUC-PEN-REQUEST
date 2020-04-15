@@ -328,12 +328,15 @@
                 The information you provide will be used in confirming your identity and communicating with you.
               </p>
               <p>
-                If you have any questions about the collection and use of this information, please contact:<br/>
+                If you have any questions about the collection and use of this information, please contact:
+              </p>
+              <p>
+                <a href="mailto:pens.coordinator@gov.bc.ca">PEN Coordinator</a><br/>
                 Data Management Unit, Student Data & Educational Resource Services Branch<br/>
                 B.C. Ministry of Education<br/>
                 PO Box 9886 Stn Prov Govt<br/>
                 Victoria BC V8W 9T6<br/>
-                250 812-0272
+                OR through Enquiry BC (Victoria): (250) 387-6121
               </p>
             </v-card>
           </v-col>

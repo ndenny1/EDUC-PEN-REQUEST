@@ -9,13 +9,12 @@
           </v-card-title>
           <v-card-text id="verification_descriptor">
             <v-card height="100%" width="100%" outlined color="#C3F1E8" class="pa-3" v-if="this.status === this.verificationResults.OK">
-                <p class="mb-2"><strong>Your email has been verified and your PEN request has now been submitted for processing.</strong></p>
-                <ul>
-                    <li>You will receive an email when your request has been processed</li>
-                    <li>Requests are processed during normal business hours</li>
-                    <li>In most cases you will get a response within one business day</li>
-                    <li><strong>We recommend that you also check back here after one business day</strong></li>
-                </ul>
+              <p class="mb-2"><strong>Your email has been verified and your PEN request has now been submitted for processing.</strong></p>
+              <ul>
+                <li>Requests are processed M-F 8am – 4:30pm excluding stat holidays</li>
+                <li>In most cases you will get a response within one business day</li>
+                <li>You will receive an email when your request has been processed. You can also log into GetMyPEN after one business day to check on status of your request</li>
+              </ul>
             </v-card>
             <v-card height="100%" width="100%" outlined color="#FFECA9" class="pa-3" v-else-if="this.status === this.verificationResults.EXPIRED">
                 <p class="mb-2"><strong>Your email verification was not completed within the 24 hour time limit. Please repeat the email verification process.</strong></p>
