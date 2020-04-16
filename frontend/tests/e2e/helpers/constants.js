@@ -2,8 +2,11 @@ import config from '../config/index';
 import faker from 'faker';
 import studentData from '../config/studentData.json'
 
-export const BceidLoginUrl = 'https://pen-request-c2mvws-test.pathfinder.gov.bc.ca/api/auth/logout?loginBceid=true';
-export const StaffLoginUrl = 'https://student-admin-c2mvws-test.pathfinder.gov.bc.ca/';
+export const namespace = config.get('url:namespace') ;
+export const environment = config.get('url:environment') ;
+
+export const BceidLoginUrl = 'https://pen-request-'+namespace +'-'+environment+'.pathfinder.gov.bc.ca/api/auth/logout?loginBceid=true';
+export const StaffLoginUrl = 'https://student-admin-'+namespace +'-'+environment+'.pathfinder.gov.bc.ca/';
 export const MailsacUrl = 'https://mailsac.com/login';
 
 export const credentials = Object.freeze({
@@ -21,6 +24,9 @@ export const MailsackCredentials = Object.freeze({
   password: config.get('penemail:pass')
 
 })
+
+
+
 
 export const fullStudentFaker = Object.freeze({
   legalLastName: faker.name.lastName(),
