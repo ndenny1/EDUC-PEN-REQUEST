@@ -9,11 +9,10 @@ class MailsacPage {
         this.submitButton = Selector('button.btn.btn-primary')
         this.myInboxTextBox = Selector('input[placeholder=anything]')
         this.checkTheEmailButton = Selector('button.btn.btn-primary.btn-block')
-        this.expectEmail = Selector('tr').withText('activate')
-        this.clickActivateLink = Selector('a').withText('https://pen')
-        this.deleteMailButton = Selector('button.btn.btn-primary.btn-xs')
-        this.permanentlyDeleteButton = Selector('button').withText('Permanently delete')
-
+        this.expectEmail = Selector('tr').withText('Activate')
+        this.clickActivateLink = Selector('a').withText('https://pen').filterVisible()
+        this.deleteMailButton = Selector('button').withText('Delete').filterVisible()
+        this.permanentlyDeleteButton = Selector('button').withText('Permanently delete').filterVisible()
     }
 
 
@@ -47,8 +46,9 @@ class MailsacPage {
     async activatePenRequest() {
         for (let i = 0; i < 2; i++) {
             try {
-                (await t.expect((this.expectEmail).innerText).contains('activate'))
+                (await this.expectEmail.exists && await this.expectEmail.visible);
                 console.log("Element found, breaking the loop")
+                await t.click(this.expectEmail)
                 break;
             }
             catch (err) {
@@ -56,7 +56,7 @@ class MailsacPage {
                 await t.eval(() => location.reload(true));
             }
         }
-        await t.click(this.expectEmail)
+        
         const link = this.clickActivateLink.innerText;
         console.log(await link);
         await t.click(this.deleteMailButton)

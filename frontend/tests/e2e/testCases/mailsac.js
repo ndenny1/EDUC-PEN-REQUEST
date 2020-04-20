@@ -10,7 +10,7 @@ fixture`mailsac`
 
 test('mailsac login test', async t => {
 
-    await t.setTestSpeed(0.5)
+    await t.setTestSpeed(1)
 
     await mailsacPage.mailsacLogin(MailsackCredentials)
 

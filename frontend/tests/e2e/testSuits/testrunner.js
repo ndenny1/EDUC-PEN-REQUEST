@@ -7,14 +7,13 @@ createTestCafe('localhost', 1337, 1338)
     .then(tc => {
         testcafe     = tc;
         runner = testcafe.createRunner();
-      //   console.log(runner.src)
-      
+       //  console.log(runner.src)
         return runner
             // list multiple test files
 			.src([
-                            '.tests/e2e/testCases/student-form.js', 
-                            '.tests/e2e/testCases/mailsac.js' ,
-                            '.tests/e2e/testCases/staff-login.jS'
+                           
+                            "../testCases/mailsac.js",
+                            "../testCases/staff-login.js"
                             
 			])
             .browsers(['chrome'])
