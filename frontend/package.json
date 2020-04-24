@@ -48,6 +48,7 @@
     "testcafe": "1.8.4",
     "vue": "^2.6.11",
     "vue-clipboard2": "^0.3.1",
+    "vue-meta": "^2.3.3",
     "vue-quick-chat": "^1.0.9",
     "vue-router": "^3.1.6",
     "vuetify": "^2.2.15",
