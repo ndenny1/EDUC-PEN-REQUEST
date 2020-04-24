@@ -1,6 +1,11 @@
 import { shallowMount } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
+jest.mock('../../../src/common/staticConfig', () => {
+  return {
+    VUE_APP_META_DATA: [ { name: 'robots', content: 'noindex,nofollow' } ]
+  };
+});
 import App from '@/App.vue';
 import Vuex from 'vuex';
 import Vue from 'vue';

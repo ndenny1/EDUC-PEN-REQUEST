@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import VueMeta from 'vue-meta';
 
 import Home from '@/components/Home.vue';
 import Logout from './components/Logout';
@@ -10,6 +11,7 @@ import ErrorPage from '@/components/ErrorPage.vue';
 import LoginError from '@/components/LoginError.vue';
 
 Vue.use(VueRouter);
+Vue.use(VueMeta);
 
 const router = new VueRouter({
   mode: 'history',
