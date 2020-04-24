@@ -14,10 +14,11 @@ pipeline{
     environment{
         DEBUG_OUTPUT = 'false'
 
-        TOOLS = 'c2mvws-tools'
-        DEV = 'c2mvws-dev'
-        TEST = 'c2mvws-test'
-        PROD = 'c2mvws-prod'
+        NAMESPACE='c2mvws'
+        TOOLS = "${NAMESPACE}-tools"
+        DEV = "${NAMESPACE}-dev"
+        TEST = "${NAMESPACE}-test"
+        PROD = "${NAMESPACE}-prod"
 
         REPO_NAME = 'educ-pen-request'
         OWNER = 'bcgov'
@@ -49,6 +50,15 @@ pipeline{
                         // Print all environment variables
                         echo 'DEBUG - All pipeline environment variables:'
                         echo sh(returnStdout: true, script: 'env')
+                    }
+                }
+            }
+        }
+        stage('Download setup files'){
+            steps{
+                script{
+                    dir('tools/jenkins'){
+                        sh "bash ./download-kc.sh \"${NAMESPACE}\""
                     }
                 }
             }
@@ -113,33 +123,6 @@ pipeline{
                 }
             }
         }
-        /*stage('SonarQube Analysis'){
-            agent any
-
-            environment {
-                scannerHome = tool 'SonarQubeScanner'
-            }
-
-            steps {
-                script {
-                    openshift.withCluster() {
-                        openshift.withProject(TOOLS) {
-                            if(DEBUG_OUTPUT.equalsIgnoreCase('true')) {
-                                echo "DEBUG - Using project: ${openshift.project()}"
-                            }
-
-                            unstash BE_COV_STASH
-                            unstash FE_COV_STASH
-                            echo 'Performing SonarQube static code analysis...'
-                            withSonarQubeEnv('sonarqube') {
-                                sh "${scannerHome}/bin/sonar-scanner"
-                            }
-                        }
-
-                    }
-                }
-            }
-        }*/
         stage('Build'){
             agent any
             steps{
@@ -224,6 +207,13 @@ pipeline{
                 }
                 failure{
                     echo 'Deployment to Dev failed'
+                }
+            }
+        }
+        stage('Create/Update Config Maps'){
+            steps{
+                script{
+                    sh "bash ./update-configmap.sh \"dev\""
                 }
             }
         }
