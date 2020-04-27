@@ -1,4 +1,4 @@
-name: Target Multiple Node.js Versions and Operating Systems
+name: E2E Tests
 on: [push]
 
 jobs:
@@ -11,4 +11,4 @@ jobs:
       - name: Run TestCafe Tests
         uses: DevExpress/testcafe-action@latest
         with:
-          args: "safari ./frontend/tests/e2e/testCases"
+          args: "safari ./frontend/tests/e2e/testCases/staff-login.js"
