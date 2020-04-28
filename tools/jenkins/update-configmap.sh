@@ -6,6 +6,12 @@ TZVALUE="America/Vancouver"
 SOAM_KC_REALM_ID="master"
 KCADM_FILE_BIN_FOLDER="/var/lib/jenkins/jobs/${OPENSHIFT_NAMESPACE}-tools/keycloak-9.0.3/bin"
 SOAM_KC=$OPENSHIFT_NAMESPACE-$envValue.pathfinder.gov.bc.ca
+if [ "$envValue" != "prod" ]
+then
+  SERVER_FRONTEND="https://pen-request-${OPENSHIFT_NAMESPACE}-${envValue}.pathfinder.gov.bc.ca"
+else
+  SERVER_FRONTEND="https://getmypen.gov.bc.ca"
+fi
 
 oc project $OPENSHIFT_NAMESPACE-$envValue
 SOAM_KC_LOAD_USER_ADMIN=$(oc -o json get secret sso-admin-${envValue} | sed -n 's/.*"username": "\(.*\)"/\1/p' | base64 --decode)
