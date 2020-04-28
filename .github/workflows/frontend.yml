@@ -14,6 +14,11 @@ on:
     paths: 
       - 'frontend/src/**'
       - 'frontend/tests/unit/**'
+  pull_request:
+    branches: [ master ]
+    paths: 
+      - 'frontend/src/**'
+      - 'frontend/tests/unit/**'
 
 jobs:
   test:

@@ -7,6 +7,15 @@ on:
   push:
     branches:
       - master
+      - 'feature/**'
+      - 'Feature/**'
+      - 'fix/*'
+      - 'Fix/*'
+    paths: 
+      - 'backend/src/**'
+      - 'backend/tests/unit/**'
+  pull_request:
+    branches: [ master ]
     paths: 
       - 'backend/src/**'
       - 'backend/tests/unit/**'
