@@ -84,7 +84,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <p class="mb-2">{{ request.tomorrow ? 'As of tomorrow morning, you may use your PEN to' : 'You now may wish to use your PEN to:' }}
+    <p class="mb-2">{{ request.tomorrow ? 'As of tomorrow morning 8am PST, you may use your PEN to' : 'You now may wish to use your PEN to:' }}
       <ul>
         <li>
           <a :href="transcriptUrl" target="_blank">
