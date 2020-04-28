@@ -8,6 +8,7 @@ const lodash = require('lodash');
 const HttpStatus = require('http-status-codes');
 const jsonwebtoken = require('jsonwebtoken');
 const localDateTime = require('@js-joda/core').LocalDateTime;
+const ChronoUnit = require('@js-joda/core').ChronoUnit;
 const { ServiceError, ConflictStateError } = require('./error'); 
 
 let codes = null;
@@ -61,6 +62,14 @@ async function getLatestPenRequest(token, digitalID) {
     penRequest = lodash.maxBy(data, 'statusUpdateDate') || null;
     if(penRequest) {
       penRequest.digitalID = null;
+      if(penRequest.penRequestStatusCode === PenRequestStatuses.AUTO || penRequest.penRequestStatusCode === PenRequestStatuses.MANUAL) {
+        let updateTime = localDateTime.parse(penRequest.statusUpdateDate);
+        let replicateTime = updateTime.truncatedTo(ChronoUnit.HOURS).withHour(config.get('penRequest:replicateTime'));
+        if(config.get('penRequest:replicateTime') <= updateTime.hour()) {
+          replicateTime = replicateTime.plusDays(1);
+        }
+        penRequest.tomorrow = penRequest.demogChanged === 'Y' && replicateTime.isAfter(localDateTime.now());
+      }
     }
   } catch(e) {
     if(!e.status || e.status !== HttpStatus.NOT_FOUND) {
