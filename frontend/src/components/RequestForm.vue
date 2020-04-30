@@ -3,7 +3,7 @@
     <v-row align-content="center" class="flex-grow-0 pb-5">
       <v-card style="margin-right: 1.4rem;margin-left: 1.4rem" height="100%" width="100%" elevation=0 color="#036"
               class="white--text">
-        <v-card-title class="py-3 pl-5"><h1>Pen Request Form</h1></v-card-title>
+        <v-card-title class="py-3 pl-5"><h1>PEN Request Form</h1></v-card-title>
       </v-card>
     </v-row>
 
