@@ -24,6 +24,7 @@ const apiRouter = express.Router();
 const authRouter = require('./routes/auth');
 const penRouter = require('./routes/pen');
 const promMid = require('express-prometheus-middleware');
+const actuator = require('express-actuator');
 //initialize app
 const app = express();
 app.set('trust proxy', 1);
@@ -31,8 +32,9 @@ app.set('trust proxy', 1);
 app.use(cors());
 app.use(helmet());
 app.use(helmet.noCache());
+app.use(actuator());
 app.use(promMid({
-  metricsPath: '/metrics',
+  metricsPath: '/prometheus',
   collectDefaultMetrics: true,
   requestDurationBuckets: [0.1, 0.5, 1, 1.5]
 }));
