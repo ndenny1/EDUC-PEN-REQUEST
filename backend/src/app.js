@@ -23,7 +23,8 @@ const OidcStrategy = require('passport-openidconnect-kc-idp').Strategy;
 const apiRouter = express.Router();
 const authRouter = require('./routes/auth');
 const penRouter = require('./routes/pen');
-
+const promMid = require('express-prometheus-middleware');
+const actuator = require('express-actuator');
 //initialize app
 const app = express();
 app.set('trust proxy', 1);
@@ -31,6 +32,12 @@ app.set('trust proxy', 1);
 app.use(cors());
 app.use(helmet());
 app.use(helmet.noCache());
+app.use(actuator());
+app.use(promMid({
+  metricsPath: '/prometheus',
+  collectDefaultMetrics: true,
+  requestDurationBuckets: [0.1, 0.5, 1, 1.5]
+}));
 //tells the app to use json as means of transporting data
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 app.use(bodyParser.urlencoded({
@@ -171,11 +178,6 @@ apiRouter.get('/', (_req, res) => {
       1
     ]
   });
-});
-
-// GetOK Base API for readiness and liveness probe
-apiRouter.get('/health', (_req, res) => {
-  res.status(200).json();
 });
 
 //set up routing to auth and main API
