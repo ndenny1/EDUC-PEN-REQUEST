@@ -3,9 +3,9 @@ const nconf = require('nconf');
 const dotenv = require('dotenv');
 const path = require('path');
 dotenv.config();
-
+const log = require('npmlog');
 const env = process.env.NODE_ENV;
-
+log.error(`NODE_ENV is ${env}`);
 nconf.argv()
   .env()
   .file({ file: path.join(__dirname, `${env}.json`) });
