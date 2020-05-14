@@ -535,8 +535,9 @@ describe('sendVerificationEmail', () => {
   const penRequestId = 'penRequestId';
   const identityTypeLabel = 'identityTypeLabel';
   const response = {data: 'data'};
-
+  const token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTQ09QRSI6IlZFUklGWV9FTUFJTCIsImlhdCI6MTU4OTQ4NDY0NCwiZXhwIjoxNTg5NTcxMDQ0LCJpc3MiOiJWZXJpZnlFbWFpbEFQSSIsInN1YiI6Im5hbWVAdGVzdC5jb20iLCJqdGkiOiJwZW5SZXF1ZXN0SWQifQ.SVa1Cm7wIMioC9S98-PxFC1BWXanfD941ySp23aNr_w';
   const spy = jest.spyOn(utils, 'postData');
+  const generateTokenSpy = jest.spyOn(utils, 'generateJWTToken');
 
   afterEach(() => {
     spy.mockClear();
@@ -544,16 +545,21 @@ describe('sendVerificationEmail', () => {
 
   it('should return response data', async () => {
     utils.postData.mockResolvedValue(response);
-
+    utils.generateJWTToken.mockResolvedValue(token);
     const result = await pen.__get__('sendVerificationEmail')('token', emailAddress, penRequestId, identityTypeLabel);
 
     const reqData = {
       emailAddress,
       penRequestId,
-      identityTypeLabel
+      identityTypeLabel,
+      verificationUrl: config.get('server:frontend') + '/api/pen/verification?verificationToken',
+      jwtToken:token
     };
     expect(result).toBeTruthy();
     expect(result).toEqual(response);
+    expect(generateTokenSpy).toHaveBeenCalledWith(penRequestId,emailAddress,'VerifyEmailAPI','HS256',{
+      SCOPE: 'VERIFY_EMAIL'
+    });
     expect(spy).toHaveBeenCalledWith('token', reqData, config.get('email:apiEndpoint') + '/verify');
   });
 

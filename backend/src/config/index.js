@@ -61,6 +61,7 @@ nconf.defaults({
   email: {
     apiEndpoint: process.env.PEN_REQUEST_EMAIL_API_ENDPOINT,
     secretKey: process.env.PEN_REQUEST_EMAIL_SECRET_KEY,
+    tokenTTL: process.env.TOKEN_TTL_MINUTES
   },
   demographics: {
     apiEndpoint: process.env.STUDENT_DEMOG_API_ENDPOINT,
