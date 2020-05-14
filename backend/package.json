@@ -8,6 +8,7 @@
     "settest": "set NODE_ENV='test'",
     "setlocal": "set NODE_ENV='local'",
     "servecmd": "nodemon ./src/server.js",
+    "serve_linux": "export NODE_ENV=local && nodemon ./src/server.js",
     "start": "node ./src/server.js",
     "lint": "node_modules/.bin/eslint . --no-fix --ignore-pattern 'node_modules' --ext .js",
     "lint:fix": "node_modules/.bin/eslint . --fix --ignore-pattern 'node_modules' --ext .js",
