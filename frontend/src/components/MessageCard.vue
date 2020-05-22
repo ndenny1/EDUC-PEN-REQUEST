@@ -40,6 +40,7 @@
   <v-alert outlined height="100%" width="100%" class="pa-3 bootstrap-success" v-else-if="status === requestStatuses.AUTO || status === requestStatuses.MANUAL">
     <p class="mb-1"><strong>Your PEN request is complete. Your PEN is:</strong></p>
     <p class="mb-2 pen"><strong>{{student.pen}}</strong></p>
+    <p class="mb-2 comment" v-if="request.completeComment && request.completeComment.length > 0">{{request.completeComment}}</p>
     <p class="mb-2">Below is the key information the Ministry of Education has on file for you. If any of this information is not current, please contact <a href="mailto:pens.coordinator@gov.bc.ca">pens.coordinator@gov.bc.ca</a>.</p>
     <v-container class="pen-info pt-0 pb-2 px-0 px-sm-3" justify="center">
       <v-row no-gutters class="py-0 px-2">
@@ -83,7 +84,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <p class="mb-2">You now may wish to use your PEN to:
+    <p class="mb-2">{{ request.tomorrow ? 'As of tomorrow morning 8am PST, you may use your PEN to' : 'You now may wish to use your PEN to:' }}
       <ul>
         <li>
           <a :href="transcriptUrl" target="_blank">
@@ -143,5 +144,9 @@ export default {
 
 .pen-info{
   line-height: 1.2;
+}
+
+.comment {
+  font-size: 0.9rem;
 }
 </style>

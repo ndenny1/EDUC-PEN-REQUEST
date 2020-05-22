@@ -1,20 +1,21 @@
 'use strict';
 
-const { getSessionUser, getAccessToken, deleteData, getDataWithParams, getData, postData, putData, PenRequestStatuses, VerificationResults, EmailVerificationStatuses } = require('./utils');
-const { getPenRequestApiCredentials } = require('./auth');
+const {getSessionUser, getAccessToken, deleteData, getDataWithParams, getData, postData, putData, PenRequestStatuses, VerificationResults, EmailVerificationStatuses, generateJWTToken} = require('./utils');
+const {getPenRequestApiCredentials} = require('./auth');
 const config = require('../config/index');
 const log = require('npmlog');
 const lodash = require('lodash');
 const HttpStatus = require('http-status-codes');
 const jsonwebtoken = require('jsonwebtoken');
 const localDateTime = require('@js-joda/core').LocalDateTime;
-const { ServiceError, ConflictStateError } = require('./error'); 
+const ChronoUnit = require('@js-joda/core').ChronoUnit;
+const {ServiceError, ConflictStateError} = require('./error');
 
 let codes = null;
 
 function getPenRequest(req, res, next) {
   const userInfo = getSessionUser(req);
-  if(!userInfo) {
+  if (!userInfo) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
       status: HttpStatus.UNAUTHORIZED,
       message: 'you are not authorized to access this page'
@@ -22,7 +23,7 @@ function getPenRequest(req, res, next) {
   }
 
   const penRequestID = req.params.id;
-  if(!req || !req.session || !req.session.penRequest || req.session.penRequest.penRequestID !== penRequestID) {
+  if (!req || !req.session || !req.session.penRequest || req.session.penRequest.penRequestID !== penRequestID) {
     return res.status(HttpStatus.BAD_REQUEST).json({
       message: 'Wrong penRequestID'
     });
@@ -47,7 +48,7 @@ async function getStudent(token, studentID, sexCodes) {
     throw new ServiceError('getStudent error', e);
   }
   const sexInfo = lodash.find(sexCodes, ['sexCode', student.sexCode]);
-  if(!sexInfo) {
+  if (!sexInfo) {
     throw new ServiceError(`Wrong sexCode: ${student.sexCode}`);
   }
   student.sexLabel = sexInfo.label;
@@ -59,11 +60,19 @@ async function getLatestPenRequest(token, digitalID) {
   try {
     let data = await getData(token, `${config.get('penRequest:apiEndpoint')}/?digitalID=${digitalID}`);
     penRequest = lodash.maxBy(data, 'statusUpdateDate') || null;
-    if(penRequest) {
+    if (penRequest) {
       penRequest.digitalID = null;
+      if (penRequest.penRequestStatusCode === PenRequestStatuses.AUTO || penRequest.penRequestStatusCode === PenRequestStatuses.MANUAL) {
+        let updateTime = localDateTime.parse(penRequest.statusUpdateDate);
+        let replicateTime = updateTime.truncatedTo(ChronoUnit.HOURS).withHour(config.get('penRequest:replicateTime'));
+        if (config.get('penRequest:replicateTime') <= updateTime.hour()) {
+          replicateTime = replicateTime.plusDays(1);
+        }
+        penRequest.tomorrow = penRequest.demogChanged === 'Y' && replicateTime.isAfter(localDateTime.now());
+      }
     }
-  } catch(e) {
-    if(!e.status || e.status !== HttpStatus.NOT_FOUND) {
+  } catch (e) {
+    if (!e.status || e.status !== HttpStatus.NOT_FOUND) {
       throw new ServiceError('getLatestPenRequest error', e);
     }
   }
@@ -87,23 +96,23 @@ function getDefaultBcscInput(userInfo) {
 
 async function getUserInfo(req, res) {
   const userInfo = getSessionUser(req);
-  if(!userInfo || !userInfo.jwt || !userInfo._json || !userInfo._json.digitalIdentityID) {
+  if (!userInfo || !userInfo.jwt || !userInfo._json || !userInfo._json.digitalIdentityID) {
     return res.status(HttpStatus.UNAUTHORIZED).json({
       message: 'No session data'
     });
   }
-  
+
   const accessToken = userInfo.jwt;
   const digitalID = userInfo._json.digitalIdentityID;
 
   return Promise.all([
-    getDigitalIdData(accessToken, digitalID), 
-    getServerSideCodes(accessToken), 
+    getDigitalIdData(accessToken, digitalID),
+    getServerSideCodes(accessToken),
     getLatestPenRequest(accessToken, digitalID)
   ]).then(async ([digitalIdData, codes, penRequest]) => {
-  
+
     const identityType = lodash.find(codes.identityTypes, ['identityTypeCode', digitalIdData.identityTypeCode]);
-    if(! identityType) {
+    if (!identityType) {
       log.error('getIdentityType Error identityTypeCode', digitalIdData.identityTypeCode);
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         message: 'Wrong identityTypeCode'
@@ -111,11 +120,11 @@ async function getUserInfo(req, res) {
     }
 
     let student = null;
-    if(digitalIdData.studentID) {
+    if (digitalIdData.studentID) {
       student = await getStudent(accessToken, digitalIdData.studentID, codes.sexCodes);
     }
 
-    if(req && req.session){
+    if (req && req.session) {
       req.session.digitalIdentityData = digitalIdData;
       req.session.digitalIdentityData.identityTypeLabel = identityType.label;
       req.session.penRequest = penRequest;
@@ -142,23 +151,23 @@ async function getUserInfo(req, res) {
 }
 
 async function getCodes(req, res) {
-  try{
+  try {
     const accessToken = getAccessToken(req);
-    if(!accessToken) {
+    if (!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'No access token'
       });
     }
 
     const codeUrls = [
-      `${config.get('penRequest:apiEndpoint')}/gender-codes`, 
+      `${config.get('penRequest:apiEndpoint')}/gender-codes`,
       `${config.get('penRequest:apiEndpoint')}/statuses`,
     ];
 
     const [genderCodes, statusCodes] = await Promise.all(codeUrls.map(url => getData(accessToken, url)));
-    if(genderCodes){
+    if (genderCodes) {
       // forcing sort if API did not return in sorted order.
-      genderCodes.sort((a,b)=> a.displayOrder - b.displayOrder);
+      genderCodes.sort((a, b) => a.displayOrder - b.displayOrder);
     }
     return res.status(HttpStatus.OK).json({genderCodes, statusCodes});
   } catch (e) {
@@ -170,8 +179,8 @@ async function getCodes(req, res) {
 }
 
 async function getServerSideCodes(accessToken) {
-  if(!codes) {
-    try{
+  if (!codes) {
+    try {
       const codeUrls = [
         `${config.get('student:apiEndpoint')}/sex-codes`,
         `${config.get('digitalID:apiEndpoint')}/identityTypeCodes`
@@ -179,7 +188,7 @@ async function getServerSideCodes(accessToken) {
 
       const [sexCodes, identityTypes] = await Promise.all(codeUrls.map(url => getData(accessToken, url)));
       codes = {sexCodes, identityTypes};
-    } catch(e) {
+    } catch (e) {
       throw new ServiceError('getServerSideCodes error', e);
     }
   }
@@ -187,18 +196,26 @@ async function getServerSideCodes(accessToken) {
 }
 
 async function sendVerificationEmail(accessToken, emailAddress, penRequestId, identityTypeLabel) {
+  const verificationUrl = config.get('server:frontend') + '/api/pen/verification?verificationToken';
   const reqData = {
     emailAddress,
     penRequestId,
-    identityTypeLabel
+    identityTypeLabel,
+    verificationUrl: verificationUrl
   };
+  log.info(`reqData data is ${reqData}`);
   const url = config.get('email:apiEndpoint') + '/verify';
   try {
+    const payload = {
+      SCOPE: 'VERIFY_EMAIL'
+    };
+    reqData.jwtToken = await generateJWTToken(penRequestId, emailAddress, 'VerifyEmailAPI', 'HS256', payload);
     return await postData(accessToken, reqData, url);
   } catch (e) {
     throw new ServiceError('sendVerificationEmail error', e);
   }
 }
+
 
 async function getAutoMatchResults(accessToken, userInfo) {
   try {
@@ -208,7 +225,7 @@ async function getAutoMatchResults(accessToken, userInfo) {
       params: {
         studSurName: userInfo['surname'],
         studGiven: userInfo['givenName'],
-        studMiddle: userInfo['givenNames'] && userInfo['givenNames'].replace(userInfo['givenName'],'').trim(),
+        studMiddle: userInfo['givenNames'] && userInfo['givenNames'].replace(userInfo['givenName'], '').trim(),
         studBirth: userInfo['birthDate'] && userInfo['birthDate'].split('-').join(''),
         studSex: userInfo['gender'] && userInfo['gender'].charAt(0)
       }
@@ -217,15 +234,13 @@ async function getAutoMatchResults(accessToken, userInfo) {
     const autoMatchResults = await getDataWithParams(accessToken, url, params);
     let bcscAutoMatchOutcome;
     let bcscAutoMatchDetails;
-    if(autoMatchResults.length < 1) {
+    if (autoMatchResults.length < 1) {
       bcscAutoMatchOutcome = 'ZEROMATCHES';
       bcscAutoMatchDetails = 'Zero PEN records found by BCSC auto-match';
-    }
-    else if(autoMatchResults.length > 1) {
+    } else if (autoMatchResults.length > 1) {
       bcscAutoMatchOutcome = 'MANYMATCHES';
       bcscAutoMatchDetails = autoMatchResults.length + ' PEN records found by BCSC auto-match';
-    }
-    else {
+    } else {
       bcscAutoMatchOutcome = 'ONEMATCH';
       const lastName = autoMatchResults[0]['studSurname'] ? autoMatchResults[0]['studSurname'] : '(none)';
       const firstName = autoMatchResults[0]['studGiven'] ? autoMatchResults[0]['studGiven'] : '(none)';
@@ -237,16 +252,16 @@ async function getAutoMatchResults(accessToken, userInfo) {
       bcscAutoMatchOutcome: bcscAutoMatchOutcome,
       bcscAutoMatchDetails: bcscAutoMatchDetails
     };
-  } catch(e) {
+  } catch (e) {
     throw new ServiceError('getAutoMatchResults error', e);
   }
 }
 
 async function postPenRequest(accessToken, reqData, userInfo) {
-  try{
+  try {
     const url = config.get('penRequest:apiEndpoint') + '/';
 
-    if(userInfo.accountType === 'BCSC') {
+    if (userInfo.accountType === 'BCSC') {
       const autoMatchResults = await getAutoMatchResults(accessToken, userInfo);
       reqData.bcscAutoMatchOutcome = autoMatchResults.bcscAutoMatchOutcome;
       reqData.bcscAutoMatchDetails = autoMatchResults.bcscAutoMatchDetails;
@@ -258,15 +273,15 @@ async function postPenRequest(accessToken, reqData, userInfo) {
     resData.digitalID = null;
 
     return resData;
-  } catch(e) {
+  } catch (e) {
     throw new ServiceError('postPenRequest error', e);
   }
 }
 
 async function submitPenRequest(req, res) {
-  try{
+  try {
     const userInfo = getSessionUser(req);
-    if(!userInfo) {
+    if (!userInfo) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'No session data'
       });
@@ -274,7 +289,7 @@ async function submitPenRequest(req, res) {
 
     const accessToken = userInfo.jwt;
 
-    if(req && req.session && req.session.penRequest && req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.REJECTED) {
+    if (req && req.session && req.session.penRequest && req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.REJECTED) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Submit PEN Request not allowed'
       });
@@ -283,12 +298,12 @@ async function submitPenRequest(req, res) {
     const resData = await postPenRequest(accessToken, req.body, userInfo._json);
 
     req.session.penRequest = resData;
-    sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeLabel).catch(e => 
+    sendVerificationEmail(accessToken, req.body.email, resData.penRequestID, req.session.digitalIdentityData.identityTypeLabel).catch(e =>
       log.error('sendVerificationEmail Error', e.stack)
     );
 
     return res.status(HttpStatus.OK).json(resData);
-  } catch(e) {
+  } catch (e) {
     log.error('submitPenRequest Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Submit pen request error',
@@ -298,15 +313,15 @@ async function submitPenRequest(req, res) {
 }
 
 async function postComment(req, res) {
-  try{
+  try {
     const accessToken = getAccessToken(req);
-    if(!accessToken) {
+    if (!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'No access token'
       });
     }
 
-    if(!req || !req.session || !req.session.penRequest || req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
+    if (!req || !req.session || !req.session.penRequest || req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Post comment not allowed'
       });
@@ -330,7 +345,7 @@ async function postComment(req, res) {
       timestamp: data.commentTimestamp
     };
     return res.status(HttpStatus.OK).json(message);
-  } catch(e) {
+  } catch (e) {
     log.error('postComment Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Post comment error'
@@ -339,9 +354,9 @@ async function postComment(req, res) {
 }
 
 async function getComments(req, res) {
-  try{
+  try {
     const userInfo = getSessionUser(req);
-    if(!userInfo) {
+    if (!userInfo) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'No session data'
       });
@@ -360,7 +375,7 @@ async function getComments(req, res) {
       },
       messages: []
     };
-    apiResData.sort((a,b) => (a.commentTimestamp > b.commentTimestamp) ? 1 : ((b.commentTimestamp > a.commentTimestamp) ? -1 : 0));
+    apiResData.sort((a, b) => (a.commentTimestamp > b.commentTimestamp) ? 1 : ((b.commentTimestamp > a.commentTimestamp) ? -1 : 0));
 
     apiResData.forEach(element => {
       const participant = {
@@ -394,14 +409,14 @@ async function getComments(req, res) {
 }
 
 function beforeUpdatePenRequestAsInitrev(penRequest) {
-  if(penRequest.penRequestStatusCode !== PenRequestStatuses.DRAFT) {
+  if (penRequest.penRequestStatusCode !== PenRequestStatuses.DRAFT) {
     throw new ConflictStateError('Current PEN Request Status: ' + penRequest.penRequestStatusCode);
   }
 
-  if(penRequest.emailVerified !== EmailVerificationStatuses.NOT_VERIFIED) {
+  if (penRequest.emailVerified !== EmailVerificationStatuses.NOT_VERIFIED) {
     throw new ConflictStateError('Current Email Verification Status: ' + penRequest.emailVerified);
   }
-  
+
   penRequest.initialSubmitDate = localDateTime.now().toString();
   penRequest.emailVerified = EmailVerificationStatuses.VERIFIED;
 
@@ -416,20 +431,20 @@ async function setPenRequestAsInitrev(penRequestID) {
 }
 
 function verifyEmailToken(token) {
-  try{
+  try {
     const tokenPayload = jsonwebtoken.verify(token, config.get('email:secretKey'));
-    if(tokenPayload.SCOPE !== 'VERIFY_EMAIL') {
+    if (tokenPayload.SCOPE !== 'VERIFY_EMAIL') {
       log.error('verifyEmailToken Error', `Invalid SCOPE: ${tokenPayload.SCOPE}`);
       return [{name: 'JsonWebTokenError'}, null];
     }
 
-    if(! tokenPayload.jti) {
+    if (!tokenPayload.jti) {
       log.error('verifyEmailToken Error', 'Invalid PEN Request ID');
       return [{name: 'JsonWebTokenError'}, null];
     }
 
     return [null, tokenPayload.jti];
-  }catch(e){
+  } catch (e) {
     log.error('verifyEmailToken Err', e.stack);
     return [e, null];
   }
@@ -440,26 +455,26 @@ async function verifyEmail(req, res) {
   const baseUrl = config.get('server:frontend');
   const verificationUrl = baseUrl + '/verification/';
 
-  if(! req.query.verificationToken) {
+  if (!req.query.verificationToken) {
     return res.redirect(verificationUrl + VerificationResults.TOKEN_ERROR);
   }
 
-  try{
+  try {
     const [error, penRequestID] = verifyEmailToken(req.query.verificationToken);
-    if(error && error.name === 'TokenExpiredError') {
+    if (error && error.name === 'TokenExpiredError') {
       return res.redirect(loggedin ? baseUrl : (verificationUrl + VerificationResults.EXPIRED));
     } else if (error) {
       return res.redirect(verificationUrl + VerificationResults.TOKEN_ERROR);
     }
 
     const data = await setPenRequestAsInitrev(penRequestID);
-    if(loggedin) {
+    if (loggedin) {
       req.session.penRequest = data;
     }
-    
+
     return res.redirect(loggedin ? baseUrl : (verificationUrl + VerificationResults.OK));
-  }catch(e){
-    if(e instanceof ConflictStateError) {
+  } catch (e) {
+    if (e instanceof ConflictStateError) {
       return res.redirect(loggedin ? baseUrl : (verificationUrl + VerificationResults.OK));
     } else {
       log.error('verifyEmail Error', e.stack);
@@ -481,7 +496,7 @@ async function updatePenRequestStatus(accessToken, penRequestID, penRequestStatu
 
     return data;
   } catch (e) {
-    if(e instanceof ConflictStateError) {
+    if (e instanceof ConflictStateError) {
       throw e;
     } else {
       throw new ServiceError('updatePenRequestStatus error', e);
@@ -490,7 +505,7 @@ async function updatePenRequestStatus(accessToken, penRequestID, penRequestStatu
 }
 
 function beforeUpdatePenRequestAsSubsrev(penRequest) {
-  if(penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
+  if (penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
     throw new ConflictStateError('Current PEN Request Status: ' + penRequest.penRequestStatusCode);
   }
 
@@ -498,9 +513,9 @@ function beforeUpdatePenRequestAsSubsrev(penRequest) {
 }
 
 async function setPenRequestAsSubsrev(req, res) {
-  try{
+  try {
     const accessToken = getAccessToken(req);
-    if(!accessToken) {
+    if (!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'No access token'
       });
@@ -509,13 +524,13 @@ async function setPenRequestAsSubsrev(req, res) {
     const penRequestID = req.params.id;
     const penRequestStatus = req.body.penRequestStatusCode;
 
-    if(! penRequestStatus) {
+    if (!penRequestStatus) {
       return res.status(HttpStatus.BAD_REQUEST).json({
         message: 'No penRequestStatus data'
       });
     }
 
-    if(penRequestStatus !== PenRequestStatuses.SUBSREV) {
+    if (penRequestStatus !== PenRequestStatuses.SUBSREV) {
       return res.status(HttpStatus.BAD_REQUEST).json({
         message: 'Wrong penRequestStatus'
       });
@@ -525,7 +540,7 @@ async function setPenRequestAsSubsrev(req, res) {
     req.session.penRequest = data;
 
     return res.status(HttpStatus.OK).json(data);
-  } catch(e) {
+  } catch (e) {
     log.error('setPenRequestAsSubsrev Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Set pen request as subsrev error',
@@ -535,25 +550,25 @@ async function setPenRequestAsSubsrev(req, res) {
 }
 
 async function resendVerificationEmail(req, res) {
-  try{
+  try {
     const accessToken = getAccessToken(req);
-    if(!accessToken) {
+    if (!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'No access token'
       });
     }
 
-    if(req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.DRAFT) {
+    if (req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.DRAFT) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Resend email not allowed'
       });
     }
 
-    const data = await sendVerificationEmail(accessToken, req.session.penRequest.email, req.session.penRequest.penRequestID, 
+    const data = await sendVerificationEmail(accessToken, req.session.penRequest.email, req.session.penRequest.penRequestID,
       req.session.digitalIdentityData.identityTypeLabel);
 
     return res.status(HttpStatus.OK).json(data);
-  } catch(e) {
+  } catch (e) {
     log.error('resendVerificationEmail Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Resend verification email error',
@@ -563,15 +578,15 @@ async function resendVerificationEmail(req, res) {
 }
 
 async function uploadFile(req, res) {
-  try{
+  try {
     const accessToken = getAccessToken(req);
-    if(!accessToken) {
+    if (!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'No access token'
       });
     }
 
-    if(!req.session.penRequest || req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
+    if (!req.session.penRequest || req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Upload file not allowed'
       });
@@ -581,7 +596,7 @@ async function uploadFile(req, res) {
 
     const data = await postData(accessToken, req.body, url);
     return res.status(HttpStatus.OK).json(data);
-  } catch(e) {
+  } catch (e) {
     log.error('uploadFile Error', e.stack);
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Upload file error'
@@ -591,16 +606,16 @@ async function uploadFile(req, res) {
 
 async function getDocument(token, penRequestID, documentID, includeDocData = 'Y') {
   try {
-    return await getData(token, `${config.get('penRequest:apiEndpoint')}/${penRequestID}/documents/${documentID}?includeDocData=${includeDocData}`);  
+    return await getData(token, `${config.get('penRequest:apiEndpoint')}/${penRequestID}/documents/${documentID}?includeDocData=${includeDocData}`);
   } catch (e) {
     throw new ServiceError('getDocument error', e);
   }
 }
 
 async function deleteDocument(req, res) {
-  try{
+  try {
     const accessToken = getAccessToken(req);
-    if(!accessToken) {
+    if (!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'No access token'
       });
@@ -608,7 +623,7 @@ async function deleteDocument(req, res) {
 
     let resData = await getDocument(accessToken, req.params.id, req.params.documentId, 'N');
 
-    if(!req.session.penRequest || resData.createDate <= req.session.penRequest.statusUpdateDate || 
+    if (!req.session.penRequest || resData.createDate <= req.session.penRequest.statusUpdateDate ||
       req.session.penRequest.penRequestStatusCode !== PenRequestStatuses.RETURNED) {
       return res.status(HttpStatus.CONFLICT).json({
         message: 'Delete file not allowed'
@@ -629,9 +644,9 @@ async function deleteDocument(req, res) {
 }
 
 async function downloadFile(req, res) {
-  try{
+  try {
     const accessToken = getAccessToken(req);
-    if(!accessToken) {
+    if (!accessToken) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'No access token'
       });

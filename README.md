@@ -1,3 +1,6 @@
+![](https://github.com/bcgov/EDUC-PEN-REQUEST/workflows/Frontend%20CI/badge.svg)
+![](https://github.com/bcgov/EDUC-PEN-REQUEST/workflows/Backend%20CI/badge.svg)
+
 # EDUC-PEN-REQUEST
 This project contains the frontend for PEN requests. 
 

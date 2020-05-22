@@ -3,7 +3,7 @@
     <v-row align-content="center" class="flex-grow-0 pb-5">
       <v-card style="margin-right: 1.4rem;margin-left: 1.4rem" height="100%" width="100%" elevation=0 color="#036"
               class="white--text">
-        <v-card-title class="py-3 pl-5"><h1>Pen Request Form</h1></v-card-title>
+        <v-card-title class="py-3 pl-5"><h1>PEN Request Form</h1></v-card-title>
       </v-card>
     </v-row>
 
@@ -68,7 +68,7 @@
               color="#003366"
               hint="As shown on current Government Photo ID. Note, If you have ONE name only – enter it into the Legal Last Name field and leave Legal First Name blank"
               outlined
-              label="Legal First Name(s) (optional)"
+              label="Legal First Name(s) (if applicable)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="40"
@@ -84,7 +84,7 @@
               color="#003366"
               hint="As shown on current Government Photo ID"
               outlined
-              label="Legal Middle Name(s) (optional)"
+              label="Legal Middle Name(s) (if applicable)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="255"
@@ -144,7 +144,7 @@
               color="#003366"
               hint="List all previous Last names used separated with spaces"
               outlined
-              label="Maiden Name (optional)"
+              label="Maiden Name (if applicable)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="40"
@@ -159,7 +159,7 @@
               color="#003366"
               hint="List all previous names used separated with spaces"
               outlined
-              label="Past Name(s) (optional)"
+              label="Past Name(s) (if applicable)"
               :disabled="enableDisableForm.disabled"
               autocomplete="6b4437dc-5a5a-11ea-8e2d-0242ac130003"
               maxlength="255"

@@ -3,9 +3,7 @@ const nconf = require('nconf');
 const dotenv = require('dotenv');
 const path = require('path');
 dotenv.config();
-
 const env = process.env.NODE_ENV;
-
 nconf.argv()
   .env()
   .file({ file: path.join(__dirname, `${env}.json`) });
@@ -43,6 +41,7 @@ nconf.defaults({
     apiEndpoint: process.env.PEN_REQUEST_API_ENDPOINT,
     clientId: process.env.PEN_REQUEST_CLIENT_ID,
     clientSecret: process.env.PEN_REQUEST_CLIENT_SECRET,
+    replicateTime: process.env.PEN_REQUEST_REPLICATE_TIME || 8,
   },
   document: {
     apiEndpoint: process.env.DOCUMENT_API_ENDPOINT,
@@ -62,6 +61,7 @@ nconf.defaults({
   email: {
     apiEndpoint: process.env.PEN_REQUEST_EMAIL_API_ENDPOINT,
     secretKey: process.env.PEN_REQUEST_EMAIL_SECRET_KEY,
+    tokenTTL: process.env.TOKEN_TTL_MINUTES
   },
   demographics: {
     apiEndpoint: process.env.STUDENT_DEMOG_API_ENDPOINT,
